@@ -1,195 +1,214 @@
 /**
- * globals.css — Songdian Technology B2B Website
+ * globals.css — Songdian Technology B2B 官网
  * ------------------------------------------------------------------
- * Global stylesheet loaded by the root layout (layout.tsx).
- * Provides:
- *   - Tailwind CSS v4 import
- *   - Design system CSS custom properties (colors, fonts)
- *   - WordPress Gutenberg content styles (.wp-content)
- *   - Utility animation keyframes (fade-in-up, fade-in)
- *   - Glass card effect (.glass-card)
- *   - Custom scrollbar styling
- *   - Text selection colors
+ * 基于 Tesla 设计哲学的极简设计系统
  *
- * Color palette:
- *   --background:  #ffffff   (white)
- *   --foreground:  #111827   (gray-900)
- *   --accent:      #d4343e   (brand red)
- *   --accent-hover: #b91c1c  (darker red for hover states)
+ * 核心原则：
+ *   - 产品（摄影/图片）是设计的全部，UI 只是辅助
+ *   - 无阴影、无渐变、无装饰边框
+ *   - 唯一色：Electric Blue (#3E6AE1) 仅用于 CTA
+ *   - 统一的 0.33s 过渡动画
+ *   - 4px 圆角 = 精确而不俏皮
+ *   - 留白即奢侈信号
  */
 
 @import "tailwindcss";
-
 @import "tw-animate-css";
 
-@import "shadcn/tailwind.css";
-
-/*---break---
- */
-
-@custom-variant dark (&:is(.dark *));
-
 /* ============================================================
-   Design System — Songdian Technology
-   White / Gray / Black palette + Red accent (#d4343e)
+   Tesla 设计系统 — 配色方案
    ============================================================ */
 
-/**
- * Tailwind @theme directive — maps CSS custom properties to Tailwind
- * utility classes so you can use e.g. `bg-background`, `text-accent`, `font-sans`.
- */
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
+  /* 主色 — Electric Blue，仅用于 CTA 按钮 */
   --color-accent: var(--accent);
   --color-accent-hover: var(--accent-hover);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-geist-mono);
-  --font-heading: var(--font-sans);
-  --color-sidebar-ring: var(--sidebar-ring);
-  --color-sidebar-border: var(--sidebar-border);
-  --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
-  --color-sidebar-accent: var(--sidebar-accent);
-  --color-sidebar-primary-foreground: var(--sidebar-primary-foreground);
-  --color-sidebar-primary: var(--sidebar-primary);
-  --color-sidebar-foreground: var(--sidebar-foreground);
-  --color-sidebar: var(--sidebar);
-  --color-chart-5: var(--chart-5);
-  --color-chart-4: var(--chart-4);
-  --color-chart-3: var(--chart-3);
-  --color-chart-2: var(--chart-2);
-  --color-chart-1: var(--chart-1);
-  --color-ring: var(--ring);
-  --color-input: var(--input);
-  --color-border: var(--border);
-  --color-destructive: var(--destructive);
-  --color-accent-foreground: var(--accent-foreground);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-muted: var(--muted);
-  --color-secondary-foreground: var(--secondary-foreground);
-  --color-secondary: var(--secondary);
-  --color-primary-foreground: var(--primary-foreground);
+
+  /* 品牌红 — 呼应 Logo 中红色 GD，用于导航激活态等点缀 */
+  --color-brand-red: var(--brand-red);
+
+  /* 文字层级 */
+  --color-foreground: var(--foreground);
+
+  /* shadcn/ui 映射 */
   --color-primary: var(--primary);
-  --color-popover-foreground: var(--popover-foreground);
-  --color-popover: var(--popover);
-  --color-card-foreground: var(--card-foreground);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent-foreground: var(--accent-foreground);
+  --color-destructive: var(--destructive);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-background: var(--background);
   --color-card: var(--card);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
-}
+  --color-card-foreground: var(--card-foreground);
+  --color-popover: var(--popover);
+  --color-popover-foreground: var(--popover-foreground);
 
-/**
- * :root — global CSS custom properties (design tokens).
- * These values are consumed by the @theme block above and by
- * any manual `var(--xxx)` references throughout the codebase.
- */
-:root {
-  /* Songdian brand colors */
-  --accent: #d4343e;               /* Brand red — CTAs, links, highlights */
-  --accent-hover: #b91c1c;         /* Darker red for hover/active states */
+  /* 圆角系统 — 4px 是默认，更大的仅用于图片卡片 */
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 12px;
+  --radius-2xl: 12px;
+  --radius-3xl: 12px;
+  --radius-4xl: 12px;
 
-  /* shadcn/ui design tokens (gray palette) */
-  --background: oklch(1 0 0);          /* Page background (white) */
-  --foreground: oklch(0.145 0 0);      /* Primary text (gray-900) */
-  --card: oklch(1 0 0);
-  --card-foreground: oklch(0.145 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.145 0 0);
-  --primary: oklch(0.205 0 0);         /* Matches --foreground for consistency */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.97 0 0);
-  --secondary-foreground: oklch(0.205 0 0);
-  --muted: oklch(0.97 0 0);
-  --muted-foreground: oklch(0.556 0 0);
-  --accent-foreground: oklch(0.205 0 0);
-  --destructive: oklch(0.577 0.245 27.325);
-  --border: oklch(0.922 0 0);
-  --input: oklch(0.922 0 0);
-  --ring: oklch(0.708 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --radius: 0.625rem;
-  --sidebar: oklch(0.985 0 0);
-  --sidebar-foreground: oklch(0.145 0 0);
-  --sidebar-primary: oklch(0.205 0 0);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.97 0 0);
-  --sidebar-accent-foreground: oklch(0.205 0 0);
-  --sidebar-border: oklch(0.922 0 0);
-  --sidebar-ring: oklch(0.708 0 0);
+  /* 字体 */
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-heading: var(--font-geist-sans);
 }
 
 /* ============================================================
-   Base — Font Smoothing & Body Defaults
+   CSS 自定义属性 — 设计 Token
    ============================================================ */
 
-/**
- * Anti-alias text rendering for crisper fonts on macOS (WebKit)
- * and Firefox (moz-osx). Applied to all elements.
- */
+:root {
+  /* ——— 品牌色 ——— */
+  --accent: #3E6AE1;           /* Electric Blue — 唯一色，仅用于 CTA */
+  --accent-hover: #3561CC;     /* 10% 加深的 Electric Blue */
+  --brand-red: #d4343e;         /* 品牌红 — 呼应 Logo 中 GD 的红色，导航激活态 */
+
+  /* ——— 文字 ——— */
+  --foreground: #171A20;       /* Carbon Dark — 标题和主导航文字 */
+
+  /* ——— 表面 ——— */
+  --background: #FFFFFF;       /* Pure White — 页面背景 */
+  --card: #FFFFFF;
+  --card-foreground: #171A20;
+  --popover: #FFFFFF;
+  --popover-foreground: #171A20;
+
+  /* ——— shadcn token ——— */
+  --primary: #3E6AE1;
+  --primary-foreground: #FFFFFF;
+  --secondary: #F4F4F4;       /* Light Ash */
+  --secondary-foreground: #171A20;
+  --muted: #F4F4F4;
+  --muted-foreground: #5C5E62; /* Pewter */
+  --accent-foreground: #FFFFFF;
+  --destructive: #DC2626;
+  --border: #EEEEEE;           /* Cloud Gray — 极淡分割线 */
+  --input: #EEEEEE;
+  --ring: #3E6AE1;
+}
+
+/* ============================================================
+   基础样式
+   ============================================================ */
+
 * {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  /* 移除所有 border 默认行为 — Tesla 风格 */
 }
 
-/**
- * Body defaults: font-family cascade (Geist Sans → system-ui fallback),
- * text color from --foreground token, comfortable line-height.
- */
 body {
   font-family: var(--font-geist-sans), system-ui, -apple-system, sans-serif;
-  line-height: 1.6;
+  color: var(--foreground);
+  line-height: 1.43;  /* 匹配 Tesla 的 14px/20px 比例 */
+  font-size: 14px;     /* Tesla 默认正文字号 */
+  font-weight: 400;
+  background: var(--background);
 }
 
 /* ============================================================
-   WordPress Gutenberg Content Styles (.wp-content)
-   ------------------------------------------------------------------
-   Styles for raw HTML rendered from WordPress Gutenberg blocks.
-   Applied when a container has the `wp-content` class (e.g. blog
-   post body, about page content). Covers headings, paragraphs,
-   links, images, figures, lists, blockquotes, code blocks, tables,
-   galleries, video/iframe embeds, and WordPress alignment classes.
+   Tesla 统一过渡系统 — 0.33s
+   ============================================================ */
+
+*,
+*::before,
+*::after {
+  transition-timing-function: cubic-bezier(0.5, 0, 0, 0.75);
+  transition-duration: 0.33s;
+}
+
+/* 对频繁变化的属性强制统一 timing */
+a, button, input, select, textarea,
+[class*="hover:"],
+[class*="transition-"] {
+  transition-duration: 0.33s;
+}
+
+/* ============================================================
+   Frosted Glass — 毛玻璃导航效果
+   ============================================================ */
+
+.glass-nav {
+  background: rgba(255, 255, 255, 0.75);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ============================================================
+   WordPress Gutenberg 内容样式
    ============================================================ */
 
 .wp-content {
-  /* ---------- Headings ---------- */
-  h1, h2, h3, h4, h5, h6 {
-    font-weight: 700;
-    color: #111827;
-    margin-top: 2em;
-    margin-bottom: 0.75em;
-    line-height: 1.3;
+  /* --- Astra 主题残余样式重置 --- */
+  /* 移除 Astra 最大宽度约束 */
+  * {
+    max-width: 100% !important;
+    float: none !important;
   }
-  h1 { font-size: 2.25rem; }    /* 36px */
-  h2 { font-size: 1.875rem; }   /* 30px */
-  h3 { font-size: 1.5rem; }     /* 24px */
-  h4 { font-size: 1.25rem; }    /* 20px */
 
-  /* ---------- Paragraphs ---------- */
+  /* 移除 Astra 容器 padding/margin */
+  .ast-container,
+  [class*="ast-"] {
+    padding-left: 0 !important;
+    padding-right: 0 !important;
+    margin-left: 0 !important;
+    margin-right: 0 !important;
+    max-width: none !important;
+  }
+
+  /* Astra 网格/列系统重置为块级 */
+  [class*="wp-block-columns"],
+  [class*="wp-block-column"] {
+    display: block !important;
+    width: 100% !important;
+    flex: none !important;
+    grid-template-columns: none !important;
+  }
+
+  /* --- 正文排版 --- */
+  /* 标题 — 用 Carbon Dark，weight 500 */
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 500;
+    color: #171A20;
+    margin-top: 1em;
+    margin-bottom: 0.75em;
+    line-height: 1.2;
+  }
+  h1 { font-size: 2.5rem; }   /* 40px — 匹配 Tesla Hero */
+  h2 { font-size: 1.875rem; }
+  h3 { font-size: 1.5rem; }
+  h4 { font-size: 1.25rem; }
+
+  /* 段落 — Graphite，14px */
   p {
     margin-bottom: 1.25em;
-    color: #4b5563;             /* gray-600 */
-    line-height: 1.75;
+    color: #393C41;
+    line-height: 1.43;
+    font-size: 14px;
   }
 
-  /* ---------- Links ---------- */
+  /* 链接 — Electric Blue，无下划线装饰 */
   a {
     color: var(--accent);
+    text-decoration: none;
+    font-weight: 500;
+  }
+  a:hover {
     text-decoration: underline;
     text-underline-offset: 4px;
-    font-weight: 500;
-    &:hover { color: var(--accent-hover); }
   }
 
-  /* ---------- Images ---------- */
+  /* 图片 — 12px 圆角（仅用于内容图片） */
   img {
     border-radius: 12px;
     max-width: 100%;
@@ -197,96 +216,95 @@ body {
     margin: 1.5em 0;
   }
 
-  /* ---------- Figure / Figcaption ---------- */
   figure {
     margin: 2em 0;
     text-align: center;
-    img { margin: 0; }          /* Remove margin from images inside figures */
-    figcaption {
-      margin-top: 0.75em;
-      font-size: 0.875rem;
-      color: #9ca3af;           /* gray-400 */
-    }
+  }
+  figure img { margin: 0; }
+  figcaption {
+    margin-top: 0.75em;
+    font-size: 14px;
+    color: #8E8E8E;
   }
 
-  /* ---------- Lists (ul / ol) ---------- */
   ul, ol {
     margin: 1.25em 0;
     padding-left: 1.5em;
-    color: #4b5563;
-    line-height: 1.75;
-    li { margin-bottom: 0.5em; }
+    color: #393C41;
+    line-height: 1.43;
   }
+  ul li, ol li { margin-bottom: 0.5em; }
   ul { list-style-type: disc; }
   ol { list-style-type: decimal; }
 
-  /* ---------- Blockquote ---------- */
   blockquote {
-    border-left: 3px solid #e5e7eb;    /* gray-200 */
+    border-left: 3px solid #EEEEEE;
     padding: 1em 0 1em 1.5em;
     margin: 1.5em 0;
     font-style: italic;
-    color: #6b7280;                     /* gray-500 */
-    background: #f9fafb;               /* gray-50 */
-    border-radius: 0 12px 12px 0;      /* Rounded right side only */
+    color: #5C5E62;
+    background: #F4F4F4;
+    border-radius: 0 12px 12px 0;
   }
 
-  /* ---------- Preformatted / Code ---------- */
   pre {
-    background: #f3f4f6;               /* gray-100 */
+    background: #F4F4F4;
     border-radius: 12px;
     padding: 1.25em;
     overflow-x: auto;
-    font-size: 0.875rem;
+    font-size: 13px;
     margin: 1.5em 0;
-    border: 1px solid #e5e7eb;
-    code { font-family: var(--font-geist-mono), monospace; }
   }
+
   code {
-    background: #f3f4f6;
+    background: #F4F4F4;
     padding: 0.15em 0.4em;
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: 0.875em;
     font-family: var(--font-geist-mono), monospace;
   }
 
-  /* ---------- Horizontal Rule ---------- */
-  hr { margin: 2.5em 0; border-color: #e5e7eb; }
+  hr { margin: 2.5em 0; border-color: #EEEEEE; }
 
-  /* ---------- WordPress Alignment Classes ---------- */
   .alignleft  { float: left; margin: 0.5em 1.5em 1em 0; max-width: 50%; }
   .alignright { float: right; margin: 0.5em 0 1em 1.5em; max-width: 50%; }
   .aligncenter { display: block; margin: 1.5em auto; }
 
-  /* ---------- WordPress Gallery Block ---------- */
   .wp-block-gallery {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 1em;
+    gap: 16px;
     margin: 2em 0;
-    img { margin: 0; border-radius: 12px; width: 100%; height: auto; }
+  }
+  .wp-block-gallery img {
+    margin: 0;
+    border-radius: 12px;
+    width: 100%;
+    height: auto;
   }
 
-  /* ---------- Tables ---------- */
   table {
     width: 100%;
     border-collapse: separate;
     border-spacing: 0;
     margin: 2em 0;
-    border: 1px solid #e5e7eb;
-    border-radius: 12px;
-    overflow: hidden;                   /* Clip corners to match border-radius */
-    th, td {
-      padding: 0.75em 1em;
-      text-align: left;
-      border-bottom: 1px solid #e5e7eb;
-      font-size: 0.9375rem;
-    }
-    th { background: #f9fafb; font-weight: 600; color: #111827; }
-    tr:last-child td { border-bottom: none; }
+    border: 1px solid #EEEEEE;
+    border-radius: 4px;
+    overflow: hidden;
   }
+  table th, table td {
+    padding: 0.75em 1em;
+    text-align: left;
+    border-bottom: 1px solid #EEEEEE;
+    font-size: 14px;
+  }
+  table th {
+    background: #F4F4F4;
+    font-weight: 500;
+    color: #171A20;
+  }
+  table tr:last-child td { border-bottom: none; }
 
-  /* ---------- Video & Iframe Embeds ---------- */
   iframe, video {
     border-radius: 12px;
     max-width: 100%;
@@ -295,21 +313,22 @@ body {
 }
 
 /* ============================================================
-   Utility Animations
-   ------------------------------------------------------------------
-   Reusable keyframe animations used across the site for
-   staggered card reveals and content fade-ins.
+   动画 — 仅保留淡入，无平移/缩放（Tesla 只用颜色过渡）
    ============================================================ */
 
-/**
- * fade-in-up — elements slide up 16px while fading in.
- * Used on product cards, post cards, and strength cards on the homepage.
- * Timing: 0.6s with a custom cubic-bezier easing for a smooth deceleration.
- */
+@keyframes fade-in {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.animate-fade-in {
+  animation: fade-in 0.33s ease-out both;
+}
+
 @keyframes fade-in-up {
   from {
     opacity: 0;
-    transform: translateY(16px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -318,110 +337,58 @@ body {
 }
 
 .animate-fade-in-up {
-  animation: fade-in-up 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
-}
-
-/**
- * fade-in — simple opacity fade from 0 to 1.
- * Timing: 0.5s ease-out.
- */
-@keyframes fade-in {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.animate-fade-in {
-  animation: fade-in 0.5s ease-out both;
+  animation: fade-in-up 0.33s cubic-bezier(0.5, 0, 0, 0.75) both;
 }
 
 /* ============================================================
-   Glass Card Effect
-   ------------------------------------------------------------------
-   Semi-transparent card with backdrop blur, used for overlays
-   and floating panels throughout the site.
+   滚动条 — 极简 6px
    ============================================================ */
-.glass-card {
-  background: rgba(255, 255, 255, 0.8);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-}
 
-/* ============================================================
-   Custom Scrollbar (WebKit browsers)
-   ------------------------------------------------------------------
-   Overrides the default browser scrollbar with a slim, rounded
-   design that matches the site's monochrome aesthetic.
-   ============================================================ */
-::-webkit-scrollbar {
-  width: 8px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
 ::-webkit-scrollbar-thumb {
-  background: #d1d5db;         /* gray-300 */
-  border-radius: 4px;
+  background: #D0D1D2;
+  border-radius: 3px;
 }
-::-webkit-scrollbar-thumb:hover {
-  background: #9ca3af;         /* gray-400 */
+::-webkit-scrollbar-thumb:hover { background: #8E8E8E; }
+
+/* ============================================================
+   文字选中 — Carbon Dark 背景
+   ============================================================ */
+
+::selection {
+  background: #171A20;
+  color: #FFFFFF;
 }
 
 /* ============================================================
-   Text Selection
-   ------------------------------------------------------------------
-   Dark selection background with white text — consistent brand
-   feel when users highlight text.
+   shadcn/ui 暗色模式（暂未启用）
    ============================================================ */
-::selection {
-  background: #111827;
-  color: #ffffff;
-}
-/*---break---
- */
+
 .dark {
-  --background: oklch(0.145 0 0);
-  --foreground: oklch(0.985 0 0);
-  --card: oklch(0.205 0 0);
-  --card-foreground: oklch(0.985 0 0);
-  --popover: oklch(0.205 0 0);
-  --popover-foreground: oklch(0.985 0 0);
-  --primary: oklch(0.922 0 0);
-  --primary-foreground: oklch(0.205 0 0);
+  --background: #171A20;
+  --foreground: #FFFFFF;
+  --card: #171A20;
+  --card-foreground: #FFFFFF;
+  --popover: #171A20;
+  --popover-foreground: #FFFFFF;
+  --primary: #3E6AE1;
+  --primary-foreground: #FFFFFF;
   --secondary: oklch(0.269 0 0);
-  --secondary-foreground: oklch(0.985 0 0);
+  --secondary-foreground: #FFFFFF;
   --muted: oklch(0.269 0 0);
-  --muted-foreground: oklch(0.708 0 0);
-  --accent: #d4343e;                  /* Keep brand red in dark mode */
-  --accent-hover: #f87171;            /* Lighter red for dark mode hover */
-  --accent-foreground: oklch(0.985 0 0);
+  --muted-foreground: #8E8E8E;
+  --accent: #3E6AE1;
+  --accent-hover: #5E8AF5;
+  --accent-foreground: #FFFFFF;
   --destructive: oklch(0.704 0.191 22.216);
-  --border: oklch(1 0 0 / 10%);
-  --input: oklch(1 0 0 / 15%);
-  --ring: oklch(0.556 0 0);
-  --chart-1: oklch(0.87 0 0);
-  --chart-2: oklch(0.556 0 0);
-  --chart-3: oklch(0.439 0 0);
-  --chart-4: oklch(0.371 0 0);
-  --chart-5: oklch(0.269 0 0);
-  --sidebar: oklch(0.205 0 0);
-  --sidebar-foreground: oklch(0.985 0 0);
-  --sidebar-primary: oklch(0.488 0.243 264.376);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.269 0 0);
-  --sidebar-accent-foreground: oklch(0.985 0 0);
-  --sidebar-border: oklch(1 0 0 / 10%);
-  --sidebar-ring: oklch(0.556 0 0);
+  --border: rgba(255, 255, 255, 0.1);
+  --input: rgba(255, 255, 255, 0.15);
+  --ring: #3E6AE1;
 }
-/*---break---
- */
+
 @layer base {
-  * {
-    @apply border-border outline-ring/50;
-  }
-  body {
-    @apply bg-background text-foreground;
-  }
-  html {
-    @apply font-sans;
-  }
+  * { @apply border-border outline-ring/50; }
+  body { @apply bg-background text-foreground; }
+  html { @apply font-sans; }
 }

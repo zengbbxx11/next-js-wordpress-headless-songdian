@@ -40,8 +40,8 @@ export const COMPANY = {
 
   /** 联系页面和结构化数据中显示的联系方式 */
   contact: {
-    /** 物理地址 — 佛山顺德同德智造园 */
-    address: "Building 17, Tongde Intelligent Manufacturing Park, No. 9 Guizhou Avenue East, Shangjiashi Community, Ronggui Subdistrict, Shunde District, Foshan, Guangdong, China",
+    /** 物理地址 */
+    address: "B-10, Qiaozhu North Road, Ronggui Subdistrict, Shunde District, Foshan, Guangdong, China",
     /** 城市 */
     city: "Foshan",
     /** 国家 */
@@ -384,22 +384,40 @@ export const ABOUT = {
     title: "Our Story",
     /** 构成叙述的段落数组 */
     content: [
-      "SONGDIAN (松典) was founded in 2010 as a dedicated digital imaging brand under Songdian Technology (Guangdong) Co., Ltd. For over a decade, we have focused on one mission: designing and manufacturing premium digital cameras that combine innovation, quality, and value.",
-      "With a manufacturing facility spanning 10,000-30,000 m² and 10 production lines, we operate at the forefront of camera technology. Our daily output of 8,000 units and annual launch of 30+ new products demonstrate our commitment to speed, scale, and continuous innovation.",
-      "We hold certifications including ISO 9001, CE, RoHS, FCC, and Sedex — and serve as a long-term manufacturing partner for globally recognized brands such as Minolta, Rollei, and Kenko. Songdian Technology is your trusted partner for OEM/ODM digital camera production, serving brands and distributors across North America, Europe, Asia, the Middle East, and Oceania.",
+      "SONGDIAN Technology is a wholly-owned subsidiary of Shenzhen Sonida, established in 2023. Its parent company, Shenzhen Sonida Digital Technology Co., Ltd., was founded in 2006. We are a national high-tech enterprise integrating R&D, design, production, sales, and brand operations.",
+      "Specializing in digital imaging equipment, our products cover digital cameras, camcorders, printers, and imaging accessories. We are one of the largest digital camera companies in China.",
+      "The group operates two major centers in Shenzhen and Shunde, with a 40,000m² facility and over 1,000 employees. Our annual production capacity exceeds 10 million units, and we hold over 500 national patents.",
+      "We are certified by ISO9001, CE, FCC, and Sedex, and have long-term ODM cooperation with global brands including Minolta, Rollei, and Kenko.",
     ],
   },
 
   /** 公司里程碑时间线 */
   timeline: [
-    { year: "2010", event: "SONGDIAN brand founded, began digital camera R&D" },
-    { year: "2013", event: "Launched first-generation compact digital camera series" },
-    { year: "2015", event: "Expanded production to multiple SMT assembly lines" },
-    { year: "2017", event: "Reached 100+ registered patents milestone" },
-    { year: "2019", event: "Entered international markets — OEM/ODM for global brands" },
-    { year: "2021", event: "Launched mirrorless and 4K video camera product lines" },
-    { year: "2023", event: "Selected for China Brand Power National优选 Program; TÜV Rheinland verified" },
-    { year: "2025", event: "500+ patents, 30+ new products/year, 8,000 units daily output" },
+    {
+      year: "2006",
+      title: "Company Established",
+      event: "Shenzhen Sonida Digital Technology Co., Ltd. was established, beginning involvement in the digital imaging field.",
+    },
+    {
+      year: "2009",
+      title: "First Independently Developed Camcorder",
+      event: "First independently developed camcorder DV801 launched, marking the start of independent camera product R&D.",
+    },
+    {
+      year: "2023",
+      title: "SONGDIAN Company Established",
+      event: "Subsidiary SONGDIAN Technology (Guangdong) Co., Ltd. established. Member of the Brand Powerhouse in Electronic Digital Industry. Launched brand upgrade strategy.",
+    },
+    {
+      year: "2024",
+      title: "Disney Authorized",
+      event: "Obtained Disney authorization, launching SONGDIAN Disney series. Won Best Outdoor Marketing Case at 9th China Advertising Festival.",
+    },
+    {
+      year: "2025",
+      title: "China Top 500 Brands",
+      event: "Selected as Top 10 China Camera Brand, honored on China's Top 500 Brands list. Recognized as Outstanding China Compact Camera of 2025.",
+    },
   ],
 
   /** 核心价值观 */

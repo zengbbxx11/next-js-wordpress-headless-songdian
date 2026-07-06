@@ -1,4 +1,4 @@
-"use client"; // 表单组件需要客户端交互
+"use client";
 
 import { Controller, type Control, type FieldError, type FieldPath, type FieldValues } from "react-hook-form";
 import { Label } from "@/components/ui/label";
@@ -42,10 +42,9 @@ export default function FormSelect<
     <div className="space-y-1.5">
       <Label className="text-sm font-medium text-gray-700">
         {label}
-        {required && <span className="text-red-400 ml-0.5">*</span>}
+        {required && <span className="text-[#3E6AE1] ml-0.5">*</span>}
       </Label>
 
-      {/* Controller 将 react-hook-form 的 control 与 shadcn Select 组件桥接 */}
       <Controller<TFieldValues, TName>
         name={name}
         control={control}
@@ -57,7 +56,7 @@ export default function FormSelect<
             <SelectTrigger
               className={cn(
                 "w-full",
-                hasError && "border-red-300 focus-visible:border-red-400 focus-visible:ring-red-200"
+                hasError && "border-[#3E6AE1] focus-visible:border-[#3E6AE1] focus-visible:ring-[#3E6AE1]/20"
               )}
             >
               <SelectValue placeholder={placeholder} />
@@ -74,7 +73,7 @@ export default function FormSelect<
       />
 
       {hasError && (
-        <p className="text-sm text-red-500">{error?.message}</p>
+        <p className="text-sm" style={{ color: "#3E6AE1" }}>{error?.message}</p>
       )}
     </div>
   );

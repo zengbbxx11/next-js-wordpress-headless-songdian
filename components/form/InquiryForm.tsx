@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Loader2 } from "lucide-react";
 
-// 产品分类下拉选项（相机类别）
 const cameraCategories = [
   { label: "Compact Digital Cameras", value: "compact-digital-cameras" },
   { label: "Mirrorless Cameras", value: "mirrorless-cameras" },
@@ -20,14 +19,12 @@ const cameraCategories = [
   { label: "Custom OEM/ODM Project", value: "custom-oem-odm-project" },
 ];
 
-// 首选联系方式下拉选项
 const preferredContactOptions = [
   { label: "Email", value: "email" },
   { label: "WhatsApp", value: "whatsapp" },
   { label: "Phone", value: "phone" },
 ];
 
-// Zod 校验模式 —— 定义表单字段的验证规则
 const inquirySchema = z.object({
   fullName: z.string().min(2, "姓名至少需要 2 个字符"),
   email: z.string().email("请输入有效的邮箱地址"),
@@ -39,14 +36,11 @@ const inquirySchema = z.object({
   preferredContact: z.string().optional(),
 });
 
-// 从 Zod 模式推断 TypeScript 类型
 type InquiryFormValues = z.infer<typeof inquirySchema>;
 
-// 使用 next-safe-form 创建安全的表单提交动作（含服务端二次校验）
 const submitInquiry = createSafeAction({
   schema: inquirySchema,
   handler: async (data) => {
-    // 模拟 API 调用 —— 实际项目中替换为真实的服务器请求
     await new Promise((resolve) => setTimeout(resolve, 500));
     return data;
   },
@@ -73,9 +67,7 @@ export default function InquiryForm() {
     },
   });
 
-  // 提交回调 —— 将表单值转为 FormData 后调用 safe action
   const onSubmit = async (values: InquiryFormValues) => {
-    // 将表单值转换为 FormData 以传递给 safe action
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
       if (value) formData.append(key, value);
@@ -90,7 +82,7 @@ export default function InquiryForm() {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
-      <Card className="w-full shadow-lg border-gray-200/70">
+      <Card className="w-full border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
         <CardHeader>
           <CardTitle className="text-xl font-bold text-gray-900">Send an Inquiry</CardTitle>
           <CardDescription className="text-sm text-gray-500">
@@ -100,7 +92,6 @@ export default function InquiryForm() {
 
         <CardContent>
           <div className="space-y-5">
-            {/* 姓名 + 邮箱 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormField
                 label="Full Name"
@@ -120,7 +111,6 @@ export default function InquiryForm() {
               />
             </div>
 
-            {/* 电话 + 公司 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormField
                 label="Phone / WhatsApp"
@@ -138,7 +128,6 @@ export default function InquiryForm() {
               />
             </div>
 
-            {/* 产品兴趣 + 数量 */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormSelect
                 name="productInterest"
@@ -158,7 +147,6 @@ export default function InquiryForm() {
               />
             </div>
 
-            {/* 留言 */}
             <FormField
               label="Your Requirements"
               type="textarea"
@@ -169,7 +157,6 @@ export default function InquiryForm() {
               error={errors.message}
             />
 
-            {/* 首选联系方式 */}
             <FormSelect
               name="preferredContact"
               label="Preferred Contact Method"
@@ -179,13 +166,23 @@ export default function InquiryForm() {
               placeholder="Select method..."
             />
 
-            {/* 提交按钮 */}
             <div className="pt-2">
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold transition-all duration-200"
-                style={{ backgroundColor: "#d4343e" }}
+                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold transition-all"
+                style={{
+                  backgroundColor: "#3E6AE1",
+                  color: "#FFFFFF",
+                  borderRadius: "4px",
+                  transitionDuration: "0.33s",
+                }}
+                onMouseEnter={(e) => {
+                  if (!isSubmitting) (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
+                }}
+                onMouseLeave={(e) => {
+                  (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
+                }}
               >
                 {isSubmitting ? (
                   <>

@@ -16,17 +16,8 @@ export default function InquiryForm({ productName, productSku, className = "" }:
     e.preventDefault();
     setLoading(true);
 
-    const formData = new FormData(e.currentTarget);
-    // Send to WordPress REST API (Contact Form 7 endpoint if installed, or custom endpoint)
-    // For now, simulate submission
+    const _formData = new FormData(e.currentTarget);
     try {
-      // If you install Contact Form 7 plugin with REST API enabled:
-      // await fetch(`${process.env.NEXT_PUBLIC_WORDPRESS_URL}/wp-json/contact-form-7/v1/contact-forms/FORM_ID/feedback`, {
-      //   method: "POST",
-      //   body: formData,
-      // });
-
-      // Simulate delay
       await new Promise((r) => setTimeout(r, 1000));
       setSubmitted(true);
     } catch {
@@ -38,9 +29,9 @@ export default function InquiryForm({ productName, productSku, className = "" }:
 
   if (submitted) {
     return (
-      <div className={`bg-white rounded-2xl border border-gray-200/70 p-8 md:p-10 text-center ${className}`}>
-        <div className="w-16 h-16 mx-auto mb-4 bg-green-50 rounded-full flex items-center justify-center">
-          <svg className="w-8 h-8 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+      <div className={`bg-white border border-[#EEEEEE] p-8 md:p-10 text-center ${className}`} style={{ borderRadius: "12px" }}>
+        <div className="w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center" style={{ backgroundColor: "#EFF3FF" }}>
+          <svg className="w-8 h-8" style={{ color: "#3E6AE1" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" />
           </svg>
         </div>
@@ -56,7 +47,8 @@ export default function InquiryForm({ productName, productSku, className = "" }:
     <form
       id="inquiry"
       onSubmit={handleSubmit}
-      className={`bg-white rounded-2xl border border-gray-200/70 p-8 md:p-10 ${className}`}
+      className={`bg-white border border-[#EEEEEE] p-8 md:p-10 ${className}`}
+      style={{ borderRadius: "12px" }}
     >
       <div className="mb-8">
         <h3 className="text-xl font-bold text-gray-900 mb-1">
@@ -67,53 +59,53 @@ export default function InquiryForm({ productName, productSku, className = "" }:
         </p>
       </div>
 
-      {/* Hidden fields for tracking */}
       {productName && <input type="hidden" name="product_name" value={productName} />}
       {productSku && <input type="hidden" name="product_sku" value={productSku} />}
 
       <div className="space-y-5">
-        {/* Name + Company */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1.5">
-              Full Name <span className="text-red-400">*</span>
+              Full Name <span style={{ color: "#3E6AE1" }}>*</span>
             </label>
             <input
               id="name"
               name="name"
               type="text"
               required
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
               placeholder="John Smith"
             />
           </div>
           <div>
             <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-1.5">
-              Company Name <span className="text-red-400">*</span>
+              Company Name <span style={{ color: "#3E6AE1" }}>*</span>
             </label>
             <input
               id="company"
               name="company"
               type="text"
               required
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
               placeholder="Your Company Inc."
             />
           </div>
         </div>
 
-        {/* Email + Phone */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1.5">
-              Email <span className="text-red-400">*</span>
+              Email <span style={{ color: "#3E6AE1" }}>*</span>
             </label>
             <input
               id="email"
               name="email"
               type="email"
               required
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
               placeholder="john@company.com"
             />
           </div>
@@ -125,13 +117,13 @@ export default function InquiryForm({ productName, productSku, className = "" }:
               id="phone"
               name="phone"
               type="tel"
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
               placeholder="+1 234 567 8900"
             />
           </div>
         </div>
 
-        {/* Country + Quantity */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           <div>
             <label htmlFor="country" className="block text-sm font-medium text-gray-700 mb-1.5">
@@ -141,7 +133,8 @@ export default function InquiryForm({ productName, productSku, className = "" }:
               id="country"
               name="country"
               type="text"
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
               placeholder="United States"
             />
           </div>
@@ -152,7 +145,8 @@ export default function InquiryForm({ productName, productSku, className = "" }:
             <select
               id="quantity"
               name="quantity"
-              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all"
+              style={{ borderRadius: "4px" }}
             >
               <option value="">Please select</option>
               <option value="sample">Sample Order (1-10 pcs)</option>
@@ -164,7 +158,6 @@ export default function InquiryForm({ productName, productSku, className = "" }:
           </div>
         </div>
 
-        {/* Service Type */}
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1.5">
             Service Required
@@ -173,7 +166,8 @@ export default function InquiryForm({ productName, productSku, className = "" }:
             {["OEM Manufacturing", "ODM Design & Build", "Custom Development", "Sample Request", "Technical Consulting", "Other"].map((service) => (
               <label
                 key={service}
-                className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-600 cursor-pointer hover:border-gray-300 transition-colors has-[:checked]:border-gray-400 has-[:checked]:bg-gray-100 has-[:checked]:text-gray-900"
+                className="flex items-center gap-2 px-3 py-2 bg-gray-50 border border-gray-200 rounded text-sm text-gray-600 cursor-pointer hover:border-gray-300 transition-colors has-[:checked]:border-gray-400 has-[:checked]:bg-gray-100 has-[:checked]:text-gray-900"
+                style={{ borderRadius: "4px" }}
               >
                 <input type="checkbox" name="services" value={service} className="sr-only" />
                 <span>{service}</span>
@@ -182,26 +176,37 @@ export default function InquiryForm({ productName, productSku, className = "" }:
           </div>
         </div>
 
-        {/* Message */}
         <div>
           <label htmlFor="message" className="block text-sm font-medium text-gray-700 mb-1.5">
-            Your Requirements <span className="text-red-400">*</span>
+            Your Requirements <span style={{ color: "#3E6AE1" }}>*</span>
           </label>
           <textarea
             id="message"
             name="message"
             required
             rows={5}
-            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded-xl text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all resize-none"
+            className="w-full px-4 py-2.5 bg-gray-50 border border-gray-200 rounded text-sm text-gray-900 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-gray-900/10 focus:border-gray-300 transition-all resize-none"
+            style={{ borderRadius: "4px" }}
             placeholder="Please describe your product requirements, target specifications, expected delivery timeline, and any other relevant details..."
           />
         </div>
 
-        {/* Submit */}
         <button
           type="submit"
           disabled={loading}
-          className="w-full sm:w-auto px-8 py-3 bg-gray-900 text-white text-sm font-semibold rounded-xl hover:bg-gray-800 disabled:opacity-60 disabled:cursor-not-allowed transition-all duration-200 hover:shadow-lg hover:shadow-gray-900/10"
+          className="w-full sm:w-auto px-8 py-3 text-white text-sm font-semibold rounded disabled:opacity-60 disabled:cursor-not-allowed transition-all"
+          style={{
+            backgroundColor: "#3E6AE1",
+            color: "#FFFFFF",
+            borderRadius: "4px",
+            transitionDuration: "0.33s",
+          }}
+          onMouseEnter={(e) => {
+            if (!loading) (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
+          }}
+          onMouseLeave={(e) => {
+            (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
+          }}
         >
           {loading ? "Sending..." : "Submit Inquiry"}
         </button>

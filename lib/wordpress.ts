@@ -159,11 +159,19 @@ async function wcFetch<T>(
 function stripHtml(html: string): string {
   return html
     .replace(/<[^>]*>/g, "")
+    .replace(/&#(\d+);/g, (_, d) => String.fromCharCode(Number(d)))  // &#8217; → '
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCharCode(parseInt(h, 16)))
     .replace(/&amp;/g, "&")
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
     .replace(/&quot;/g, '"')
     .replace(/&#039;/g, "'")
+    .replace(/&rsquo;/g, "'")
+    .replace(/&lsquo;/g, "'")
+    .replace(/&rdquo;/g, '"')
+    .replace(/&ldquo;/g, '"')
+    .replace(/&mdash;/g, "\u2014")
+    .replace(/&ndash;/g, "\u2013")
     .replace(/&hellip;/g, "...")
     .trim();
 }
@@ -586,6 +594,26 @@ export async function getProductCategories(): Promise<WCProductCategory[]> {
  * 以及所有已发布博客文章和产品的动态路由。
  *
  * @returns sitemap 条目对象数组，包含 url、lastModified、changeFrequency 和 priority
+ */
+/**
+ * 从 WordPress 页面获取 Banner 图片 URL。
+ * 读取 slug 为 "banner" 的页面的特色图片。
+ * 如果页面不存在或无特色图片，fallback 到 media.ts 中的静态 URL。
+ *
+ * 换图流程：WordPress 后台 → 页面 "Banner" → 设置特色图片 → 保存 → 网站自动刷新（ISR）
+ */
+export async function getSiteBanner(): Promise<string | null> {
+  try {
+    const page = await getPageBySlug("home-banner");
+    if (page?.featuredImage) return page.featuredImage;
+    return null;
+  } catch {
+    return null;
+  }
+}
+
+/**
+ * 收集所有站点 URL 用于生成 sitemap.xml
  */
 export async function getAllSiteUrls() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";

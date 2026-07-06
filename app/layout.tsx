@@ -29,13 +29,14 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingInquiry from "@/components/FloatingInquiry";
 import { COMPANY } from "@/lib/content-data";
+import { MEDIA } from "@/lib/media";
 import { organizationSchema, webSiteSchema } from "@/lib/seo";
 import "./globals.css";
 
 // 初始化 next-super-meta 全局配置
 initSuperMeta({
   siteUrl: process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000",
-  defaultImage: `${process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000"}/og-image.jpg`,
+  defaultImage: MEDIA.ogImage,
 });
 
 // ------------------------------------------------------------------
@@ -109,7 +110,7 @@ export const metadata: Metadata = {
     siteName: COMPANY.name,
     title: `${COMPANY.name} — ${COMPANY.tagline}`,
     description: COMPANY.description,
-    images: [{ url: `${SITE_URL}/og-image.jpg`, width: 1200, height: 630 }],
+    images: [{ url: MEDIA.ogImage, width: 1200, height: 630 }],
   },
 
   // Twitter Card — used by X / Twitter for link previews
@@ -191,9 +192,9 @@ export default function RootLayout({
         {/*
           Main content area:
           - flex-1 pushes the footer to the bottom on short pages
-          - pt-[4.5rem] accounts for the fixed header height
+          - pt-14 matches the Tesla-style fixed header height (h-14 = 56px)
         */}
-        <main className="flex-1 pt-[4.5rem]">{children}</main>
+        <main className="flex-1 pt-14 pb-14">{children}</main>
 
         {/* Site-wide footer with company info, links, and copyright */}
         <Footer />

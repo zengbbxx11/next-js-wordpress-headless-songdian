@@ -1,4 +1,4 @@
-"use client"; // React Hook Form 需要在客户端运行
+"use client";
 
 import type { FieldError, UseFormRegisterReturn } from "react-hook-form";
 import { Input } from "@/components/ui/input";
@@ -13,7 +13,7 @@ interface FormFieldProps {
   placeholder?: string;
   required?: boolean;
   className?: string;
-  rows?: number; // 仅用于 textarea
+  rows?: number;
   registration: UseFormRegisterReturn;
 }
 
@@ -33,7 +33,7 @@ export default function FormField({
     <div className={cn("space-y-1.5", className)}>
       <Label htmlFor={registration.name} className="text-sm font-medium text-gray-700">
         {label}
-        {required && <span className="text-red-400 ml-0.5">*</span>}
+        {required && <span className="text-[#3E6AE1] ml-0.5">*</span>}
       </Label>
 
       {type === "textarea" ? (
@@ -43,7 +43,7 @@ export default function FormField({
           rows={rows}
           placeholder={placeholder}
           className={cn(
-            hasError && "border-red-300 focus-visible:border-red-400 focus-visible:ring-red-200"
+            hasError && "border-[#3E6AE1] focus-visible:border-[#3E6AE1] focus-visible:ring-[#3E6AE1]/20"
           )}
         />
       ) : (
@@ -53,13 +53,13 @@ export default function FormField({
           {...registration}
           placeholder={placeholder}
           className={cn(
-            hasError && "border-red-300 focus-visible:border-red-400 focus-visible:ring-red-200"
+            hasError && "border-[#3E6AE1] focus-visible:border-[#3E6AE1] focus-visible:ring-[#3E6AE1]/20"
           )}
         />
       )}
 
       {hasError && (
-        <p className="text-sm text-red-500">{error?.message}</p>
+        <p className="text-sm" style={{ color: "#3E6AE1" }}>{error?.message}</p>
       )}
     </div>
   );

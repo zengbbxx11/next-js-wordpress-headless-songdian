@@ -20,6 +20,7 @@
 
 import type { BreadcrumbItem, StructuredData } from "@/lib/types";
 import { COMPANY } from "@/lib/content-data";
+import { MEDIA } from "@/lib/media";
 
 /** 规范站点 URL，在构建/运行时从环境中解析 */
 const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -70,7 +71,7 @@ export function organizationSchema(): StructuredData {
     name: COMPANY.name,
     url: SITE_URL,
     description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "",
-    logo: `${SITE_URL}/logo.png`,
+    logo: MEDIA.logo,
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",

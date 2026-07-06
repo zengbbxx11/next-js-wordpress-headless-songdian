@@ -1,58 +1,64 @@
-/**
- * 这是一个客户端组件，因为它使用了：
- * - `useState` + `useEffect` 配合滚动事件监听来切换可见性
- * - `window.scrollY` — 仅浏览器 API
- */
 "use client";
 
+/**
+ * Tesla 风格持久底部咨询栏
+ * ------------------------------------------------------------------
+ * 固定在 viewport 底部，白色背景，顶部极细边框。
+ * 始终可见，不使用滚动监听（保持代码简洁）。
+ */
+
 import Link from "next/link";
-import { useState, useEffect } from "react";
-import { COMPANY } from "@/lib/content-data";
 
 /**
- * 浮动询盘小部件 — 固定在视口右下角。
- *
- * 行为：
- * - 默认隐藏；用户滚动超过 400px 后变为可见
- * - 使用 opacity + translateY 过渡实现平滑淡入/上滑效果
- * - `pointer-events-none` 确保隐藏的按钮不会被意外点击
- *
- * 渲染两个垂直堆叠的 CTA：
- * 1. **快速询盘** — 胶囊形红色按钮，带聊天气泡图标，链接到 `/contact`
- * 2. **WhatsApp** — 绿色圆形按钮，链接到公司 WhatsApp 号码
- *    （构建 URL 前从电话号码中去除所有非数字字符）
+ * Tesla 持久底部栏：
+ * - 固定在 viewport 底部，fixed bottom-0 left-0 right-0 z-50
+ * - 白色背景，顶部 #EEEEEE 极细边框
+ * - 高度 56px
+ * - 左侧 "Quick Inquiry" 文字（14px，Carbon Dark），右侧蓝色 CTA
+ * - 0.33s 过渡
  */
 export default function FloatingInquiry() {
-  /** 小部件是否应可见（由滚动位置触发） */
-  const [visible, setVisible] = useState(false);
-
-  /**
-   * 附加被动滚动监听器，检测用户是否已滚动超过 400px 阈值。
-   * 卸载时清理。
-   */
-  useEffect(() => {
-    const handleScroll = () => setVisible(window.scrollY > 400);
-    window.addEventListener("scroll", handleScroll, { passive: true });
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
-
   return (
     <div
-      className={`fixed bottom-6 right-6 z-50 flex flex-col items-end gap-3 transition-all duration-300 ${
-        visible
-          ? "opacity-100 translate-y-0"
-          : "opacity-0 translate-y-4 pointer-events-none"
-      }`}
+      className="fixed bottom-0 left-0 right-0 z-50 bg-white flex items-center justify-between px-6"
+      style={{
+        height: "56px",
+        borderTop: "1px solid #EEEEEE",
+        transition: "all 0.33s ease",
+      }}
     >
-      {/* ====================== 快速询盘 CTA ====================== */}
-      {/* 胶囊形按钮，带聊天气泡图标 — 导航至 /contact */}
+      <span
+        style={{
+          fontSize: "14px",
+          fontWeight: 500,
+          color: "#171A20",
+        }}
+      >
+        Quick Inquiry
+      </span>
+
       <Link
         href="/contact"
-        className="group flex items-center gap-3 px-5 py-3.5 bg-red-600 text-white rounded-2xl shadow-lg shadow-red-600/20 hover:shadow-xl hover:shadow-red-600/30 hover:-translate-y-0.5 transition-all duration-300"
+        className="inline-flex items-center px-6 text-white text-sm font-medium rounded"
+        style={{
+          fontSize: "14px",
+          fontWeight: 500,
+          backgroundColor: "#3E6AE1",
+          color: "#FFFFFF",
+          height: "36px",
+          borderRadius: "4px",
+          transition: "background-color 0.33s ease",
+        }}
+        onMouseEnter={(e) => {
+          (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
+        }}
+        onMouseLeave={(e) => {
+          (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
+        }}
       >
-        {/* 聊天气泡图标 */}
+        Send Inquiry
         <svg
-          className="w-5 h-5"
+          className="w-4 h-4 ml-2"
           fill="none"
           viewBox="0 0 24 24"
           stroke="currentColor"
@@ -61,29 +67,17 @@ export default function FloatingInquiry() {
             strokeLinecap="round"
             strokeLinejoin="round"
             strokeWidth={2}
-            d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"
+            d="M13 7l5 5m0 0l-5 5m5-5H6"
           />
         </svg>
-        <span className="text-sm font-semibold whitespace-nowrap">
-          Quick Inquiry
-        </span>
       </Link>
 
-      {/* ====================== WhatsApp CTA ====================== */}
-      {/* 绿色圆形按钮 — 在新标签页中打开 WhatsApp 聊天。
-          电话号码去除所有非数字字符以适配 wa.me URL 格式。 */}
-      <a
-        href={`https://wa.me/${COMPANY.contact.whatsapp.replace(/\D/g, "")}`}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="flex items-center justify-center w-12 h-12 bg-green-500 text-white rounded-full shadow-lg hover:shadow-xl hover:-translate-y-0.5 transition-all duration-300"
-        aria-label="Chat on WhatsApp"
-      >
-        {/* WhatsApp logo 图标（内联 SVG 路径） */}
-        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-          <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z" />
-        </svg>
-      </a>
+      {/* 底部安全区域占位 — 为页面内容留出空间 */}
+      <style jsx global>{`
+        body {
+          padding-bottom: 56px;
+        }
+      `}</style>
     </div>
   );
 }

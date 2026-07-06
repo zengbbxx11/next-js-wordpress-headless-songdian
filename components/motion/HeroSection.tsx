@@ -3,46 +3,54 @@
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { HERO } from "@/lib/content-data";
+import { MEDIA } from "@/lib/media";
 
 /**
- * HeroSection — 带 SMT 工厂背景的动画首页 Hero。
+ * HeroSection — 首页全屏 Banner
  * ------------------------------------------------------------------
- * 处理 Hero 内容动画的客户端组件。
- * 全视口 Hero，以工厂生产线图片为背景，
- * 渐变覆盖层，以及徽章、头条、副标题和 CTA 的错位入场动画。
- *
- * 尊重 `prefers-reduced-motion` — 为偏好减少动画的用户
- * 禁用动画。
+ * 100vh 全屏 hero，SMT 产线实拍图作背景。
+ * 深色叠加层确保文字清晰可读，大号标题 + 居中布局。
+ * 尊重 prefers-reduced-motion。
  */
-export default function HeroSection() {
+
+const COLORS = {
+  electricBlue: "#3E6AE1",
+  electricBlueHover: "#3457B8",
+  graphite: "#393C41",
+  white: "#FFFFFF",
+} as const;
+
+interface HeroSectionProps {
+  /** Banner 图片 URL（从 WordPress 页面读取，fallback 到 media.ts） */
+  bannerUrl?: string;
+}
+
+export default function HeroSection({ bannerUrl }: HeroSectionProps) {
   const prefersReducedMotion = useReducedMotion();
 
-  // 错位动画属性
-  const staggerChildren = prefersReducedMotion ? 0 : 0.12;
+  const staggerChildren = prefersReducedMotion ? 0 : 0.1;
   const itemVariants = {
-    hidden: { opacity: 0, y: prefersReducedMotion ? 0 : 20 },
-    visible: { opacity: 1, y: 0 },
+    hidden: { opacity: 0 },
+    visible: { opacity: 1 },
   };
+  const TRANSITION = { duration: 0.33, ease: "easeOut" as const };
 
   return (
-    <section className="relative overflow-hidden min-h-[85dvh] flex items-center">
-      {/* 背景：SMT 生产线横幅图片 */}
+    <section className="relative overflow-hidden min-h-screen flex items-center">
       {/* eslint-disable-next-line @next/next/no-img-element */}
       <img
-        src="http://localhost:10004/wp-content/uploads/2026/06/banner.webp"
+        src={bannerUrl || MEDIA.heroBanner}
         alt="Songdian SMT production line — precision camera manufacturing"
         className="absolute inset-0 w-full h-full object-cover"
         loading="eager"
       />
 
-      {/* 渐变覆盖层：深色左侧 → 透明右侧，保证文本可读性 */}
-      <div className="absolute inset-0 bg-gradient-to-r from-gray-950/85 via-gray-950/50 to-gray-950/20" />
-      {/* 底部微妙的渐变，确保一致的对比度 */}
-      <div className="absolute inset-0 bg-gradient-to-t from-gray-950/20 to-transparent" />
+      {/* 深色叠加层 — 40% 不透明度保证白字清晰 */}
+      <div className="absolute inset-0 bg-black/40" />
 
-      {/* Hero 内容 */}
+      {/* Hero 内容 — 左侧对齐，更大气 */}
       <motion.div
-        className="relative z-10 max-w-7xl mx-auto px-6 py-24 md:py-32 lg:py-40 w-full"
+        className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 py-32 md:py-40 w-full"
         initial="hidden"
         animate="visible"
         variants={{
@@ -51,56 +59,95 @@ export default function HeroSection() {
           },
         }}
       >
-        <div className="max-w-2xl">
-          {/* 行业徽章 */}
-          <motion.span
-            variants={itemVariants}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="inline-block px-4 py-1.5 bg-white/15 text-white/90 text-xs font-medium rounded-full mb-6 tracking-wider uppercase border border-white/20 backdrop-blur-sm"
-          >
-            {HERO.badge}
-          </motion.span>
+        <div className="max-w-3xl">
+        {/* 行业徽章 */}
+        <motion.span
+          variants={itemVariants}
+          transition={TRANSITION}
+          className="inline-block px-4 py-1.5 text-white text-sm font-medium rounded-full mb-8"
+          style={{
+            fontSize: "14px",
+            fontWeight: 500,
+            backgroundColor: "rgba(255, 255, 255, 0.15)",
+            color: COLORS.white,
+          }}
+        >
+          {HERO.badge}
+        </motion.span>
 
-          {/* 主标题 */}
-          <motion.h1
-            variants={itemVariants}
-            transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-            className="text-4xl md:text-6xl lg:text-7xl font-bold text-white tracking-tight leading-[1.05] mb-6"
-          >
-            {HERO.title}
-          </motion.h1>
+        {/* 主标题 — 大号醒目 */}
+        <motion.h1
+          variants={itemVariants}
+          transition={TRANSITION}
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-semibold text-white tracking-tight leading-[1.05] mb-6"
+        >
+          {HERO.title}
+        </motion.h1>
 
-          {/* 副标题 */}
-          <motion.p
-            variants={itemVariants}
-            transition={{ duration: 0.55, ease: [0.16, 1, 0.3, 1] }}
-            className="text-lg text-gray-300 leading-relaxed max-w-lg mb-10"
-          >
-            {HERO.subtitle}
-          </motion.p>
+        {/* 副标题 — 20px，白色半透明 */}
+        <motion.p
+          variants={itemVariants}
+          transition={TRANSITION}
+          className="text-lg md:text-xl text-white/80 font-normal leading-relaxed mb-10 max-w-2xl"
+        >
+          {HERO.subtitle}
+        </motion.p>
 
-          {/* CTA 按钮 */}
-          <motion.div
-            variants={itemVariants}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-            className="flex flex-wrap gap-4"
+        {/* CTA 按钮 — 并排，大尺寸 */}
+        <motion.div
+          variants={itemVariants}
+          transition={TRANSITION}
+          className="flex flex-wrap items-center gap-4"
+        >
+          {/* 主按钮 — 蓝色，48px 高 */}
+          <Link
+            href={HERO.cta.primary.href}
+            className="inline-flex items-center justify-center px-8 text-white font-semibold rounded transition-colors"
+            style={{
+              fontSize: "16px",
+              fontWeight: 600,
+              backgroundColor: COLORS.electricBlue,
+              color: COLORS.white,
+              height: "48px",
+              borderRadius: "4px",
+              transitionDuration: "0.33s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlueHover;
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlue;
+            }}
           >
-            <Link
-              href={HERO.cta.primary.href}
-              className="inline-flex items-center px-6 py-3 bg-red-600 text-white text-sm font-semibold rounded-xl hover:bg-red-700 active:scale-[0.97] transition-all duration-200 shadow-lg shadow-red-600/20"
-            >
-              {HERO.cta.primary.label}
-              <svg className="w-4 h-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
-            </Link>
-            <Link
-              href={HERO.cta.secondary.href}
-              className="inline-flex items-center px-6 py-3 border border-white/30 text-white text-sm font-semibold rounded-xl hover:bg-white/10 hover:border-white/40 transition-all duration-200"
-            >
-              {HERO.cta.secondary.label}
-            </Link>
-          </motion.div>
+            {HERO.cta.primary.label}
+            <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17 8l4 4m0 0l-4 4m4-4H3" />
+            </svg>
+          </Link>
+
+          {/* 副按钮 — 白底黑字，48px 高 */}
+          <Link
+            href={HERO.cta.secondary.href}
+            className="inline-flex items-center justify-center px-8 font-semibold rounded transition-colors"
+            style={{
+              fontSize: "16px",
+              fontWeight: 600,
+              backgroundColor: COLORS.white,
+              color: COLORS.graphite,
+              height: "48px",
+              borderRadius: "4px",
+              transitionDuration: "0.33s",
+            }}
+            onMouseEnter={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F4F4";
+            }}
+            onMouseLeave={(e) => {
+              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.white;
+            }}
+          >
+            {HERO.cta.secondary.label}
+          </Link>
+        </motion.div>
         </div>
       </motion.div>
     </section>
