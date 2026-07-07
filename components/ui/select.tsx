@@ -1,11 +1,19 @@
 "use client"
 
+/*
+ * Select —— 下拉选择 UI 原语
+ * 基于 @base-ui/react 的 Select 复合组件封装，属于 shadcn 风格基础组件。
+ * 主要职责：提供可访问的下拉单选；由 Root/Group/Value/Trigger/Content/Item 等
+ * 子组件组合而成，弹出层通过 Portal + Positioner 定位并带入场/退场动画。
+ */
+
 import * as React from "react"
 import { Select as SelectPrimitive } from "@base-ui/react/select"
 
 import { cn } from "@/lib/utils"
 import { ChevronDownIcon, CheckIcon, ChevronUpIcon } from "lucide-react"
 
+// Select：直接复用 @base-ui Select 根组件。
 const Select = SelectPrimitive.Root
 
 function SelectGroup({ className, ...props }: SelectPrimitive.Group.Props) {
@@ -28,6 +36,8 @@ function SelectValue({ className, ...props }: SelectPrimitive.Value.Props) {
   )
 }
 
+// SelectTrigger：触发按钮，size 默认 default（可选 sm）；
+// 末尾内置下拉箭头图标（ChevronDownIcon）。
 function SelectTrigger({
   className,
   size = "default",
@@ -56,6 +66,8 @@ function SelectTrigger({
   )
 }
 
+// SelectContent：弹出面板；组合 Portal（传送到 body）+ Positioner（定位）
+// 与 Popup（实际面板）。side/align 等控制相对触发器的位置与动画方向。
 function SelectContent({
   className,
   children,
@@ -108,6 +120,7 @@ function SelectLabel({
   )
 }
 
+// SelectItem：单个可选项；右侧 CheckIcon 仅在选中时通过 ItemIndicator 显示。
 function SelectItem({
   className,
   children,

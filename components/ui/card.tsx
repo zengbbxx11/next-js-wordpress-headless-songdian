@@ -1,7 +1,15 @@
+/*
+ * Card —— 卡片容器 UI 原语（纯 React 组件，无 Radix 依赖）
+ * 基于 shadcn 卡片结构：Card 作为外层容器，内含 Header/Title/Description/Action/
+ * Content/Footer 等子区块。通过 data-slot 标识各区域，便于在 CSS 中联动样式。
+ * 支持 size（default/sm）控制内边距；默认为 default。
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// Card：外层容器，data-size 切换默认/紧凑间距（--card-spacing）。
 function Card({
   className,
   size = "default",
@@ -20,6 +28,7 @@ function Card({
   )
 }
 
+// CardHeader：标题区，存在 Action/Description 时自动切换为网格布局。
 function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -33,6 +42,7 @@ function CardHeader({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardTitle：卡片标题；卡片为 sm 尺寸时字号同步缩小。
 function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -46,6 +56,7 @@ function CardTitle({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardDescription：标题下的辅助说明文字（muted 色调）。
 function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -56,6 +67,7 @@ function CardDescription({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardAction：右上角操作区（如按钮/链接），与 Header 网格对齐。
 function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -69,6 +81,7 @@ function CardAction({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardContent：卡片主体内容区。
 function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div
@@ -79,6 +92,7 @@ function CardContent({ className, ...props }: React.ComponentProps<"div">) {
   )
 }
 
+// CardFooter：卡片底部区域，带顶边框与浅色背景。
 function CardFooter({ className, ...props }: React.ComponentProps<"div">) {
   return (
     <div

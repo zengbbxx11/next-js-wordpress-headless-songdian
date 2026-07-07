@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：framer-motion 下划线入场动画依赖浏览器
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 

@@ -11,6 +11,12 @@ import {
 } from "@/components/ui/select";
 import { cn } from "@/lib/utils";
 
+/**
+ * FormSelect — 基于 react-hook-form + shadcn Select 的下拉字段
+ * ------------------------------------------------------------------
+ * 客户端组件。通过 Controller 接管 shadcn Select 的受控状态，适用于需要校验的下拉选项。
+ */
+
 interface FormSelectProps<
   TFieldValues extends FieldValues = FieldValues,
   TName extends FieldPath<TFieldValues> = FieldPath<TFieldValues>,

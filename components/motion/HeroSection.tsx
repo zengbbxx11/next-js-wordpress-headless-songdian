@@ -1,5 +1,13 @@
 "use client";
 
+/*
+ * HeroSection —— 首页全屏 Banner（项目自定义动画组件）
+ * 100vh 全屏 hero，以 SMT 产线实拍图为背景，叠加深色蒙层保证文字可读。
+ * 标题/副标题/CTA 通过 framer-motion 的 staggerChildren 依次淡入；
+ * 尊重系统“减少动态效果”偏好，开启时关闭错位动画。
+ * 文案与配色取自 HERO / MEDIA 常量与品牌色（Electric Blue 等）。
+ */
+
 import Link from "next/link";
 import { motion, useReducedMotion } from "framer-motion";
 import { HERO } from "@/lib/content-data";
@@ -26,8 +34,10 @@ interface HeroSectionProps {
 }
 
 export default function HeroSection({ bannerUrl }: HeroSectionProps) {
+  // useReducedMotion：读取系统“减少动态效果”偏好，据此关闭错位动画。
   const prefersReducedMotion = useReducedMotion();
 
+  // 减少动态时 staggerChildren 置 0，避免子元素依次动画。
   const staggerChildren = prefersReducedMotion ? 0 : 0.1;
   const itemVariants = {
     hidden: { opacity: 0 },

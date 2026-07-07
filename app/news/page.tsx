@@ -1,5 +1,9 @@
-/**
- * 新闻列表页面 — Tesla Design System
+/*
+ * 文件：app/news/page.tsx（新闻列表 / News）
+ * 职责：新闻/资讯列表页，含头条推荐、文章网格与分页导航。
+ * 数据来源（WP REST API）：getPosts() —— WP 文章列表（支持 page 分页，每页 9 篇）。
+ * 渲染方式：Async Server Component + ISR（revalidate = 60 秒）。
+ * 是否含 client 组件：否（列表为服务端渲染，卡片为展示型组件）。
  */
 
 import Link from "next/link";
@@ -15,6 +19,7 @@ export const metadata = await superMeta({
   url: "/news",
 });
 
+// ISR 重新验证间隔（秒）：每 60 秒重新生成新闻列表，平衡实时性与性能
 export const revalidate = 60;
 
 interface NewsPageProps {
@@ -25,6 +30,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
   const params = await searchParams;
   const currentPage = Number(params.page) || 1;
 
+  // 从 WP REST API 获取新闻文章（按页），每页 9 篇
   const { posts, pagination } = await getPosts({ page: currentPage, perPage: 9 });
 
   const breadcrumbs = generateBreadcrumbs([{ label: "News" }]);
@@ -34,19 +40,19 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
 
   return (
     <>
-      {/* Hero — 仅面包屑 */}
+      {/* 首屏 Hero —— 仅含面包屑 */}
       <section className="py-5" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs items={breadcrumbs} variant="dark" />
         </div>
       </section>
 
-      {/* Posts */}
+      {/* 文章列表 */}
       <section className="py-12 md:py-16 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           {posts.length > 0 ? (
             <>
-              {/* Featured */}
+              {/* 精选 */}
               {featured && (
                 <Link
                   href={`/news/${featured.slug}`}
@@ -91,7 +97,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                 </Link>
               )}
 
-              {/* Grid */}
+              {/* 网格 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {remaining.map((post) => (
                   <Link

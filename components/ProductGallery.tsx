@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：缩略图点击切换右侧大图
 import { useState } from "react";
 
 /**
@@ -25,6 +26,7 @@ export default function ProductGallery({
   gallery,
   category,
 }: ProductGalleryProps) {
+  // 当前展示的大图地址，默认取主图
   const [selected, setSelected] = useState(mainImage);
 
   // 缩略图列表：产品图 + 最多 3 张相册图
@@ -40,6 +42,7 @@ export default function ProductGallery({
         {thumbs.map((img) => (
           <button
             key={img.id}
+            // 点击缩略图切换右侧大图
             onClick={() => setSelected(img.src)}
             className={`relative aspect-square overflow-hidden bg-gray-50 border-2 transition-colors cursor-pointer ${
               selected === img.src

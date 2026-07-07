@@ -7,6 +7,8 @@
  */
 "use client";
 
+// 客户端组件：交互逻辑（滚动监听、下拉、移动端菜单）需运行在浏览器环境
+
 import { useState, useEffect, useRef } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -51,17 +53,20 @@ export default function Header() {
   const dropdownRef = useRef<HTMLDivElement>(null);
   const closeTimer = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
+  // 监听滚动：滚动超过 20px 时切换为毛玻璃导航栏
   useEffect(() => {
     const handleScroll = () => setScrolled(window.scrollY > 20);
     window.addEventListener("scroll", handleScroll, { passive: true });
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  // 路由变化时收起移动端菜单与下拉，避免残留状态
   useEffect(() => {
     setMobileOpen(false);
     setActiveDropdown(null);
   }, [pathname]);
 
+  // 移动端菜单展开时锁定页面滚动
   useEffect(() => {
     document.body.style.overflow = mobileOpen ? "hidden" : "";
     return () => {

@@ -1,3 +1,13 @@
+/*
+ * 文件：app/sitemap.ts（站点地图 / Sitemap）
+ * 职责：生成 sitemap.xml，包含静态页面、动态产品页与动态文章页的 URL 及更新频率。
+ * 数据来源（WP REST API）：
+ *   - getAllProductSlugs() → 产品 slug（动态 /products/[slug]）
+ *   - getAllPostSlugs()    → 文章 slug（动态 /news/[slug]）
+ * 渲染方式：Next.js Metadata Route，服务端异步生成（WP 不可用时静默跳过动态部分）。
+ * 是否含 client 组件：否。
+ */
+
 import type { MetadataRoute } from "next";
 import { getAllPostSlugs, getAllProductSlugs } from "@/lib/wordpress";
 

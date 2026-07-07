@@ -1,12 +1,9 @@
 /**
- * @fileoverview 可编辑内容数据模块
- *
- * Songdian Technology B2B 网站中所有静态文本、图片和公司信息的中央存储库。
- * 所有内容均以常量形式定义在此，编辑人员可以直接修改文案、产品描述、FAQ
- * 和公司详情，无需修改各个页面组件。
- *
- * @module content-data
- * @package Songdian Technology — Next.js WordPress Headless B2B Website
+ * 可编辑内容数据模块（中央内容仓库）
+ * ------------------------------------------------------------------
+ * 站点的所有静态文案、图片与公司信息统一在此以常量形式集中管理。
+ * 编辑人员可直接修改此处文案、产品描述、FAQ、公司详情，
+ * 而无需改动各个页面组件。
  */
 
 /**
@@ -75,7 +72,7 @@ export const COMPANY = {
 
 /**
  * 首页 Hero 区域内容。
- * 包含徽章、主标题、副标题和 CTA 按钮标签及其目标路由。
+ * 包含徽章、主标题、副标题，以及主/次 CTA 按钮标签与其目标路由。
  */
 export const HERO = {
   /** 主标题上方显示的小徽章/标签 */
@@ -98,8 +95,8 @@ export const HERO = {
 // ============================================================
 
 /**
- * Hero 区域下方显示的信任指标条。
- * 每个项目将 Lucide 图标名称与简短的可信度声明配对。
+ * Hero 区域下方展示的信任指标条。
+ * 每个项目将 Lucide 图标名称与一句简短的可信度声明配对。
  */
 export const TRUST_ITEMS = [
   /** ISO 9001 质量管理认证 */
@@ -117,8 +114,8 @@ export const TRUST_ITEMS = [
 // ============================================================
 
 /**
- * 首页显示的产品分类卡片。
- * 每个分类包含名称、简短描述和 Lucide 图标标识符。
+ * 首页展示的产品分类卡片。
+ * 每个分类包含名称、简短描述与对应的 Lucide 图标标识符。
  */
 export const PRODUCT_CATEGORIES = [
   /** 消费级和专业级数码相机 */
@@ -158,8 +155,8 @@ export const PRODUCT_CATEGORIES = [
 // ============================================================
 
 /**
- * 首页"为什么选择我们"区域显示的竞争优势亮点。
- * 每个优势包含标题和描述段落。
+ * 首页"为什么选择我们"区域展示的竞争优势亮点。
+ * 每个优势包含标题与一段描述文字。
  */
 export const STRENGTHS = [
   {
@@ -193,9 +190,9 @@ export const STRENGTHS = [
 // ============================================================
 
 /**
- * 服务页面显示的服务产品详情。
- * 每个服务包含用于锚点链接的 id、标题、副标题、摘要
- * 和功能要点列表。
+ * 服务页面展示的服务项目详情。
+ * 每个服务包含用于锚点链接的 id、标题、副标题、概述段落
+ * 以及功能要点列表。
  */
 export const SERVICES = [
   {
@@ -274,10 +271,9 @@ export const SERVICES = [
 // ============================================================
 
 /**
- * 按分类组织的 FAQ 内容，显示在 FAQ 页面并用于生成
- * FAQPage 结构化数据（SEO）。
- *
- * 每个分类包含一组问答项目对。
+ * 按分类组织的 FAQ 内容，用于 FAQ 页面展示，
+ * 并生成 FAQPage 结构化数据（SEO）。
+ * 每个分类下包含一组"问题/答案"对。
  */
 export const FAQS = [
   {
@@ -368,8 +364,8 @@ export const FAQS = [
 // ============================================================
 
 /**
- * 关于我们页面的所有内容，包括 hero 区域、公司故事、
- * 历史时间线、核心价值观、认证和研发亮点。
+ * 关于我们页面的全部内容，涵盖 hero 区域、公司故事、
+ * 历史时间线、核心价值观、认证资质与研发亮点。
  */
 export const ABOUT = {
   /** 关于页面 hero/横幅区域 */
@@ -390,6 +386,16 @@ export const ABOUT = {
       "We are certified by ISO9001, CE, FCC, and Sedex, and have long-term ODM cooperation with global brands including Minolta, Rollei, and Kenko.",
     ],
   },
+
+  /** 关键经营指标（数字滚动展示，嵌入 Our Story 右侧栏） */
+  stats: [
+    { value: 40000, prefix: "", suffix: " ㎡", label: "Facility Area", format: true },
+    { value: 60, prefix: "", suffix: "+", label: "Countries Served", format: false },
+    { value: 10, prefix: "", suffix: "M+", label: "Annual Output", format: false },
+    { value: 1000, prefix: "", suffix: "+", label: "Employees", format: true },
+    { value: 500, prefix: "", suffix: "+", label: "Patents", format: true },
+    { value: 100, prefix: "", suffix: "+", label: "R&D Experts", format: true },
+  ],
 
   /** 公司里程碑时间线 */
   timeline: [
@@ -467,6 +473,13 @@ export const ABOUT = {
       { label: "Daily Output", value: "8,000 Units" },
     ],
   },
+
+  /** 工厂宣传视频区块（About 页，CTA 之前） */
+  factory: {
+    title: "Take a Look Inside Our Factory",
+    caption:
+      "Step inside our 40,000 m² manufacturing facility — where over 8,000 cameras are precision-built every single day.",
+  },
 } as const;
 
 // ============================================================
@@ -474,8 +487,8 @@ export const ABOUT = {
 // ============================================================
 
 /**
- * 联系/询盘页面显示的询盘表单指导提示，
- * 帮助潜在客户了解在提交制造询盘时应提供哪些信息。
+ * 联系/询盘页面展示的询盘表单填写指引，
+ * 帮助潜在客户了解提交制造询盘时应提供哪些信息。
  */
 export const INQUIRY_GUIDE = [
   {

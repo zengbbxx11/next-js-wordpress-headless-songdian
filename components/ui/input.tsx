@@ -1,8 +1,15 @@
+/*
+ * Input —— 文本输入框 UI 原语
+ * 基于 @base-ui/react 的 Input 原语封装，属于 shadcn 风格基础组件。
+ * 主要职责：单行文本输入；处理 focus、disabled、校验错误（aria-invalid）等状态样式。
+ */
+
 import * as React from "react"
 import { Input as InputPrimitive } from "@base-ui/react/input"
 
 import { cn } from "@/lib/utils"
 
+// Input：包装 @base-ui InputPrimitive，data-slot="input" 便于样式定位。
 function Input({ className, type, ...props }: React.ComponentProps<"input">) {
   return (
     <InputPrimitive

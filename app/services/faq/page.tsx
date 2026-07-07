@@ -1,5 +1,9 @@
-/**
- * FAQ 页面 — Tesla Design System
+/*
+ * 文件：app/services/faq/page.tsx（常见问题 / FAQ）
+ * 职责：常见问题解答页，按分类折叠展示（<details>），并注入 FAQ JSON-LD 结构化数据。
+ * 数据来源：本地常量 FAQS（@/lib/content-data）；faqSchema()（@/lib/seo）。
+ * 渲染方式：静态生成 + ISR（revalidate = 3600 秒）。
+ * 是否含 client 组件：否（折叠交互由原生 <details> 实现）。
  */
 
 import { superMeta } from "next-super-meta";
@@ -13,6 +17,7 @@ export const metadata = await superMeta({
   url: "/services/faq",
 });
 
+// ISR 重新验证间隔（秒）：静态内容每小时刷新一次
 export const revalidate = 3600;
 
 export default function FAQPage() {
@@ -31,14 +36,14 @@ export default function FAQPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }}
       />
 
-      {/* Hero — 仅面包屑 */}
+      {/* 首屏 Hero —— 仅含面包屑 */}
       <section className="py-5" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs items={breadcrumbs} variant="dark" />
         </div>
       </section>
 
-      {/* FAQ Items */}
+      {/* 常见问题列表 */}
       <section className="py-12 md:py-20 bg-white">
         <div className="max-w-3xl mx-auto px-6">
           <div className="space-y-12">

@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：链接 hover 颜色切换依赖内联事件处理器
 import Link from "next/link";
 import { COMPANY, FOOTER_LINKS } from "@/lib/site-config";
 import { MEDIA } from "@/lib/media";
@@ -20,6 +21,7 @@ const COLORS = {
 } as const;
 
 export default function Footer() {
+  // 当前年份，用于页脚版权展示
   const year = new Date().getFullYear();
 
   return (

@@ -1,5 +1,11 @@
-/**
- * 产品列表页面 — Tesla Design System
+/*
+ * 文件：app/products/page.tsx（产品列表 / Products）
+ * 职责：产品列表页，含分类筛选、产品网格与分页。
+ * 数据来源（WP REST API）：
+ *   - getProducts()         → WP 产品列表（支持 page 分页与 category 筛选，每页 12 个）
+ *   - getProductCategories()→ WP 产品分类（用于筛选按钮）
+ * 渲染方式：Async Server Component + ISR（revalidate = 60 秒）。
+ * 是否含 client 组件：否。
  */
 
 import Link from "next/link";
@@ -15,6 +21,7 @@ export const metadata = await superMeta({
   url: "/products",
 });
 
+// ISR 重新验证间隔（秒）：每 60 秒重新生成产品列表，平衡实时性与性能
 export const revalidate = 60;
 
 interface ProductsPageProps {
@@ -26,6 +33,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const currentPage = Number(params.page) || 1;
   const categoryFilter = params.category ? Number(params.category) : undefined;
 
+  // 并行获取产品列表与分类（分类接口失败时回退为空数组）
   const [{ products, pagination }, rawCategories] = await Promise.all([
     getProducts({ page: currentPage, perPage: 12, category: categoryFilter }),
     getProductCategories().catch(() => []),

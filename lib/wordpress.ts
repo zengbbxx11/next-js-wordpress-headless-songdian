@@ -2,8 +2,8 @@
  * @fileoverview WordPress + WooCommerce REST API 客户端
  *
  * 为 WordPress REST API（wp/v2）和 WooCommerce REST API（wc/v3）提供类型化的
- * fetch 封装器和数据获取函数。处理身份认证、ISR 重新验证、请求超时、分页解析，
- * 并将原始 WP/WC 响应转换为 Next.js 前端使用的应用友好类型。
+ * fetch 封装器与数据获取函数。处理身份认证、ISR 重新验证、请求超时、分页解析，
+ * 并将原始 WP/WC 响应转换为 Next.js 前端使用的应用层类型。
  *
  * @module wordpress
  * @package Songdian Technology — Next.js WordPress Headless B2B Website
@@ -40,14 +40,14 @@ const WC_API = `${WP_URL}/wp-json/wc/v3`;
 /**
  * WordPress REST API（wp/v2）的通用类型化 fetch 封装器。
  *
- * 自动处理 AbortController 超时、发送 JSON content-type 头部、
+ * 自动处理 AbortController 超时、发送 JSON content-type 头，
  * 通过 Next.js `next.revalidate` 选项应用 ISR 重新验证，
- * 并从 `X-WP-TotalPages` 和 `X-WP-Total` 响应头解析分页元数据。
+ * 并从 `X-WP-TotalPages` 与 `X-WP-Total` 响应头解析分页元数据。
  *
  * @typeParam T - JSON 响应体的预期类型
- * @param endpoint - 相对于 wp/v2 基础路径的 WP API 路径（例如 `/posts?per_page=10`）
+ * @param endpoint - 相对于 wp/v2 基础路径的 WP API 路径（如 `/posts?per_page=10`）
  * @param options   - 标准 `fetch` 选项，扩展了可选的 `timeout`（毫秒）
- * @returns 包含解析后的 `data` 和可选的 `pagination` 元数据的对象
+ * @returns 包含解析后的 `data` 与可选 `pagination` 元数据的对象
  * @throws {Error} 当响应非 OK 或请求超时时抛出
  */
 async function wpFetch<T>(
@@ -90,13 +90,13 @@ async function wpFetch<T>(
 /**
  * WooCommerce REST API（wc/v3）的通用类型化 fetch 封装器。
  *
- * 与 {@link wpFetch} 类似，但使用 `WOOCOMMERCE_CONSUMER_KEY` 和
+ * 与 {@link wpFetch} 类似，但会使用 `WOOCOMMERCE_CONSUMER_KEY` 与
  * `WOOCOMMERCE_CONSUMER_SECRET` 环境变量添加 HTTP Basic 认证。
  *
  * @typeParam T - JSON 响应体的预期类型
- * @param endpoint - 相对于 wc/v3 基础路径的 WC API 路径（例如 `/products`）
+ * @param endpoint - 相对于 wc/v3 基础路径的 WC API 路径（如 `/products`）
  * @param options   - 标准 `fetch` 选项，扩展了可选的 `timeout`（毫秒）
- * @returns 包含解析后的 `data` 和可选的 `pagination` 元数据的对象
+ * @returns 包含解析后的 `data` 与可选 `pagination` 元数据的对象
  * @throws {Error} 当响应非 OK 或请求超时时抛出
  */
 async function wcFetch<T>(
@@ -150,7 +150,7 @@ async function wcFetch<T>(
 // ============================================================
 
 /**
- * 从字符串中去除所有 HTML 标签并解码常见的 HTML 实体。
+ * 去除字符串中的所有 HTML 标签并解码常见 HTML 实体。
  * 用于从 WordPress 的 `rendered` 字段生成纯文本摘要。
  *
  * @param html - WordPress API 返回的原始 HTML 字符串
@@ -177,11 +177,11 @@ function stripHtml(html: string): string {
 }
 
 /**
- * 从 WordPress 文章、页面或 WooCommerce 产品对象中提取特色图片 URL 和 alt 文本。
- * 同时支持 WP REST 的 `_embedded` 媒体和 WC REST 的 `images` 数组。
+ * 从 WordPress 文章、页面或 WooCommerce 产品对象中提取特色图片 URL 与 alt 文本。
+ * 同时兼容 WP REST 的 `_embedded` 媒体与 WC REST 的 `images` 数组。
  *
  * @param post - WP 文章、页面或 WC 产品原始 API 对象
- * @returns 包含 `url`（可为 null）和 `alt` 文本的对象
+ * @returns 包含 `url`（可为 null）与 `alt` 文本的对象
  */
 function getFeaturedImage(post: WPPost | WPPage | WCProduct): { url: string | null; alt: string } {
   // WP 文章/页面嵌入式特色媒体
@@ -198,7 +198,7 @@ function getFeaturedImage(post: WPPost | WPPage | WCProduct): { url: string | nu
 /**
  * 将 ISO 8601 日期字符串格式化为人类可读的美式英文日期。
  *
- * @param dateStr - ISO 日期字符串（例如 `2025-03-15T10:30:00`）
+ * @param dateStr - ISO 日期字符串（如 `2025-03-15T10:30:00`）
  * @returns 格式化后的日期字符串，如 `"March 15, 2025"`
  */
 export function formatDate(dateStr: string): string {
@@ -222,7 +222,7 @@ export function formatDate(dateStr: string): string {
  * @param params.categoryId - 按分类 ID 筛选
  * @param params.tagId      - 按标签 ID 筛选
  * @param params.search     - 搜索查询字符串
- * @returns 包含 {@link PostSummary} 数组和分页元数据的对象
+ * @returns 包含 {@link PostSummary} 数组与分页元数据的对象
  */
 export async function getPosts(params?: {
   page?: number;
@@ -298,7 +298,7 @@ export async function getPostBySlug(slug: string): Promise<PostDetail | null> {
 
 /**
  * 获取所有已发布文章的 slug（最多 100 个）。
- * 用于静态站点生成（`generateStaticParams`）和 sitemap 生成。
+ * 用于静态站点生成（`generateStaticParams`）与 sitemap 生成。
  *
  * @returns 文章 slug 字符串数组
  */
@@ -360,7 +360,7 @@ export async function getTags(): Promise<WPTag[]> {
 }
 
 // ============================================================
-// 产品 API（WP REST — WooCommerce 产品自定义文章类型）
+// 产品 API（通过 WP REST 访问 WooCommerce 产品自定义文章类型）
 // ============================================================
 
 /** WooCommerce 产品自定义文章类型通过 WP REST API 访问的基础 URL */
@@ -370,15 +370,15 @@ const PRODUCT_API_BASE = `${WP_URL}/wp-json/wp/v2/product`;
  * 通过 WP REST API 获取分页的 WooCommerce 产品列表。
  *
  * 使用 `product` 自定义文章类型端点（而非 WC v3 API），
- * 将嵌入式媒体和分类术语映射为 {@link ProductSummary} 对象。
+ * 将内嵌媒体与分类术语映射为 {@link ProductSummary} 对象。
  *
  * @param params - 可选的筛选/分页参数
  * @param params.page     - 页码（从 1 开始）
  * @param params.perPage  - 每页产品数（默认 12）
  * @param params.category - 按产品分类 ID 筛选
- * @param params.featured - 是否仅筛选推荐产品（WP REST 中产品暂不支持此功能；为将来使用保留）
+ * @param params.featured - 是否仅筛选推荐产品（WP REST 中产品暂不支持此功能；保留供将来使用）
  * @param params.search   - 搜索查询字符串
- * @returns 包含 {@link ProductSummary} 数组和可选分页信息的对象
+ * @returns 包含 {@link ProductSummary} 数组与可选分页信息的对象
  */
 export async function getProducts(params?: {
   page?: number;
@@ -413,7 +413,7 @@ export async function getProducts(params?: {
 
     const products: ProductSummary[] = data.map((p) => {
       const media = p._embedded?.["wp:featuredmedia"]?.[0];
-      // 产品分类在 wp:term[1] 中（taxonomy=product_cat）
+      // 产品分类位于 wp:term[1]（taxonomy=product_cat）
       const productCats = (p._embedded?.["wp:term"]?.[1] || []) as unknown as WCProductCategory[];
       const productTags = (p._embedded?.["wp:term"]?.[2] || []) as unknown as WPTag[];
 
@@ -533,7 +533,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
 
 /**
  * 获取所有已发布产品的 slug（最多 100 个）。
- * 用于静态站点生成（`generateStaticParams`）和 sitemap 生成。
+ * 用于静态站点生成（`generateStaticParams`）与 sitemap 生成。
  *
  * @returns 产品 slug 字符串数组
  */
@@ -558,7 +558,7 @@ export async function getAllProductSlugs(): Promise<string[]> {
 
 /**
  * 获取所有 WooCommerce 产品分类，按字母排序（最多 50 个）。
- * 使用 `product_cat` 分类端点，设置较长的 ISR 重新验证窗口。
+ * 使用 `product_cat` 分类端点，并设置较长的 ISR 重新验证窗口。
  *
  * @returns {@link WCProductCategory} 对象数组
  */
@@ -589,18 +589,11 @@ export async function getProductCategories(): Promise<WCProductCategory[]> {
 // ============================================================
 
 /**
- * 收集所有可被发现的站点 URL，用于 XML sitemap 生成。
- * 包括静态页面（首页、产品、博客、服务、询盘、联系）
- * 以及所有已发布博客文章和产品的动态路由。
- *
- * @returns sitemap 条目对象数组，包含 url、lastModified、changeFrequency 和 priority
- */
-/**
  * 从 WordPress 页面获取 Banner 图片 URL。
- * 读取 slug 为 "banner" 的页面的特色图片。
- * 如果页面不存在或无特色图片，fallback 到 media.ts 中的静态 URL。
+ * 读取 slug 为 "home-banner" 的页面的特色图片。
+ * 若页面不存在或无特色图片，则返回 null（由调用方回退到 media.ts 中的静态 URL）。
  *
- * 换图流程：WordPress 后台 → 页面 "Banner" → 设置特色图片 → 保存 → 网站自动刷新（ISR）
+ * 换图流程：WordPress 后台 → 页面 "home-banner" → 设置特色图片 → 保存 → 网站自动刷新（ISR）
  */
 export async function getSiteBanner(): Promise<string | null> {
   try {
@@ -614,6 +607,10 @@ export async function getSiteBanner(): Promise<string | null> {
 
 /**
  * 收集所有站点 URL 用于生成 sitemap.xml
+ * 包含静态页面（首页、产品、博客、服务、询盘、联系）
+ * 以及所有已发布博客文章与产品的动态路由。
+ *
+ * @returns sitemap 条目对象数组，含 url、lastModified、changeFrequency 与 priority
  */
 export async function getAllSiteUrls() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";

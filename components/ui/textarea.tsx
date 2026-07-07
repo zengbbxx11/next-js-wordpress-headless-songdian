@@ -1,7 +1,14 @@
+/*
+ * Textarea —— 多行文本输入框 UI 原语（纯 React 组件，无 Radix 依赖）
+ * 主要职责：多行文本输入；使用 field-sizing-content 实现内容自适应高度，
+ * 并统一处理 focus、disabled、校验错误（aria-invalid）等状态样式。
+ */
+
 import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
+// Textarea：原生 <textarea> 封装，data-slot="textarea" 便于样式定位。
 function Textarea({ className, ...props }: React.ComponentProps<"textarea">) {
   return (
     <textarea

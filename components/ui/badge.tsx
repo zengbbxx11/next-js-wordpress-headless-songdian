@@ -1,3 +1,10 @@
+/*
+ * Badge —— 标签/徽章 UI 原语
+ * 基于 @base-ui/react（useRender）实现，而非 Radix，但属于同类 shadcn 风格基础组件。
+ * 主要职责：展示状态、分类、计数等小标签；通过 cva 提供 variant（default/secondary/
+ * destructive/outline/ghost/link）变体，支持内联图标（inline-start / inline-end）。
+ */
+
 import { mergeProps } from "@base-ui/react/merge-props"
 import { useRender } from "@base-ui/react/use-render"
 import { cva, type VariantProps } from "class-variance-authority"
@@ -27,6 +34,8 @@ const badgeVariants = cva(
   }
 )
 
+// Badge：默认渲染为 <span>；通过 useRender 支持自定义 render（多态渲染）。
+// variant 默认 "default"，可覆盖 className。
 function Badge({
   className,
   variant = "default",

@@ -1,5 +1,12 @@
-/**
- * 产品详情页面 — Tesla Design System
+/*
+ * 文件：app/products/[slug]/page.tsx（产品详情 / Product Detail）
+ * 职责：单个产品详情页，含画廊、特性、规格表、产品亮点、相关产品与 JSON-LD（productSchema）。
+ * 数据来源（WP REST API）：
+ *   - getProductBySlug(slug) → 单个产品
+ *   - getAllProductSlugs()   → 产品 slug 列表（用于 SSG 预渲染）
+ *   - getProducts()          → 同类相关产品
+ * 渲染方式：Async Server Component + ISR（revalidate = 60 秒）+ generateStaticParams 预生成。
+ * 是否含 client 组件：是 —— ProductGallery 为客户端交互组件。
  */
 
 import Link from "next/link";
@@ -12,13 +19,16 @@ import { cleanPostContent } from "@/lib/html-cleaner";
 import { generateBreadcrumbs, productSchema } from "@/lib/seo";
 import { COMPANY } from "@/lib/content-data";
 
+// ISR 重新验证间隔（秒）：每 60 秒重新生成产品详情
 export const revalidate = 60;
 
+// 预生成所有产品静态路径（SSG）：从 WP 拉取全部产品 slug
 export async function generateStaticParams() {
   const slugs = await getAllProductSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
+// 动态生成该产品的 SEO 元信息（title / description / canonical / Open Graph）
 export async function generateMetadata({
   params,
 }: {
@@ -40,6 +50,7 @@ export async function generateMetadata({
   };
 }
 
+// 从产品短描述 HTML 中提取要点列表（去标签、去项目符号）
 function extractFeatures(html: string): string[] {
   return html
     .replace(/<br\s*\/?>/gi, "\n")
@@ -50,6 +61,7 @@ function extractFeatures(html: string): string[] {
     .slice(0, 8);
 }
 
+// 从产品短描述 HTML 中提取规格行（短行视为规格条目）
 function extractSpecs(html: string): { label: string; value: string }[] {
   const lines = html
     .replace(/<br\s*\/?>/gi, "\n")
@@ -84,8 +96,14 @@ export default async function ProductDetailPage({
     );
   }
 
+  // 主分类（用于面包屑 + 返回按钮，回到对应分类列表）
+  const primaryCategory = product.categories[0];
+
   const breadcrumbs = generateBreadcrumbs([
     { label: "Products", href: "/products" },
+    ...(primaryCategory
+      ? [{ label: primaryCategory.name, href: `/products?category=${primaryCategory.id}` }]
+      : []),
     { label: product.name },
   ]);
 
@@ -109,6 +127,7 @@ export default async function ProductDetailPage({
   const galleryImages = product.gallery || [];
   const hasContent = product.description && product.description.trim().length > 0;
 
+  // 获取同类相关产品（取首个分类，最多 4 个）
   let relatedProducts: Awaited<ReturnType<typeof getProducts>> = { products: [], pagination: null };
   if (product.categories.length > 0) {
     try { relatedProducts = await getProducts({ category: product.categories[0].id, perPage: 4 }); } catch { /* ignore */ }
@@ -118,19 +137,19 @@ export default async function ProductDetailPage({
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
-      {/* Breadcrumbs */}
+      {/* 面包屑导航 */}
       <section className="bg-gray-50 py-4" style={{ borderBottom: "1px solid #EEEEEE" }}>
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs items={breadcrumbs} />
         </div>
       </section>
 
-      {/* Product Overview */}
+      {/* 产品概览 */}
       <section className="py-10 md:py-14 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-10 md:gap-14">
 
-            {/* Left: Product Gallery */}
+            {/* 左栏：产品图集 */}
             <div>
               {primaryImage ? (
                 <>
@@ -164,7 +183,7 @@ export default async function ProductDetailPage({
               )}
             </div>
 
-            {/* Right: Product Info */}
+            {/* 右栏：产品信息 */}
             <div>
               <p className="text-xs text-gray-400 uppercase tracking-wider mb-3">Product Model</p>
               <h1 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight leading-tight mb-5">
@@ -188,7 +207,7 @@ export default async function ProductDetailPage({
                 </p>
               )}
 
-              {/* CTA buttons */}
+              {/* 行动号召按钮 */}
               <div className="flex flex-wrap gap-3 mb-8">
                 <Link
                   href="/contact"
@@ -208,14 +227,14 @@ export default async function ProductDetailPage({
                   </svg>
                 </Link>
                 <Link
-                  href="/products"
+                  href={primaryCategory ? `/products?category=${primaryCategory.id}` : "/products"}
                   className="inline-flex items-center px-6 py-3 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
                 >
-                  &larr; All Products
+                  &larr; {primaryCategory ? `Back to ${primaryCategory.name}` : "All Products"}
                 </Link>
               </div>
 
-              {/* OEM/ODM notice */}
+              {/* OEM/ODM 说明 */}
               <div className="flex items-center gap-2.5 p-4 rounded-xl border" style={{ backgroundColor: "#EFF3FF", borderColor: "#C5D5F8" }}>
                 <svg className="w-5 h-5 shrink-0" style={{ color: "#3E6AE1" }} fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -229,7 +248,7 @@ export default async function ProductDetailPage({
         </div>
       </section>
 
-      {/* Specifications */}
+      {/* 规格参数 */}
       {specs.length > 0 && (
         <section className="py-12 md:py-16" style={{ backgroundColor: "#F4F4F4" }}>
           <div className="max-w-5xl mx-auto px-6">
@@ -259,7 +278,7 @@ export default async function ProductDetailPage({
       )}
 
       
-      {/* Product Highlights */}
+      {/* 产品亮点 */}
       {hasContent && (
         <section className="py-14 md:py-20 bg-white">
           <div className="max-w-5xl mx-auto px-6">
@@ -269,7 +288,7 @@ export default async function ProductDetailPage({
         </section>
       )}
 
-      {/* Related Products */}
+      {/* 相关产品 */}
       {relatedProducts.products.length > 1 && (
         <section className="py-14 md:py-20" style={{ backgroundColor: "#F4F4F4" }}>
           <div className="max-w-7xl mx-auto px-6">

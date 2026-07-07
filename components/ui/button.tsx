@@ -1,3 +1,11 @@
+/*
+ * Button —— 按钮 UI 原语
+ * 基于 @base-ui/react 的 Button 原语封装，属于 shadcn 风格基础组件。
+ * 主要职责：可点击操作按钮；通过 cva 提供 variant（default/outline/secondary/ghost/
+ * destructive/link）与 size（default/xs/sm/lg/icon/icon-xs/icon-sm/icon-lg）组合，
+ * 默认 variant=default、size=default。
+ */
+
 import { Button as ButtonPrimitive } from "@base-ui/react/button"
 import { cva, type VariantProps } from "class-variance-authority"
 
@@ -40,6 +48,8 @@ const buttonVariants = cva(
   }
 )
 
+// Button：包装 @base-ui ButtonPrimitive，data-slot="button" 便于样式与测试定位。
+// cn() 合并 cva 生成的变体类与用户 className。
 function Button({
   className,
   variant = "default",

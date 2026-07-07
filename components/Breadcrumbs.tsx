@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：通过内联 onMouseEnter/onMouseLeave 事件处理器实现 hover 颜色切换
 import Link from "next/link";
 import type { BreadcrumbItem } from "@/lib/types";
 

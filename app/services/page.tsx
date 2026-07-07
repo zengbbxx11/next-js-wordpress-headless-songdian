@@ -1,5 +1,9 @@
-/**
- * 服务概览页面 — Tesla Design System
+/*
+ * 文件：app/services/page.tsx（服务概览 / Services）
+ * 职责：OEM/ODM 服务介绍页，展示四项核心服务、FAQ 引导与询盘表单。
+ * 数据来源：本地常量 services（页面内联定义）；InquiryForm 处理表单提交。
+ * 渲染方式：静态生成 + ISR（revalidate = 3600 秒）。
+ * 是否含 client 组件：是 —— InquiryForm 为客户端表单组件。
  */
 
 import Link from "next/link";
@@ -15,6 +19,7 @@ export const metadata = await superMeta({
   url: "/services",
 });
 
+// ISR 重新验证间隔（秒）：静态内容每小时刷新一次
 export const revalidate = 3600;
 
 const services = [
@@ -65,14 +70,14 @@ export default function ServicesPage() {
 
   return (
     <>
-      {/* Hero — 仅面包屑 */}
+      {/* 首屏 Hero —— 仅含面包屑 */}
       <section className="py-5" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs items={breadcrumbs} variant="dark" />
         </div>
       </section>
 
-      {/* Service Grid */}
+      {/* 服务网格 */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -100,7 +105,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* FAQ CTA — Electric Blue */}
+      {/* 常见问题行动号召 —— 电光蓝 */}
       <section className="py-12 bg-gray-50 border-y border-[#EEEEEE]">
         <div className="max-w-3xl mx-auto px-6 text-center">
           <h3 className="text-lg font-semibold text-gray-900 mb-3">Have Questions?</h3>
@@ -127,7 +132,7 @@ export default function ServicesPage() {
         </div>
       </section>
 
-      {/* Inquiry Form */}
+      {/* 询盘表单 */}
       <section className="py-16 bg-white">
         <div className="max-w-3xl mx-auto px-6">
           <InquiryForm />

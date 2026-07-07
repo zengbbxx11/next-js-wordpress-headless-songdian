@@ -1,605 +1,594 @@
 /**
- * @fileoverview Complete TypeScript Type Definitions
+ * 完整 TypeScript 类型定义
+ * ------------------------------------------------------------------
+ * 全站使用的类型声明，按逻辑分组：
  *
- * Type declarations for the entire application, organized into logical groups:
+ * 1. WordPress 核心类型 —— WP REST API（wp/v2）返回的原始结构
+ * 2. WooCommerce 类型 —— WC REST API（wc/v3）及自定义插件字段的原始结构
+ * 3. 应用层类型 —— 经转换后供 Next.js 前端组件使用的结构
+ * 4. SEO 类型 —— 结构化数据、面包屑、sitemap 条目结构
  *
- * 1. **WordPress Core Types** — Raw shapes returned by the WP REST API (wp/v2)
- * 2. **WooCommerce Types** — Raw shapes from the WC REST API (wc/v3) and custom plugin fields
- * 3. **Application Types** — Transformed shapes used by the Next.js frontend components
- * 4. **SEO Types** — Structured data, breadcrumbs, and sitemap entry shapes
- *
- * These types serve as the contract between the WordPress backend and the
- * Next.js frontend, ensuring type safety across API calls, page props, and
- * component rendering.
- *
- * @module types
- * @package Songdian Technology — Next.js WordPress Headless B2B Website
+ * 这些类型是 WordPress 后端与 Next.js 前端之间的契约，
+ * 确保 API 调用、页面 props 与组件渲染全程类型安全。
  */
 
 // ============================================================
-// WordPress Core Types (wp/v2 REST API response shapes)
+// WordPress 核心类型（wp/v2 REST API 返回结构）
 // ============================================================
 
 /**
- * WordPress rendered content object.
- * Used for `title`, `content`, and other fields that support both raw editing
- * and rendered HTML output.
+ * WordPress 渲染内容对象。
+ * 用于 `title`、`content` 等同时支持原始编辑态与渲染后 HTML 输出的字段。
  */
 export interface WPContent {
-  /** Rendered HTML string */
+  /** 渲染后的 HTML 字符串 */
   rendered: string;
-  /** Whether the content is password-protected */
+  /** 内容是否受密码保护 */
   protected: boolean;
 }
 
 /**
- * WordPress excerpt object.
- * Contains the auto-generated or manually written excerpt for a post/page.
+ * WordPress 摘要对象。
+ * 包含文章/页面自动生成或手动填写的摘要。
  */
 export interface WPExcerpt {
-  /** Rendered HTML string (may contain `<p>` tags or be plain text) */
+  /** 渲染后的 HTML 字符串（可能含 `<p>` 标签或为纯文本） */
   rendered: string;
-  /** Whether the excerpt is from a password-protected post */
+  /** 摘要是否来自受密码保护的文章 */
   protected: boolean;
 }
 
 /**
- * A single WordPress media attachment size variant.
- * Each registered image size produces one {@link MediaSize} entry.
+ * 单个 WordPress 媒体附件尺寸变体。
+ * 每个已注册图片尺寸都会生成一个 {@link MediaSize} 条目。
  */
 export interface MediaSize {
-  /** File name (relative to uploads directory) */
+  /** 文件名（相对于 uploads 目录） */
   file: string;
-  /** Width in pixels */
+  /** 宽度（像素） */
   width: number;
-  /** Height in pixels */
+  /** 高度（像素） */
   height: number;
-  /** MIME type (e.g. `image/jpeg`) */
+  /** MIME 类型（如 `image/jpeg`） */
   mime_type: string;
-  /** Absolute URL to the sized image */
+  /** 该尺寸图片的绝对 URL */
   source_url: string;
 }
 
 /**
- * Collection of all registered image size variants for a media attachment.
- * Includes WordPress core sizes plus any theme/plugin-registered sizes.
+ * 媒体附件所有已注册尺寸变体的集合。
+ * 包含 WordPress 核心尺寸及主题/插件额外注册的尺寸。
  */
 export interface MediaSizes {
-  /** 150x150 thumbnail (WordPress core) */
+  /** 150x150 缩略图（WP 核心） */
   thumbnail?: MediaSize;
-  /** Max 300px width (WordPress core) */
+  /** 最大 300px 宽（WP 核心） */
   medium?: MediaSize;
-  /** Max 768px width (WordPress core) */
+  /** 最大 768px 宽（WP 核心） */
   medium_large?: MediaSize;
-  /** Max 1024px width (WordPress core) */
+  /** 最大 1024px 宽（WP 核心） */
   large?: MediaSize;
-  /** Full/original size — always present */
+  /** 完整/原图尺寸 —— 始终存在 */
   full: MediaSize;
 }
 
 /**
- * WordPress media attachment (image, video, document, etc.).
- * Returned via `_embedded['wp:featuredmedia']` when `_embed=true` is set.
+ * WordPress 媒体附件（图片、视频、文档等）。
+ * 当请求带 `_embed=true` 时，通过 `_embedded['wp:featuredmedia']` 返回。
  */
 export interface WPMedia {
-  /** Attachment post ID */
+  /** 附件文章 ID */
   id: number;
-  /** ISO 8601 date string */
+  /** ISO 8601 日期字符串 */
   date: string;
-  /** URL-friendly slug */
+  /** URL 友好的 slug */
   slug: string;
-  /** Rendered title (often the file name) */
+  /** 渲染后的标题（通常为文件名） */
   title: WPContent;
-  /** Alt text for accessibility */
+  /** 用于无障碍的 alt 文本 */
   alt_text: string;
-  /** Image caption (may contain HTML) */
+  /** 图片说明（可能含 HTML） */
   caption: WPContent;
-  /** Longer description field */
+  /** 较长描述字段 */
   description: WPContent;
-  /** General media type (`image`, `video`, etc.) */
+  /** 媒体大类（`image`、`video` 等） */
   media_type: string;
-  /** Specific MIME type */
+  /** 具体 MIME 类型 */
   mime_type: string;
-  /** Absolute URL to the full-size original */
+  /** 完整原图的绝对 URL */
   source_url: string;
-  /** Dimension and size variant details (present for images) */
+  /** 尺寸与变体详情（图片时存在） */
   media_details?: { width: number; height: number; sizes: MediaSizes };
 }
 
 /**
- * WordPress post category.
- * Taxonomy: `category` (hierarchical).
+ * WordPress 文章分类（taxonomy：category，层级型）。
  */
 export interface WPCategory {
-  /** Term ID */
+  /** 术语 ID */
   id: number;
-  /** Display name (e.g. "Product News") */
+  /** 显示名称（如 "Product News"） */
   name: string;
-  /** URL-friendly slug */
+  /** URL 友好的 slug */
   slug: string;
-  /** Category description */
+  /** 分类描述 */
   description: string;
-  /** Number of posts in this category */
+  /** 该分类下的文章数量 */
   count: number;
 }
 
 /**
- * WordPress post tag.
- * Taxonomy: `post_tag` (non-hierarchical).
+ * WordPress 文章标签（taxonomy：post_tag，非层级型）。
  */
 export interface WPTag {
-  /** Term ID */
+  /** 术语 ID */
   id: number;
-  /** Display name (e.g. "OEM Manufacturing") */
+  /** 显示名称（如 "OEM Manufacturing"） */
   name: string;
-  /** URL-friendly slug */
+  /** URL 友好的 slug */
   slug: string;
-  /** Number of posts with this tag */
+  /** 带该标签的文章数量 */
   count: number;
 }
 
 /**
- * WordPress user (author) profile.
- * Returned via `_embedded.author` when `_embed=true` is set.
+ * WordPress 用户（作者）档案。
+ * 当请求带 `_embed=true` 时，通过 `_embedded.author` 返回。
  */
 export interface WPUser {
-  /** User ID */
+  /** 用户 ID */
   id: number;
-  /** Display name */
+  /** 显示名称 */
   name: string;
-  /** Author archive URL */
+  /** 作者归档页 URL */
   url: string;
-  /** Biographical info */
+  /** 个人简介 */
   description: string;
-  /** Avatar URLs keyed by size (e.g. `"96": "https://..."`) */
+  /** 按尺寸索引的头像 URL（如 `"96": "https://..."`） */
   avatar_urls: Record<string, string>;
 }
 
 /**
- * Raw WordPress blog post as returned by the WP REST API.
- * The `_embedded` property is only present when `_embed=true` is added to the request.
+ * WP REST API 返回的原始 WordPress 博客文章。
+ * 仅当请求附加 `_embed=true` 时才会包含 `_embedded` 属性。
  */
 export interface WPPost {
-  /** Post ID */
+  /** 文章 ID */
   id: number;
-  /** ISO 8601 publication date (site timezone) */
+  /** ISO 8601 发布日期（站点时区） */
   date: string;
-  /** ISO 8601 publication date (GMT) */
+  /** ISO 8601 发布日期（GMT） */
   date_gmt: string;
-  /** ISO 8601 last-modified date (site timezone) */
+  /** ISO 8601 最后修改日期（站点时区） */
   modified: string;
-  /** ISO 8601 last-modified date (GMT) */
+  /** ISO 8601 最后修改日期（GMT） */
   modified_gmt: string;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Post status (`publish`, `draft`, etc.) */
+  /** 文章状态（`publish`、`draft` 等） */
   status: string;
-  /** Post type (`post`, `page`, `product`, etc.) */
+  /** 文章类型（`post`、`page`、`product` 等） */
   type: string;
-  /** Rendered title */
+  /** 渲染后的标题 */
   title: WPContent;
-  /** Rendered body content (HTML) */
+  /** 渲染后的正文内容（HTML） */
   content: WPContent;
-  /** Rendered excerpt */
+  /** 渲染后的摘要 */
   excerpt: WPExcerpt;
-  /** Author user ID */
+  /** 作者用户 ID */
   author: number;
-  /** Featured media attachment ID */
+  /** 特色媒体附件 ID */
   featured_media: number;
-  /** Array of category term IDs */
+  /** 分类术语 ID 数组 */
   categories: number[];
-  /** Array of tag term IDs */
+  /** 标签术语 ID 数组 */
   tags: number[];
-  /** Embedded related data (present when `_embed=true`) */
+  /** 内嵌的关联数据（仅当 `_embed=true` 时存在） */
   _embedded?: {
-    /** Embedded author(s) */
+    /** 内嵌作者 */
     author?: WPUser[];
-    /** Embedded featured image */
+    /** 内嵌特色图片 */
     "wp:featuredmedia"?: WPMedia[];
-    /** Embedded taxonomy terms (index 0 = categories, index 1 = tags) */
+    /** 内嵌分类术语（索引 0 = 分类，索引 1 = 标签） */
     "wp:term"?: (WPCategory[] | WPTag[])[];
   };
 }
 
 /**
- * Raw WordPress page as returned by the WP REST API.
- * Similar to {@link WPPost} but without categories/tags taxonomy fields.
+ * WP REST API 返回的原始 WordPress 页面。
+ * 与 {@link WPPost} 类似，但不含分类/标签等分类法字段。
  */
 export interface WPPage {
-  /** Page ID */
+  /** 页面 ID */
   id: number;
-  /** ISO 8601 publication date */
+  /** ISO 8601 发布日期 */
   date: string;
-  /** ISO 8601 last-modified date */
+  /** ISO 8601 最后修改日期 */
   modified: string;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Page status (`publish`, `draft`, etc.) */
+  /** 页面状态（`publish`、`draft` 等） */
   status: string;
-  /** Rendered title */
+  /** 渲染后的标题 */
   title: WPContent;
-  /** Rendered body content (HTML) */
+  /** 渲染后的正文内容（HTML） */
   content: WPContent;
-  /** Rendered excerpt */
+  /** 渲染后的摘要 */
   excerpt: WPExcerpt;
-  /** Author user ID */
+  /** 作者用户 ID */
   author: number;
-  /** Featured media attachment ID */
+  /** 特色媒体附件 ID */
   featured_media: number;
-  /** Embedded related data (present when `_embed=true`) */
+  /** 内嵌的关联数据（仅当 `_embed=true` 时存在） */
   _embedded?: {
-    /** Embedded author(s) */
+    /** 内嵌作者 */
     author?: WPUser[];
-    /** Embedded featured image */
+    /** 内嵌特色图片 */
     "wp:featuredmedia"?: WPMedia[];
   };
 }
 
 /**
- * Pagination metadata parsed from WordPress/WooCommerce response headers.
- *
- * Populated from the `X-WP-TotalPages` and `X-WP-Total` HTTP headers
- * that all WP/WC REST API endpoints return.
+ * 从 WordPress/WooCommerce 响应头解析出的分页元数据。
+ * 由所有 WP/WC REST 端点返回的 `X-WP-TotalPages` 与 `X-WP-Total` 头填充。
  */
 export interface WPPagination {
-  /** Total number of records across all pages */
+  /** 所有页记录总数 */
   total: number;
-  /** Total number of pages */
+  /** 总页数 */
   totalPages: number;
 }
 
 // ============================================================
-// WooCommerce Types (wc/v3 REST API + custom plugin fields)
+// WooCommerce 类型（wc/v3 REST API + 自定义插件字段）
 // ============================================================
 
 /**
- * WooCommerce product image.
- * Represents a single image in the product's `images` or `gallery` arrays.
+ * WooCommerce 产品图片。
+ * 表示产品 `images` 或 `gallery` 数组中的单张图片。
  */
 export interface WCProductImage {
-  /** Image attachment ID */
+  /** 图片附件 ID */
   id: number;
-  /** ISO 8601 creation date */
+  /** ISO 8601 创建日期 */
   date_created: string;
-  /** Absolute source URL */
+  /** 绝对源 URL */
   src: string;
-  /** Image name/title */
+  /** 图片名称/标题 */
   name: string;
-  /** Alt text for accessibility */
+  /** 用于无障碍的 alt 文本 */
   alt: string;
 }
 
 /**
- * WooCommerce product category.
- * Taxonomy: `product_cat` (hierarchical).
+ * WooCommerce 产品分类（taxonomy：product_cat，层级型）。
  */
 export interface WCProductCategory {
-  /** Term ID */
+  /** 术语 ID */
   id: number;
-  /** Display name (e.g. "Action Cameras") */
+  /** 显示名称（如 "Action Cameras"） */
   name: string;
-  /** URL-friendly slug */
+  /** URL 友好的 slug */
   slug: string;
 }
 
 /**
- * WooCommerce product tag.
- * Taxonomy: `product_tag` (non-hierarchical).
+ * WooCommerce 产品标签（taxonomy：product_tag，非层级型）。
  */
 export interface WCProductTag {
-  /** Term ID */
+  /** 术语 ID */
   id: number;
-  /** Display name (e.g. "Waterproof") */
+  /** 显示名称（如 "Waterproof"） */
   name: string;
-  /** URL-friendly slug */
+  /** URL 友好的 slug */
   slug: string;
 }
 
 /**
- * WooCommerce product attribute.
- * Used for specifications like sensor type, resolution, battery capacity, etc.
+ * WooCommerce 产品属性。
+ * 用于传感器类型、分辨率、电池容量等规格说明。
  */
 export interface WCProductAttribute {
-  /** Attribute ID */
+  /** 属性 ID */
   id: number;
-  /** Display name (e.g. "Sensor") */
+  /** 显示名称（如 "Sensor"） */
   name: string;
-  /** Sort position */
+  /** 排序位置 */
   position: number;
-  /** Whether visible on the product page */
+  /** 是否在产品页可见 */
   visible: boolean;
-  /** Whether this attribute is used for variations */
+  /** 是否用于变体 */
   variation: boolean;
-  /** Selected option values */
+  /** 选中的选项值 */
   options: string[];
 }
 
 /**
- * Raw WooCommerce product as returned by the WC REST API (wc/v3).
- * This is a simplified type covering the fields actually consumed by the frontend.
+ * WC REST API（wc/v3）返回的原始 WooCommerce 产品。
+ * 此为简化类型，仅覆盖前端实际消费到的字段。
  */
 export interface WCProduct {
-  /** Product ID */
+  /** 产品 ID */
   id: number;
-  /** Product name/title */
+  /** 产品名称/标题 */
   name: string;
-  /** URL-safe slug */
-  slug: string;
-  /** Full permalink on the WordPress site */
+  /** WordPress 站点上的完整永久链接 */
   permalink: string;
-  /** ISO 8601 creation date */
+  /** URL 安全的 slug */
+  slug: string;
+  /** ISO 8601 创建日期 */
   date_created: string;
-  /** ISO 8601 last-modified date */
+  /** ISO 8601 最后修改日期 */
   date_modified: string;
-  /** Product type */
+  /** 产品类型 */
   type: "simple" | "variable" | "grouped" | "external";
-  /** Product status (`publish`, `draft`, etc.) */
+  /** 产品状态（`publish`、`draft` 等） */
   status: string;
-  /** Whether the product is marked as featured */
+  /** 是否标记为推荐产品 */
   featured: boolean;
-  /** Full HTML description */
+  /** 完整 HTML 描述 */
   description: string;
-  /** Short plain-text excerpt */
+  /** 简短纯文本摘要 */
   short_description: string;
-  /** Stock Keeping Unit */
+  /** 库存单位（SKU） */
   sku: string;
-  /** Current display price (string to preserve precision) */
+  /** 当前展示价格（用字符串保留精度） */
   price: string;
-  /** Regular (non-sale) price */
+  /** 常规（非促销）价格 */
   regular_price: string;
-  /** Sale price (empty if not on sale) */
+  /** 促销价（无促销时为空） */
   sale_price: string;
-  /** Rendered price HTML (e.g. `<del>$199</del> <ins>$149</ins>`) */
+  /** 渲染后的价格 HTML（如 `<del>$199</del> <ins>$149</ins>`） */
   price_html: string;
-  /** Whether the product is currently on sale */
+  /** 产品当前是否在促销 */
   on_sale: boolean;
-  /** Whether the product can be purchased */
+  /** 产品是否可购买 */
   purchasable: boolean;
-  /** Cumulative sales count */
+  /** 累计销量 */
   total_sales: number;
-  /** Whether the product is virtual (no shipping) */
+  /** 是否为虚拟产品（无需发货） */
   virtual: boolean;
-  /** Whether the product is downloadable */
+  /** 是否可下载 */
   downloadable: boolean;
-  /** Product images (first = featured, rest = gallery) */
+  /** 产品图片（第一张为特色图，其余为图库） */
   images: WCProductImage[];
-  /** Product categories */
+  /** 产品分类 */
   categories: WCProductCategory[];
-  /** Product tags */
+  /** 产品标签 */
   tags: WCProductTag[];
-  /** Product attributes/specifications */
+  /** 产品属性/规格 */
   attributes: WCProductAttribute[];
-  /** Variation product IDs (for variable products) */
+  /** 变体产品 ID（针对可变产品） */
   variations: number[];
-  /** Related product IDs */
+  /** 关联产品 ID */
   related_ids: number[];
-  /** Custom meta data fields */
+  /** 自定义元数据字段 */
   meta_data: { id: number; key: string; value: unknown }[];
-  /** Stock availability status */
+  /** 库存可用状态 */
   stock_status: "instock" | "outofstock" | "onbackorder";
 }
 
 // ============================================================
-// Application Types (transformed for Next.js frontend consumption)
+// 应用层类型（经转换后供 Next.js 前端消费）
 // ============================================================
 
 /**
- * Lightweight blog post representation used in list views (blog index, category pages).
- * Contains only the fields needed for post cards/previews.
+ * 列表视图（博客首页、分类页）使用的轻量文章表示。
+ * 仅包含文章卡片/预览所需的字段。
  */
 export interface PostSummary {
-  /** Post ID */
+  /** 文章 ID */
   id: number;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Post title (plain text) */
+  /** 文章标题（纯文本） */
   title: string;
-  /** Short excerpt (HTML stripped) */
+  /** 简短摘要（已去除 HTML） */
   excerpt: string;
-  /** Featured image URL (nullable) */
+  /** 特色图片 URL（可为 null） */
   featuredImage: string | null;
-  /** Featured image alt text */
+  /** 特色图片 alt 文本 */
   featuredImageAlt: string;
-  /** Formatted publication date (e.g. "March 15, 2025") */
+  /** 格式化后的发布日期（如 "March 15, 2025"） */
   date: string;
-  /** Author display name */
+  /** 作者显示名称 */
   author: string;
-  /** Associated categories */
+  /** 关联的分类 */
   categories: { id: number; name: string; slug: string }[];
 }
 
 /**
- * Full blog post representation used on single post pages.
- * Includes full HTML content and all metadata needed for the detail view and SEO.
+ * 单篇文章页使用的完整文章表示。
+ * 包含完整 HTML 正文及详情页与 SEO 所需的全部元数据。
  */
 export interface PostDetail {
-  /** Post ID */
+  /** 文章 ID */
   id: number;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Post title (plain text) */
+  /** 文章标题（纯文本） */
   title: string;
-  /** Full body content (raw HTML from WordPress) */
+  /** 完整正文内容（来自 WordPress 的原始 HTML） */
   content: string;
-  /** Short excerpt (HTML stripped) */
+  /** 简短摘要（已去除 HTML） */
   excerpt: string;
-  /** Featured image URL (nullable) */
+  /** 特色图片 URL（可为 null） */
   featuredImage: string | null;
-  /** Featured image alt text */
+  /** 特色图片 alt 文本 */
   featuredImageAlt: string;
-  /** Formatted publication date */
+  /** 格式化后的发布日期 */
   date: string;
-  /** ISO 8601 last-modified date string */
+  /** ISO 8601 最后修改日期字符串 */
   modified: string;
-  /** Author display name */
+  /** 作者显示名称 */
   author: string;
-  /** Author avatar URL (96px) */
+  /** 作者头像 URL（96px） */
   authorAvatar: string;
-  /** Associated categories */
+  /** 关联的分类 */
   categories: { id: number; name: string; slug: string }[];
-  /** Associated tags */
+  /** 关联的标签 */
   tags: { id: number; name: string; slug: string }[];
 }
 
 /**
- * Full WordPress page representation used on static pages (About, Contact, etc.).
- * Contains HTML content and featured image for rendering.
+ * 静态页（关于、联系等）使用的完整 WordPress 页面表示。
+ * 包含渲染所需的 HTML 正文与特色图片。
  */
 export interface PageDetail {
-  /** Page ID */
+  /** 页面 ID */
   id: number;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Page title (plain text) */
+  /** 页面标题（纯文本） */
   title: string;
-  /** Full body content (raw HTML from WordPress) */
+  /** 完整正文内容（来自 WordPress 的原始 HTML） */
   content: string;
-  /** Short excerpt (HTML stripped) */
+  /** 简短摘要（已去除 HTML） */
   excerpt: string;
-  /** Featured image URL (nullable) */
+  /** 特色图片 URL（可为 null） */
   featuredImage: string | null;
-  /** ISO 8601 last-modified date string */
+  /** ISO 8601 最后修改日期字符串 */
   modified: string;
 }
 
 /**
- * Lightweight product representation used in product grid/list views.
- * Contains the fields needed for product cards (image, name, price, etc.).
+ * 产品网格/列表视图使用的轻量产品表示。
+ * 包含产品卡片（图片、名称、价格等）所需字段。
  */
 export interface ProductSummary {
-  /** Product ID */
+  /** 产品 ID */
   id: number;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Product name */
+  /** 产品名称 */
   name: string;
-  /** Short description (HTML stripped) */
+  /** 简短描述（已去除 HTML） */
   shortDescription: string;
-  /** Current display price (string for precision) */
+  /** 当前展示价格（用字符串保留精度） */
   price: string;
-  /** Regular (non-sale) price */
+  /** 常规（非促销）价格 */
   regularPrice: string;
-  /** Sale price (empty if not on sale) */
+  /** 促销价（无促销时为空） */
   salePrice: string;
-  /** Whether the product is on sale */
+  /** 产品是否在促销 */
   onSale: boolean;
-  /** Whether the product is featured */
+  /** 是否为推荐产品 */
   featured: boolean;
-  /** Primary product image URL (nullable) */
+  /** 主产品图片 URL（可为 null） */
   image: string | null;
-  /** Product image alt text */
+  /** 产品图片 alt 文本 */
   imageAlt: string;
-  /** Product categories */
+  /** 产品分类 */
   categories: WCProductCategory[];
-  /** Product tags */
+  /** 产品标签 */
   tags: WCProductTag[];
-  /** Stock availability (`instock`, `outofstock`, etc.) */
+  /** 库存可用状态（`instock`、`outofstock` 等） */
   stockStatus: string;
 }
 
 /**
- * Full product representation used on single product detail pages.
- * Includes full description HTML, gallery images, attributes, and related products.
+ * 单产品详情页使用的完整产品表示。
+ * 包含完整描述 HTML、图库图片、属性与关联产品。
  */
 export interface ProductDetail {
-  /** Product ID */
+  /** 产品 ID */
   id: number;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Product name */
+  /** 产品名称 */
   name: string;
-  /** Full HTML description (from WordPress editor) */
+  /** 完整 HTML 描述（来自 WordPress 编辑器） */
   description: string;
-  /** Short plain-text description */
+  /** 简短纯文本描述 */
   shortDescription: string;
-  /** Current display price */
+  /** 当前展示价格 */
   price: string;
-  /** Regular price */
+  /** 常规价格 */
   regularPrice: string;
-  /** Sale price */
+  /** 促销价 */
   salePrice: string;
-  /** Rendered price HTML (e.g. with sale strikethrough) */
+  /** 渲染后的价格 HTML（含促销删除线等） */
   priceHtml: string;
-  /** Whether the product is on sale */
+  /** 产品是否在促销 */
   onSale: boolean;
-  /** Stock Keeping Unit */
+  /** 库存单位（SKU） */
   sku: string;
-  /** All product images (featured + gallery combined) */
+  /** 全部产品图片（特色图 + 图库合并） */
   images: WCProductImage[];
-  /** Gallery images (excluding featured) */
+  /** 图库图片（不含特色图） */
   gallery: WCProductImage[];
-  /** Product categories */
+  /** 产品分类 */
   categories: WCProductCategory[];
-  /** Product tags */
+  /** 产品标签 */
   tags: WCProductTag[];
-  /** Product specifications/attributes */
+  /** 产品规格/属性 */
   attributes: WCAttribute[];
-  /** Related product IDs */
+  /** 关联产品 ID */
   relatedIds: number[];
-  /** Stock availability status */
+  /** 库存可用状态 */
   stockStatus: string;
-  /** ISO 8601 last-modified date string */
+  /** ISO 8601 最后修改日期字符串 */
   dateModified: string;
 }
 
 /**
- * Simplified product attribute used in the application layer.
- * Flattened from {@link WCProductAttribute} — each attribute maps to a single
- * name/slug/value tuple rather than containing an options array.
+ * 应用层使用的简化产品属性。
+ * 由 {@link WCProductAttribute} 展平而来 —— 每个属性映射为单个
+ * name/slug/value 元组，而非包含 options 数组。
  */
 export interface WCAttribute {
-  /** Attribute name (e.g. "Sensor") */
+  /** 属性名称（如 "Sensor"） */
   name: string;
-  /** URL-safe slug */
+  /** URL 安全的 slug */
   slug: string;
-  /** Attribute value (e.g. "1/2.3-inch CMOS") */
+  /** 属性值（如 "1/2.3-inch CMOS"） */
   value: string;
 }
 
 // ============================================================
-// SEO Types
+// SEO 类型
 // ============================================================
 
 /**
- * A single breadcrumb item used for UI rendering and Schema.org BreadcrumbList.
- * The last item in a trail typically omits the `href` since it represents the current page.
+ * 用于 UI 渲染与 Schema.org BreadcrumbList 的单个面包屑项。
+ * 路径中最后一项通常省略 `href`，因其代表当前页。
  */
 export interface BreadcrumbItem {
-  /** Display label */
+  /** 显示标签 */
   label: string;
-  /** Destination URL (omit for the current page) */
+  /** 目标 URL（当前页省略） */
   href?: string;
 }
 
 /**
- * Generic Schema.org JSON-LD structured data object.
- * The `@context` and `@type` fields are required; additional properties are
- * added via an index signature to support all Schema.org types.
+ * 通用 Schema.org JSON-LD 结构化数据对象。
+ * `@context` 与 `@type` 为必填字段；其余属性通过索引签名支持
+ * 所有 Schema.org 类型。
  */
 export interface StructuredData {
-  /** JSON-LD context (always `"https://schema.org"`) */
+  /** JSON-LD 上下文（恒为 `"https://schema.org"`） */
   "@context": string;
-  /** Schema.org type (e.g. `"Article"`, `"Product"`, `"BreadcrumbList"`) */
+  /** Schema.org 类型（如 `"Article"`、`"Product"`、`"BreadcrumbList"`） */
   "@type": string;
-  /** Any additional Schema.org properties */
+  /** 其余任意 Schema.org 属性 */
   [key: string]: unknown;
 }
 
 // ============================================================
-// Sitemap Types
+// Sitemap 类型
 // ============================================================
 
 /**
- * A single entry in the XML sitemap.
- * Follows the sitemaps.org protocol with optional change frequency and priority.
+ * XML sitemap 中的单个条目。
+ * 遵循 sitemaps.org 协议，含可选的更新频率与优先级。
  */
 export interface SitemapEntry {
-  /** Absolute URL of the page */
+  /** 页面绝对 URL */
   url: string;
-  /** Last modification date (ISO string or Date object) */
+  /** 最后修改日期（ISO 字符串或 Date 对象） */
   lastModified?: string | Date;
-  /** How frequently the page is likely to change */
+  /** 页面预计的变更频率 */
   changeFrequency?: "always" | "hourly" | "daily" | "weekly" | "monthly" | "yearly" | "never";
-  /** Priority relative to other URLs on the site (0.0 – 1.0) */
+  /** 站内相对其他 URL 的优先级（0.0 – 1.0） */
   priority?: number;
 }

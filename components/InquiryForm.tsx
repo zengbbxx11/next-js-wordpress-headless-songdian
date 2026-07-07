@@ -2,6 +2,13 @@
 
 import { useState, type FormEvent } from "react";
 
+/**
+ * InquiryForm — 产品咨询表单（简化版，components 根目录）
+ * ------------------------------------------------------------------
+ * 客户端组件。受控于本地 state 管理提交/加载状态，提交为模拟请求（1 秒延迟）。
+ * 用于产品详情页等场景，可携带 productName / productSku 作为隐藏字段。
+ */
+
 interface InquiryFormProps {
   productName?: string;
   productSku?: string;
@@ -18,6 +25,7 @@ export default function InquiryForm({ productName, productSku, className = "" }:
 
     const _formData = new FormData(e.currentTarget);
     try {
+      // 模拟提交请求：生产环境应替换为对后端 / WP REST API 的真实调用
       await new Promise((r) => setTimeout(r, 1000));
       setSubmitted(true);
     } catch {

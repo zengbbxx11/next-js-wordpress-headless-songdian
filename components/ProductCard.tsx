@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：CTA 按钮 hover 颜色切换依赖内联事件处理器
 import Link from "next/link";
 import type { ProductSummary } from "@/lib/types";
 

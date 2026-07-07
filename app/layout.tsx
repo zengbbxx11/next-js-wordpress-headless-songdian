@@ -1,3 +1,14 @@
+/*
+ * 文件：app/layout.tsx（根布局 / Root Layout）
+ * 职责：全站根布局，包裹所有页面。负责字体加载（Geist Sans/Mono）、
+ *       全局 SEO 元信息与 JSON-LD（Organization + WebSite）、
+ *       以及持久化 UI 外壳（Header → main → Footer → FloatingInquiry）。
+ * 数据来源：本地常量与工具 —— COMPANY（@/lib/content-data）、MEDIA（@/lib/media）、
+ *           organizationSchema()/webSiteSchema()（@/lib/seo）；不直接请求 WP REST API。
+ * 渲染方式：服务端组件（Root Layout，随请求渲染，非独立 SSG/ISR）。
+ * 是否含 client 组件：是 —— Header、Footer、FloatingInquiry 内部包含交互/客户端组件。
+ */
+
 /**
  * RootLayout — Songdian Technology B2B Website
  * ------------------------------------------------------------------
@@ -160,18 +171,18 @@ export default function RootLayout({
 
   return (
     // ------------------------------------------------------------------
-    // <html> tag: sets lang="en" for accessibility + SEO, attaches font CSS variables,
-    // and enables Tailwind's antialiased smoothing
+    // <html> 标签：设置 lang="en" 以利无障碍与 SEO，挂载字体 CSS 变量，
+    // 并启用 Tailwind 的抗锯齿平滑渲染
     // ------------------------------------------------------------------
     <html lang="en" className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
       <head>
-        {/* JSON-LD structured data — injected for Google rich snippets */}
-        {/* Organization schema: name, logo, URL, sameAs social profiles */}
+        {/* JSON-LD 结构化数据 —— 注入供 Google 富媒体结果使用 */}
+        {/* Organization 架构：名称、Logo、URL、sameAs 社交档案 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(orgSchema) }}
         />
-        {/* WebSite schema: enables sitelinks search box in Google results */}
+        {/* WebSite 架构：启用 Google 搜索结果中的站内搜索框 */}
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
@@ -184,22 +195,22 @@ export default function RootLayout({
         */}
         {/* next-super-meta 自动注入 SEO 元标签 */}
       </head>
-      {/* Body: vertical flex column to push footer to the bottom; white bg, dark text */}
+      {/* Body：纵向 flex 列布局，将页脚推到底部；白底深字 */}
       <body className="min-h-screen flex flex-col bg-white text-gray-900">
-        {/* Site-wide navigation header */}
+        {/* 站点级导航页头 */}
         <Header />
 
         {/*
-          Main content area:
-          - flex-1 pushes the footer to the bottom on short pages
-          - pt-14 matches the Tesla-style fixed header height (h-14 = 56px)
+          主内容区：
+          - flex-1 将页脚推至底部署短页面
+          - pt-14 匹配 Tesla 风格固定页头高度（h-14 = 56px）
         */}
         <main className="flex-1 pt-14 pb-14">{children}</main>
 
-        {/* Site-wide footer with company info, links, and copyright */}
+        {/* 站点级页脚：公司信息、链接与版权 */}
         <Footer />
 
-        {/* Floating inquiry button — sticky widget visible on all pages */}
+        {/* 浮动询盘按钮 —— 全站可见的常驻组件 */}
         <FloatingInquiry />
       </body>
     </html>

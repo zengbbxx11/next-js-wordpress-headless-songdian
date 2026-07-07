@@ -1,5 +1,12 @@
 "use client";
 
+/**
+ * 询盘表单（完整版，components/form 目录）
+ * ------------------------------------------------------------------
+ * 客户端组件。基于 react-hook-form + zod 校验 + next-safe-form 提交。
+ * 字段包含姓名/邮箱/电话/公司/产品类型/数量/留言/偏好联系方式，提交成功后弹窗提示并重置。
+ */
+
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
@@ -25,6 +32,7 @@ const preferredContactOptions = [
   { label: "Phone", value: "phone" },
 ];
 
+// zod 校验规则：姓名至少 2 字符、邮箱格式正确、留言至少 10 字符、产品类型为必填
 const inquirySchema = z.object({
   fullName: z.string().min(2, "姓名至少需要 2 个字符"),
   email: z.string().email("请输入有效的邮箱地址"),
@@ -38,6 +46,7 @@ const inquirySchema = z.object({
 
 type InquiryFormValues = z.infer<typeof inquirySchema>;
 
+// next-safe-form action：模拟后端提交（延迟 500ms 后返回数据）
 const submitInquiry = createSafeAction({
   schema: inquirySchema,
   handler: async (data) => {
@@ -67,6 +76,7 @@ export default function InquiryForm() {
     },
   });
 
+  // 提交处理：组装 FormData 并调用安全 action，成功后提示并重置表单
   const onSubmit = async (values: InquiryFormValues) => {
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {

@@ -17,8 +17,10 @@
  *     Icons /    ← 页面图标
  */
 
+// WordPress 媒体库基础 URL（来自环境变量，开发环境回退到 localhost:10004）
 const WP_BASE = process.env.NEXT_PUBLIC_WP_URL || "http://localhost:10004";
 
+// 根据上传年月目录与文件名拼接 WordPress 媒体文件的完整 URL
 function wpFile(yearMonth: string, filename: string): string {
   return `${WP_BASE}/wp-content/uploads/${yearMonth}/${filename}`;
 }
@@ -36,6 +38,9 @@ export const MEDIA = {
 
   /** ── FileBird: Website/OG ── */
   ogImage: wpFile("2026/07", "og-image.jpg"),
+
+  /** ── 工厂宣传视频（WordPress 媒体库上传） ── */
+  factoryVideo: wpFile("2026/07", "SongdianFactoryVideo.mp4"),
 
   /** ── FileBird: Website/Icons ── */
   icons: {

@@ -1,16 +1,18 @@
-/**
- * Homepage — Tesla Design System
- * ------------------------------------------------------------------
- * Async Server Component with ISR (60s revalidate).
+/*
+ * 文件：app/page.tsx（首页 / Homepage）
+ * 职责：网站首页，聚合展示信任条、产品分类、精选产品、核心优势与最新资讯，并引导询盘。
+ * 数据来源（WP REST API）：
+ *   - getPosts()            → WP 文章（新闻）列表
+ *   - getProducts()         → WP 产品列表（经 WP REST API，无需 WooCommerce Key）
+ *   - getProductCategories()→ WP 产品分类
+ *   - getSiteBanner()       → WP 站点 Banner 图
+ * 渲染方式：Async Server Component + ISR（revalidate = 60 秒）。
+ * 是否含 client 组件：是 —— HeroSection、AnimatedSection、ProductCard、PostCard 为客户端动效组件。
  *
- * Sections:
- *   1. Hero — via HeroSection (already Tesla-styled)
- *   2. Trust Strip — Pewter text, EEEEEE separators
- *   3. Product Categories — No shadow, no scale hover, light border
- *   4. Featured Products — via ProductCard (Tesla-styled)
- *   5. Why Choose Us — No shadow hover
- *   6. Latest News — via PostCard (Tesla-styled)
- *   7. CTA — Carbon Dark bg, Electric Blue CTA
+ * 页面区块（Section）：
+ *   1. 首屏 Hero   2. 信任条 Trust Strip   3. 产品分类 Product Categories
+ *   4. 精选产品 Featured Products   5. 核心优势 Why Choose Us
+ *   6. 最新资讯 Latest News   7. 行动号召 CTA
  */
 
 import Link from "next/link";
@@ -28,6 +30,7 @@ export const metadata = await superMeta({
   url: "/",
 });
 
+// ISR 重新验证间隔（秒）：每 60 秒重新生成首页，平衡内容实时性与性能
 export const revalidate = 60;
 
 export default async function HomePage() {
@@ -54,10 +57,10 @@ export default async function HomePage() {
 
   return (
     <>
-      {/* Section 1 — Hero */}
+      {/* 区块 1 — 首屏 Hero */}
       <HeroSection bannerUrl={bannerUrl || undefined} />
 
-      {/* Section 2 — Trust Strip */}
+      {/* 区块 2 — 信任条 Trust Strip */}
       <section className="py-10" style={{ borderBottom: "1px solid #EEEEEE", backgroundColor: "#FFFFFF" }}>
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4" style={{ fontSize: "14px", color: "#5C5E62" }}>
@@ -72,7 +75,7 @@ export default async function HomePage() {
         </div>
       </section>
 
-      {/* Section 3 — Product Categories */}
+      {/* 区块 3 — 产品分类 Product Categories */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -106,7 +109,7 @@ export default async function HomePage() {
       </section>
       </AnimatedSection>
 
-      {/* Section 4 — Featured Products */}
+      {/* 区块 4 — 精选产品 Featured Products */}
       {hasWooCommerce && (
         <AnimatedSection>
         <section className="py-16 md:py-24 bg-gray-50">
@@ -137,7 +140,7 @@ export default async function HomePage() {
         </AnimatedSection>
       )}
 
-      {/* Section 5 — Why Choose Us */}
+      {/* 区块 5 — 核心优势 Why Choose Us */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -165,7 +168,7 @@ export default async function HomePage() {
       </section>
       </AnimatedSection>
 
-      {/* Section 6 — Latest News */}
+      {/* 区块 6 — 最新资讯 Latest News */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-7xl mx-auto px-6">
@@ -202,7 +205,7 @@ export default async function HomePage() {
       </section>
       </AnimatedSection>
 
-      {/* Section 7 — CTA */}
+      {/* 区块 7 — 行动号召 CTA */}
       <AnimatedSection>
       <section className="py-16 md:py-24" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6 text-center">

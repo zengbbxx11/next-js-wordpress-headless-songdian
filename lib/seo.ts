@@ -13,9 +13,6 @@
  * - Product（WooCommerce 产品）
  * - FAQPage（常见问题页面）
  * - LocalBusiness / Manufacturer（本地商家/制造商）
- *
- * @module seo
- * @package Songdian Technology — Next.js WordPress Headless B2B Website
  */
 
 import type { BreadcrumbItem, StructuredData } from "@/lib/types";
@@ -30,7 +27,7 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
 // ============================================================
 
 /**
- * 生成语义面包屑路径，用于 UI 渲染和 Schema.org
+ * 生成语义面包屑路径，用于 UI 渲染与 Schema.org
  * BreadcrumbList 结构化数据。"首页"面包屑始终自动前置。
  *
  * @example
@@ -42,8 +39,8 @@ const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
  * // => [{ label: "首页", href: "/" }, { label: "博客", href: "/blog" }, { label: "我的文章" }]
  * ```
  *
- * @param items - 面包屑分段数组；最后一项通常不包含 `href`
- * @returns 包含前置"首页"的 {@link BreadcrumbItem} 数组
+ * @param items - 面包屑分段数组；最后一项通常不含 `href`
+ * @returns 含前置"首页"的 {@link BreadcrumbItem} 数组
  */
 export function generateBreadcrumbs(
   items: { label: string; href?: string }[]
@@ -59,8 +56,8 @@ export function generateBreadcrumbs(
 // ============================================================
 
 /**
- * 生成 Organization Schema.org 结构化数据对象。
- * 用于首页和全局站点元数据中标识公司实体。
+ * 生成 Organization（组织）Schema.org 结构化数据对象。
+ * 用于首页与全局站点元数据中标识公司实体。
  *
  * @returns 符合 https://schema.org/Organization 的 {@link StructuredData} 对象
  */
@@ -85,8 +82,8 @@ export function organizationSchema(): StructuredData {
 }
 
 /**
- * 生成带有站点链接搜索框的 WebSite Schema.org 结构化数据对象。
- * 为博客搜索功能启用 Google 的站点链接搜索框功能。
+ * 生成带站点链接搜索框的 WebSite Schema.org 结构化数据对象。
+ * 为博客搜索功能启用 Google 的站点链接搜索框（sitelinks searchbox）。
  *
  * @returns 符合 https://schema.org/WebSite 的 {@link StructuredData} 对象
  */
@@ -105,8 +102,8 @@ export function webSiteSchema(): StructuredData {
 }
 
 /**
- * 生成 BreadcrumbList Schema.org 结构化数据对象。
- * 每个面包屑项映射为带有位置编号的 ListItem。
+ * 生成 BreadcrumbList（面包屑列表）Schema.org 结构化数据对象。
+ * 每个面包屑项映射为带位置编号的 ListItem。
  *
  * @param items - 面包屑项（通常来自 {@link generateBreadcrumbs}）
  * @returns 符合 https://schema.org/BreadcrumbList 的 {@link StructuredData} 对象
@@ -135,7 +132,7 @@ export function breadcrumbSchema(items: BreadcrumbItem[]): StructuredData {
  * @param params.datePublished - ISO 8601 发布日期
  * @param params.dateModified  - ISO 8601 最后修改日期
  * @param params.author        - 作者显示名称
- * @param params.url           - 相对于站点根目录的文章路径（例如 `/blog/my-post`）
+ * @param params.url           - 相对于站点根目录的文章路径（如 `/blog/my-post`）
  * @returns 符合 https://schema.org/Article 的 {@link StructuredData} 对象
  */
 export function articleSchema(params: {
@@ -172,16 +169,16 @@ export function articleSchema(params: {
 }
 
 /**
- * 为 WooCommerce 产品页面生成 Product Schema.org 结构化数据对象。
- * offer 使用 `businessFunction: ProvideService` 来反映 B2B 询盘模式
- *（价格通过报价获取，而非直接结账）。
+ * 为 WooCommerce 产品页生成 Product Schema.org 结构化数据对象。
+ * offer 使用 `businessFunction: ProvideService` 以体现 B2B 询盘模式
+ *（价格通过报价获取，而非直接下单结算）。
  *
  * @param params - 产品元数据
  * @param params.name        - 产品显示名称
  * @param params.description - 产品描述（纯文本或 HTML）
- * @param params.image       - 主要产品图片绝对 URL（可为 null）
+ * @param params.image       - 主产品图片绝对 URL（可为 null）
  * @param params.sku         - 产品 SKU（可为 null）
- * @param params.url         - 相对于站点根目录的产品路径（例如 `/products/my-camera`）
+ * @param params.url         - 相对于站点根目录的产品路径（如 `/products/my-camera`）
  * @returns 符合 https://schema.org/Product 的 {@link StructuredData} 对象
  */
 export function productSchema(params: {
@@ -216,7 +213,7 @@ export function productSchema(params: {
 
 /**
  * 生成 FAQPage Schema.org 结构化数据对象。
- * 每个 FAQ 条目变为一个带有 acceptedAnswer 的 Question。
+ * 每个 FAQ 条目变为一个带 acceptedAnswer 的 Question。
  *
  * @param faqs - 问题/答案对数组
  * @returns 符合 https://schema.org/FAQPage 的 {@link StructuredData} 对象
@@ -237,8 +234,8 @@ export function faqSchema(faqs: { question: string; answer: string }[]): Structu
 }
 
 /**
- * 生成 Manufacturer（LocalBusiness）Schema.org 结构化数据对象。
- * 为本地 SEO 提供公司的物理地址和联系详情。
+ * 生成 Manufacturer（本地商家）Schema.org 结构化数据对象。
+ * 为本地 SEO 提供公司的实体地址与联系详情。
  *
  * @returns 符合 https://schema.org/Manufacturer 的 {@link StructuredData} 对象
  */

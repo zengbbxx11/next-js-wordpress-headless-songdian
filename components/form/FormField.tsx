@@ -6,6 +6,13 @@ import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { cn } from "@/lib/utils";
 
+/**
+ * FormField — 基于 react-hook-form 的通用表单字段
+ * ------------------------------------------------------------------
+ * 客户端组件。封装 Label + Input/Textarea + 错误信息，受控于 react-hook-form 的 registration。
+ * 校验错误时使用品牌红 #3E6AE1 高亮边框与提示文字。
+ */
+
 interface FormFieldProps {
   label: string;
   error?: FieldError;

@@ -1,5 +1,13 @@
 "use client";
 
+/*
+ * AnimatedSection —— 滚动触发的入场动画包装组件（项目自定义）
+ * 基于 framer-motion 的 whileInView，当元素滚动进入视口时淡入并滑入。
+ * - 通过 direction 控制滑入方向（上/下/左/右/无），delay 支持错位动画。
+ * - 尊重系统“减少动态效果”偏好：开启时直接无动画渲染，保证可访问性。
+ * - viewport={{ once: true }} 保证动画仅触发一次。
+ */
+
 import { motion, useReducedMotion } from "framer-motion";
 import type { ReactNode } from "react";
 

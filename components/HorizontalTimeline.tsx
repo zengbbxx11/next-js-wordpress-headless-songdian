@@ -1,5 +1,6 @@
 "use client";
 
+// 客户端组件：framer-motion 进场动画依赖浏览器，且需读取偏好设置
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import {
   Flag,

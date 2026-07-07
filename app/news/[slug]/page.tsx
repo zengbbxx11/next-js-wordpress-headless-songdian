@@ -1,5 +1,12 @@
-/**
- * 新闻文章详情页面 — Tesla Design System
+/*
+ * 文件：app/news/[slug]/page.tsx（新闻文章详情 / News Detail）
+ * 职责：单篇文章详情页，含面包屑、正文、标签、相关文章与 JSON-LD（articleSchema）。
+ * 数据来源（WP REST API）：
+ *   - getPostBySlug(slug) → 单篇文章
+ *   - getAllPostSlugs()   → 文章 slug 列表（用于 SSG 预渲染）
+ *   - getPosts()          → 同类相关文章
+ * 渲染方式：Async Server Component + ISR（revalidate = 60 秒）+ generateStaticParams 预生成。
+ * 是否含 client 组件：否。
  */
 
 import Link from "next/link";
@@ -11,13 +18,16 @@ import { generateBreadcrumbs, articleSchema } from "@/lib/seo";
 import { formatDate } from "@/lib/wordpress";
 import { cleanPostContent } from "@/lib/html-cleaner";
 
+// ISR 重新验证间隔（秒）：每 60 秒重新生成文章详情
 export const revalidate = 60;
 
+// 预生成所有文章静态路径（SSG）：从 WP 拉取全部文章 slug
 export async function generateStaticParams() {
   const slugs = await getAllPostSlugs();
   return slugs.map((slug) => ({ slug }));
 }
 
+// 动态生成该文章的 SEO 元信息（title / description / canonical / Open Graph）
 export async function generateMetadata({
   params,
 }: {
@@ -61,6 +71,7 @@ export default async function NewsDetailPage({
     author: post.author, url: `/news/${slug}`,
   });
 
+  // 获取同类相关文章（取首个分类，最多 4 篇，失败时忽略）
   let relatedPosts: Awaited<ReturnType<typeof getPosts>> = { posts: [], pagination: { total: 0, totalPages: 0 } };
   if (post.categories.length > 0) {
     try { relatedPosts = await getPosts({ categoryId: post.categories[0].id, perPage: 4 }); } catch { /* ignore */ }
@@ -99,7 +110,7 @@ export default async function NewsDetailPage({
         </div>
       </section>
 
-      {/* Article Body */}
+      {/* 文章正文 */}
       <article className="bg-white pt-8 md:pt-10 pb-16 md:pb-20">
         <div className="max-w-3xl mx-auto px-6">
 
@@ -118,7 +129,7 @@ export default async function NewsDetailPage({
 
           <div className="wp-content" dangerouslySetInnerHTML={{ __html: cleanPostContent(post.content) }} />
 
-          {/* Tags — #F4F4F4 bg, #5C5E62 text */}
+          {/* 标签 —— 背景 #F4F4F4、文字 #5C5E62 */}
           {post.tags.length > 0 && (
             <div className="flex flex-wrap gap-2 mt-14 pt-10 border-t border-[#EEEEEE]">
               {post.tags.map((tag) => (
@@ -133,7 +144,7 @@ export default async function NewsDetailPage({
             </div>
           )}
 
-          {/* Back to News — blue link */}
+          {/* 返回资讯列表 —— 蓝色链接 */}
           <div className="mt-12">
             <Link
               href="/news"
@@ -149,7 +160,7 @@ export default async function NewsDetailPage({
         </div>
       </article>
 
-      {/* Related Posts */}
+      {/* 相关文章 */}
       {related.length > 0 && (
         <section className="py-16 md:py-20 bg-gray-50 border-t border-[#EEEEEE]">
           <div className="max-w-5xl mx-auto px-6">

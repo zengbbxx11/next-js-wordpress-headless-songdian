@@ -1,5 +1,10 @@
-/**
- * 联系页面 — Tesla Design System
+/*
+ * 文件：app/contact/page.tsx（联系我们 / Contact）
+ * 职责：联系方式展示 + 询盘表单，含公司地址/邮箱/电话、询盘须知与 Google 地图。
+ * 数据来源：本地常量 COMPANY、INQUIRY_GUIDE（@/lib/content-data）；
+ *           localBusinessSchema()（@/lib/seo）；表单提交由 InquiryForm 处理。
+ * 渲染方式：静态生成 + ISR（revalidate = 3600 秒）。
+ * 是否含 client 组件：是 —— InquiryForm 为客户端表单组件。
  */
 
 import { superMeta } from "next-super-meta";
@@ -16,6 +21,7 @@ export const metadata = await superMeta({
   url: "/contact",
 });
 
+// ISR 重新验证间隔（秒）：静态内容每小时刷新一次
 export const revalidate = 3600;
 
 export default function ContactPage() {
@@ -29,19 +35,19 @@ export default function ContactPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(businessSchema) }}
       />
 
-      {/* Hero — 仅面包屑 */}
+      {/* 首屏 Hero —— 仅含面包屑 */}
       <section className="py-5" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6">
           <Breadcrumbs items={breadcrumbs} variant="dark" />
         </div>
       </section>
 
-      {/* Main Content */}
+      {/* 主内容区 */}
       <section className="py-12 md:py-20 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="grid grid-cols-1 lg:grid-cols-5 gap-10 lg:gap-16">
 
-            {/* Left Column */}
+            {/* 左栏 */}
             <div className="lg:col-span-2">
               <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-6">Contact Information</h2>
 
@@ -89,7 +95,7 @@ export default function ContactPage() {
                 </CardContent>
               </Card>
 
-              {/* Inquiry Guide */}
+              {/* 询盘指引 */}
               <Card className="bg-gray-50 border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
                 <CardContent>
                   <h3 className="text-sm font-semibold text-gray-900 mb-3">What to Include</h3>
@@ -110,7 +116,7 @@ export default function ContactPage() {
               </Card>
             </div>
 
-            {/* Right Column — Inquiry Form */}
+            {/* 右栏 —— 询盘表单 */}
             <div className="lg:col-span-3">
               <InquiryForm />
             </div>
@@ -118,7 +124,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Google Map */}
+      {/* Google 地图 */}
       <section className="py-4 bg-gray-50 border-t border-[#EEEEEE]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="aspect-[21/9] overflow-hidden bg-gray-200 border border-[#D0D1D2]" style={{ borderRadius: "12px" }}>
