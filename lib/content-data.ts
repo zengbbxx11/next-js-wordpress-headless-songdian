@@ -19,15 +19,15 @@ export const COMPANY = {
   tagline: "Digital Camera OEM/ODM Manufacturer",
   /** SEO meta 描述和简介段落 */
   description:
-    "A leading OEM/ODM digital camera manufacturer with 19 years of industry expertise. 30+ new products annually, 8,000 units daily output, and 500+ patents — serving global brands across 50+ countries.",
-  /** 公司成立年份 */
-  founded: 2010,
-  /** 员工数量范围 */
-  employees: "500-1,000",
-  /** 工厂面积范围 */
-  factorySize: "10,000-30,000 m²",
-  /** 最大日产能 */
-  dailyOutput: "8,000+ units",
+    "A leading OEM/ODM digital camera manufacturer with 20 years of industry expertise. 30+ new products annually, 10 million units annual output, and 500+ patents — serving global brands across 60+ countries.",
+  /** 公司成立年份（集团母公司深圳 Sonida 创立于 2006 年） */
+  founded: 2006,
+  /** 员工数量 */
+  employees: "1,000+",
+  /** 工厂面积 */
+  factorySize: "40,000 m²",
+  /** 最大年产能 */
+  annualOutput: "10M+ units/year",
   /** 每年发布的新产品数量 */
   annualProducts: "30+",
   /** 注册专利总数 */
@@ -80,7 +80,7 @@ export const HERO = {
   /** 主 Hero 标题（首页的 H1） */
   title: "Your Trusted Digital Camera Manufacturer",
   /** 标题下方的支持性段落 */
-  subtitle: "19 years of OEM/ODM expertise. 30+ new products annually, 8,000 units daily output, and 500+ patents. Premium digital cameras designed and manufactured for global brands.",
+  subtitle: "20 years of OEM/ODM expertise. 30+ new products annually, 10 million units annual output, and 500+ patents. Premium digital cameras designed and manufactured for global brands.",
   /** 行动号召按钮配置 */
   cta: {
     /** 主要（高亮）CTA */
@@ -102,9 +102,9 @@ export const TRUST_ITEMS = [
   /** ISO 9001 质量管理认证 */
   { icon: "shield", text: "ISO 9001 Certified" },
   /** 日产能 */
-  { icon: "lightning", text: "8,000 Units/Day Capacity" },
+  { icon: "lightning", text: "10M Units/Year Capacity" },
   /** 全球市场覆盖 */
-  { icon: "globe", text: "50+ Countries Served" },
+  { icon: "globe", text: "60+ Countries Served" },
   /** 专利组合 */
   { icon: "trophy", text: "500+ Patents" },
 ] as const;
@@ -151,6 +151,30 @@ export const PRODUCT_CATEGORIES = [
 ] as const;
 
 // ============================================================
+// 全球 ODM 合作伙伴（首页）
+// ============================================================
+
+/**
+ * 首页"Global ODM Partners"区域内容。
+ * 展示全球出口网络（地图+辐射箭头）与国际合作品牌 Logo 墙。
+ */
+export const GLOBAL_ODM = {
+  /** 区块主标题 */
+  title: "Global ODM Partners",
+  /** 品牌红 eyebrow 标签 */
+  eyebrow: "Global Reach",
+  /** 核心标语（主标语） */
+  tagline: "World-Class Quality, Certified Excellence",
+  /** 核心标语（副标语） */
+  taglineSecondary: "Proven Partner for Global Imaging Brands",
+  /** 出口国家/地区描述 */
+  exportDescription:
+    "Products exported to 60+ countries/regions including US, Japan, Europe, Australia, Middle East, South Africa, Thailand, Mexico, Indonesia, South America, Russia, and Central Asia.",
+  /** ODM 服务合作品牌列表（用于文字展示 + 结构化数据） */
+  brands: ["Konica Minolta", "Kenko", "Rollei", "YASHICA", "aiwa", "ILFORD", "B+H", "Gripo", "AKITO"],
+} as const;
+
+// ============================================================
 // 为什么选择我们（首页）
 // ============================================================
 
@@ -160,16 +184,16 @@ export const PRODUCT_CATEGORIES = [
  */
 export const STRENGTHS = [
   {
-    title: "19 Years of Expertise",
-    description: "Since 2010, we've been dedicated to digital camera R&D and manufacturing. Our veteran engineering team delivers products that win markets.",
+    title: "20 Years of Expertise",
+    description: "Since 2006, we've been dedicated to digital camera R&D and manufacturing. Our veteran engineering team delivers products that win markets.",
   },
   {
     title: "30+ New Products Annually",
     description: "Fast-paced innovation cycle — we launch over 30 new models each year, keeping your product lineup fresh and competitive.",
   },
   {
-    title: "8,000 Units Daily Output",
-    description: "10 production lines across 10,000-30,000 m² facility. Daily capacity of 8,000 units ensures timely delivery at any scale.",
+    title: "10M Units Annual Output",
+    description: "10 production lines across 40,000 m² facility. Annual capacity of 10 million units ensures timely delivery at any scale.",
   },
   {
     title: "500+ Patents",
@@ -204,7 +228,7 @@ export const SERVICES = [
     subtitle: "Build to Your Specification",
     /** 概述段落 */
     summary:
-      "Hand us your product specifications, BOM, and branding requirements — we handle everything from component sourcing and PCB assembly to firmware flashing, QC testing, and custom packaging. 10 production lines, 8,000 units daily output.",
+      "Hand us your product specifications, BOM, and branding requirements — we handle everything from component sourcing and PCB assembly to firmware flashing, QC testing, and custom packaging. 10 production lines, 10 million units annual output.",
     /** 主要功能/交付物 */
     features: [
       "Full BOM procurement and supply chain management",
@@ -213,7 +237,7 @@ export const SERVICES = [
       "Custom enclosure with your logo and color scheme",
       "Retail-ready packaging with your brand design",
       "100% functional QC with detailed inspection reports",
-      "Daily capacity of 8,000 units for rapid fulfillment",
+      "Annual capacity of 10 million units for rapid fulfillment",
     ],
   },
   {
@@ -283,7 +307,7 @@ export const FAQS = [
       {
         question: "How do you prove your factory's strength?",
         answer:
-          "We have 19 years of experience, an in-house R&D team, and hold certifications like ISO 9001, CE, RoHS, FCC, Sedex. We serve as a long-term manufacturing partner for brands like Minolta, Rollei and Kenko.",
+          "We have 20 years of experience, an in-house R&D team, and hold certifications like ISO 9001, CE, RoHS, FCC, Sedex. We serve as a long-term manufacturing partner for brands like Minolta, Rollei and Kenko.",
       },
       {
         question: "What is your quality control process?",
@@ -372,7 +396,7 @@ export const ABOUT = {
   hero: {
     title: "About Songdian Technology",
     subtitle:
-      "A leading digital camera OEM/ODM manufacturer with 19 years of expertise. 30+ new products annually, 8,000 units daily output, and 500+ registered patents.",
+      "A leading digital camera OEM/ODM manufacturer with 20 years of expertise. 30+ new products annually, 10 million units annual output, and 500+ registered patents.",
   },
 
   /** 公司起源故事 */
@@ -431,7 +455,7 @@ export const ABOUT = {
     {
       title: "Craftsmanship",
       description:
-        "We treat every component and every process with meticulous attention to detail. Our engineering team brings 19 years of camera-specific manufacturing expertise to every project.",
+        "We treat every component and every process with meticulous attention to detail. Our engineering team brings 20 years of camera-specific manufacturing expertise to every project.",
     },
     {
       title: "Innovation Driven",
@@ -450,14 +474,25 @@ export const ABOUT = {
     },
   ],
 
-  /** 公司持有的认证 */
-  certifications: [
-    { name: "ISO 9001", description: "Quality Management System", year: "2015" },
-    { name: "CE Certification", description: "European Conformity", year: "2013" },
-    { name: "FCC Certification", description: "Federal Communications Commission (USA)", year: "2013" },
-    { name: "RoHS Compliant", description: "Restriction of Hazardous Substances", year: "2013" },
-    { name: "Sedex / SMETA", description: "Ethical & Responsible Sourcing Audit", year: "2019" },
-    { name: "500+ Patents", description: "Registered Design & Utility Patents", year: "Ongoing" },
+  /** 资质认证证书图片（图标格栅 + 点击 Lightbox 展示高清大图）
+   * 图片统一存放于 public/CertificationsAndComplianceImages/，文件名前缀即证书类型。
+   * title 为证书代号，description 为证书全称/适用范围，src 指向 public 下的图片。 */
+  certificationImages: [
+    { title: "BSCI", description: "Business Social Compliance Initiative", src: "/CertificationsAndComplianceImages/BSCI-sonida.png" },
+    { title: "CE", description: "European Conformity", src: "/CertificationsAndComplianceImages/CE-DC312-songdian.png" },
+    { title: "CPC", description: "Children's Product Certificate", src: "/CertificationsAndComplianceImages/CPC-DC50X-sonida.png" },
+    { title: "EMC", description: "Electromagnetic Compatibility", src: "/CertificationsAndComplianceImages/EMC-sonida.png" },
+    { title: "EPA", description: "U.S. Environmental Protection Agency", src: "/CertificationsAndComplianceImages/EPA-sonida.png" },
+    { title: "FCC", description: "U.S. Federal Communications Commission", src: "/CertificationsAndComplianceImages/FCC-DC312-songdian.png" },
+    { title: "FDA", description: "U.S. Food & Drug Administration", src: "/CertificationsAndComplianceImages/FDA-sonida.png" },
+    { title: "ISO 9001", description: "Quality Management System", src: "/CertificationsAndComplianceImages/ISO9001-songdian.png" },
+    { title: "MSDS", description: "Material Safety Data Sheet", src: "/CertificationsAndComplianceImages/MSDS-sonida.png" },
+    { title: "RoHS", description: "Restriction of Hazardous Substances", src: "/CertificationsAndComplianceImages/RoHS-DC312-songdain.png" },
+    { title: "TELEC", description: "Japan Radio Equipment Certification", src: "/CertificationsAndComplianceImages/TELEC-sonida.png" },
+    { title: "UKCA", description: "UK Conformity Assessed", src: "/CertificationsAndComplianceImages/UKCA-DC312-songdian.png" },
+    { title: "UL", description: "Underwriters Laboratories", src: "/CertificationsAndComplianceImages/UL-HDV301-sonida.png" },
+    { title: "UN38.3", description: "Battery Transport Safety", src: "/CertificationsAndComplianceImages/UN38.3-NP60-sonida.png" },
+    { title: "WEEE", description: "Waste Electrical & Electronic Equipment", src: "/CertificationsAndComplianceImages/WEEE-sonida.png" },
   ],
 
   /** 研发区域内容 */
@@ -470,15 +505,34 @@ export const ABOUT = {
       { label: "Annual New Products", value: "30+" },
       { label: "Registered Patents", value: "500+" },
       { label: "Production Lines", value: "10" },
-      { label: "Daily Output", value: "8,000 Units" },
+      { label: "Annual Output", value: "10M Units" },
     ],
   },
+
+  /** 制造实力三大板块（并入工厂视频区，作为能力卡片展示）
+   * 说明：与现有 Our Story / 右侧数字 / 研发区保持一致口径——
+   * 工厂面积采用 40,000㎡、每年新品采用 30+（用户确认以现状为准）；
+   * 净新增事实：总投资约 3.5 亿元、线材加工 7+ 年、垂直整合产线。 */
+  manufacturing: [
+    {
+      title: "Mega Factory",
+      body: "Our mega factory spans approximately 40,000 m² with a total investment of around 350 million RMB. It integrates product design, R&D, manufacturing, and sales under one roof.",
+    },
+    {
+      title: "Production Capability",
+      body: "Leveraging 20 years of manufacturing expertise in 3C digital products and 7+ years in cable processing, we operate a vertically integrated process — in-house R&D, mold development, injection molding, and final assembly — ensuring high efficiency and reliable on-time delivery.",
+    },
+    {
+      title: "Innovation Technology",
+      body: "Committed to innovation in digital imaging, we continuously introduce top technical talent and launch 30+ new products annually, with 500+ design patents and product certifications recognized domestically and internationally.",
+    },
+  ],
 
   /** 工厂宣传视频区块（About 页，CTA 之前） */
   factory: {
     title: "Take a Look Inside Our Factory",
     caption:
-      "Step inside our 40,000 m² manufacturing facility — where over 8,000 cameras are precision-built every single day.",
+      "Step inside our 40,000 m² manufacturing facility — where over 10 million cameras are precision-built every year.",
   },
 } as const;
 

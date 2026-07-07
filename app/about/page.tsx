@@ -14,13 +14,14 @@ import { AnimatedCounter } from "@/components/AnimatedCounter";
 import HorizontalTimeline from "@/components/HorizontalTimeline";
 import SectionHeading from "@/components/SectionHeading";
 import FactoryVideo from "@/components/FactoryVideo";
+import CertificateGallery from "@/components/CertificateGallery";
 import { MEDIA } from "@/lib/media";
 import { generateBreadcrumbs } from "@/lib/seo";
 import { COMPANY, ABOUT } from "@/lib/content-data";
 
 export const metadata = await superMeta({
   title: "About Us",
-  description: `Learn about ${COMPANY.name} — a leading OEM/ODM digital camera manufacturer with 15+ years of experience, serving brands in 50+ countries worldwide.`,
+  description: `Learn about ${COMPANY.name} — a leading OEM/ODM digital camera manufacturer with 20+ years of experience, serving brands in 60+ countries worldwide.`,
   url: "/about",
 });
 
@@ -114,62 +115,33 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 区块 5 —— 企业价值观 */}
+      {/* 区块 5 —— 制造实力 + 工厂视频（位于时间线之后） */}
       <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeading className="mb-12">Our Values</SectionHeading>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {ABOUT.values.map((v) => (
-              <div key={v.title} className="p-8 border border-[#EEEEEE] hover:border-[#D0D1D2] transition-colors" style={{ borderRadius: "12px", transitionDuration: "0.33s" }}>
-                <h3 className="text-lg font-semibold text-gray-900 mb-3">{v.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#5C5E62" }}>{v.description}</p>
+        <div className="max-w-6xl mx-auto px-6">
+          {/* 品牌红 eyebrow + 区块标题，与「Who We Are / By the Numbers」的视觉语言呼应 */}
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] mb-3" style={{ color: "#d4343e" }}>
+            Manufacturing Excellence
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-10">
+            {ABOUT.factory.title}
+          </h2>
+
+          {/* 三大能力卡片：Mega Factory / Production Capability / Innovation Technology
+              沿用「价值观」同款白卡 + 细灰边 + 圆角，保持整站组件语言统一 */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+            {ABOUT.manufacturing.map((block) => (
+              <div
+                key={block.title}
+                className="p-8 bg-white border border-[#EEEEEE] hover:border-[#D0D1D2] transition-colors"
+                style={{ borderRadius: "12px", transitionDuration: "0.33s" }}
+              >
+                <h3 className="text-lg font-semibold text-gray-900 mb-3">{block.title}</h3>
+                <p className="text-sm leading-relaxed" style={{ color: "#5C5E62" }}>{block.body}</p>
               </div>
             ))}
           </div>
-        </div>
-      </section>
 
-      {/* 区块 6 —— 研发实力 */}
-      <section className="py-16 md:py-24 bg-gray-50">
-        <div className="max-w-4xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-6">{ABOUT.rd.title}</h2>
-          <p className="text-gray-600 leading-relaxed mb-10">{ABOUT.rd.content}</p>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-            {ABOUT.rd.highlights.map((h) => (
-              <div key={h.label} className="bg-white p-5 border border-[#EEEEEE] text-center" style={{ borderRadius: "12px" }}>
-                <div className="text-xl font-bold text-gray-900">{h.value}</div>
-                <div className="text-xs mt-1" style={{ color: "#5C5E62" }}>{h.label}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 区块 7 —— 资质认证 */}
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <SectionHeading className="mb-12">Certifications &amp; Compliance</SectionHeading>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {ABOUT.certifications.map((cert) => (
-              <div key={cert.name} className="p-6 border border-[#EEEEEE] text-center hover:border-[#D0D1D2] transition-colors" style={{ borderRadius: "12px", transitionDuration: "0.33s" }}>
-                <div className="w-12 h-12 mx-auto mb-3 bg-gray-100 flex items-center justify-center" style={{ borderRadius: "12px" }}>
-                  <svg className="w-6 h-6 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z" />
-                  </svg>
-                </div>
-                <div className="text-sm font-semibold text-gray-900 mb-1">{cert.name}</div>
-                <div className="text-xs" style={{ color: "#5C5E62" }}>{cert.description}</div>
-                <div className="text-[11px] mt-2" style={{ color: "#8E8E8E" }}>Since {cert.year}</div>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* 区块 —— 工厂视频（位于 CTA 之前） */}
-      <section className="py-16 md:py-24 bg-gray-50">
-        <div className="max-w-5xl mx-auto px-6">
-          <SectionHeading className="mb-10">{ABOUT.factory.title}</SectionHeading>
+          {/* 工厂视频 */}
           <FactoryVideo
             src={MEDIA.factoryVideo}
             label="Play Songdian factory tour video"
@@ -183,7 +155,18 @@ export default function AboutPage() {
         </div>
       </section>
 
-      {/* 区块 8 —— 行动号召（电光蓝） */}
+      {/* 区块 6 —— 资质认证（图标格栅 + 点击 Lightbox 高清大图） */}
+      <section className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          <SectionHeading className="mb-3">Certifications &amp; Compliance</SectionHeading>
+          <p className="mb-10 text-sm" style={{ color: "#5C5E62" }}>
+            Click any certificate to view the full image.
+          </p>
+          <CertificateGallery items={ABOUT.certificationImages} />
+        </div>
+      </section>
+
+      {/* 区块 7 —— 行动号召（电光蓝） */}
       <section className="py-16 md:py-24" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6 text-center">
           <h2 className="text-white tracking-tight mb-4" style={{ fontSize: "30px", fontWeight: 500, color: "#FFFFFF" }}>

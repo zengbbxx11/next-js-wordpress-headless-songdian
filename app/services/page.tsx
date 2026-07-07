@@ -25,7 +25,7 @@ export const revalidate = 3600;
 const services = [
   {
     title: "OEM Manufacturing",
-    desc: "Build-to-spec production. Hand us your specifications and branding — we handle BOM procurement, SMT assembly, firmware, QC, and packaging. 10 production lines, 8,000 units daily output.",
+    desc: "Build-to-spec production. Hand us your specifications and branding — we handle BOM procurement, SMT assembly, firmware, QC, and packaging. 10 production lines, 10 million units annual output.",
     features: [
       "Full BOM procurement and supply chain management",
       "High-precision SMT assembly across 10 production lines",

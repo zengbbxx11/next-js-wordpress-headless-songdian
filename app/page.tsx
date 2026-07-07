@@ -1,6 +1,6 @@
 /*
  * 文件：app/page.tsx（首页 / Homepage）
- * 职责：网站首页，聚合展示信任条、产品分类、精选产品、核心优势与最新资讯，并引导询盘。
+ * 职责：网站首页，聚合展示信任条、精选产品、核心优势与最新资讯，并引导询盘。
  * 数据来源（WP REST API）：
  *   - getPosts()            → WP 文章（新闻）列表
  *   - getProducts()         → WP 产品列表（经 WP REST API，无需 WooCommerce Key）
@@ -10,19 +10,22 @@
  * 是否含 client 组件：是 —— HeroSection、AnimatedSection、ProductCard、PostCard 为客户端动效组件。
  *
  * 页面区块（Section）：
- *   1. 首屏 Hero   2. 信任条 Trust Strip   3. 产品分类 Product Categories
- *   4. 精选产品 Featured Products   5. 核心优势 Why Choose Us
- *   6. 最新资讯 Latest News   7. 行动号召 CTA
+ *   1. 首屏 Hero   2. 信任条 Trust Strip
+ *   3. 精选产品 Featured Products   4. 核心优势 Why Choose Us
+ *   5. 全球 ODM 合作伙伴 Global ODM Partners   6. 最新资讯 Latest News
+ *   7. 行动号召 CTA
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import { getPosts, getProducts, getSiteBanner, getProductCategories } from "@/lib/wordpress";
 import PostCard from "@/components/PostCard";
 import ProductCard from "@/components/ProductCard";
 import HeroSection from "@/components/motion/HeroSection";
 import AnimatedSection from "@/components/motion/AnimatedSection";
 import { superMeta } from "next-super-meta";
-import { PRODUCT_CATEGORIES, STRENGTHS, COMPANY } from "@/lib/content-data";
+import { STRENGTHS, COMPANY, GLOBAL_ODM } from "@/lib/content-data";
+import { MEDIA } from "@/lib/media";
 
 export const metadata = await superMeta({
   title: `${COMPANY.tagline} — OEM / ODM Digital Camera Factory`,
@@ -66,50 +69,16 @@ export default async function HomePage() {
           <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4" style={{ fontSize: "14px", color: "#5C5E62" }}>
             <span className="flex items-center gap-2">ISO 9001 Certified</span>
             <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
-            <span className="flex items-center gap-2">8,000 Units/Day Capacity</span>
+            <span className="flex items-center gap-2">10M Units/Year Capacity</span>
             <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
-            <span className="flex items-center gap-2">50+ Countries Served</span>
+            <span className="flex items-center gap-2">60+ Countries Served</span>
             <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
             <span className="flex items-center gap-2">500+ Patents</span>
           </div>
         </div>
       </section>
 
-      {/* 区块 3 — 产品分类 Product Categories */}
-      <AnimatedSection>
-      <section className="py-16 md:py-24 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
-            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#5C5E62" }}>Our Capabilities</span>
-            <h2 className="mt-2 tracking-tight" style={{ fontSize: "30px", fontWeight: 500, color: "#171A20" }}>
-              Camera Product Categories
-            </h2>
-            <p className="mt-4 max-w-xl mx-auto" style={{ color: "#5C5E62" }}>
-              We design and manufacture a wide range of digital cameras for global brands
-            </p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-            {PRODUCT_CATEGORIES.map((cat) => (
-              <Link
-                key={cat.name}
-                href="/products"
-                className="group flex flex-col items-center p-6 border text-center transition-colors border-[#EEEEEE] hover:border-[#D0D1D2]"
-                style={{
-                  borderRadius: "12px",
-                  transitionDuration: "0.33s",
-                }}
-              >
-                <div className="w-12 h-12 bg-gray-100 flex items-center justify-center mb-4 transition-colors" style={{ borderRadius: "12px" }} />
-                <span className="text-sm font-medium text-gray-900 mb-1">{cat.name}</span>
-                <span className="text-[11px] leading-snug" style={{ color: "#5C5E62" }}>{cat.description.slice(0, 50)}...</span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-      </AnimatedSection>
-
-      {/* 区块 4 — 精选产品 Featured Products */}
+      {/* 区块 3 — 精选产品 Featured Products */}
       {hasWooCommerce && (
         <AnimatedSection>
         <section className="py-16 md:py-24 bg-gray-50">
@@ -140,7 +109,7 @@ export default async function HomePage() {
         </AnimatedSection>
       )}
 
-      {/* 区块 5 — 核心优势 Why Choose Us */}
+      {/* 区块 4 — 核心优势 Why Choose Us */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
@@ -168,9 +137,71 @@ export default async function HomePage() {
       </section>
       </AnimatedSection>
 
-      {/* 区块 6 — 最新资讯 Latest News */}
+      {/* 区块 5 — 全球 ODM 合作伙伴 Global ODM Partners */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-gray-50">
+        <div className="max-w-7xl mx-auto px-6">
+          {/* 品牌红 eyebrow + 标题 */}
+          <p className="text-xs font-semibold uppercase tracking-[0.15em] mb-3" style={{ color: "#d4343e" }}>
+            {GLOBAL_ODM.eyebrow}
+          </p>
+          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-3">
+            {GLOBAL_ODM.title}
+          </h2>
+          <div className="mb-8 max-w-2xl">
+            <p className="text-lg font-semibold text-gray-900 leading-snug">
+              {GLOBAL_ODM.tagline}
+            </p>
+            <p className="text-base font-medium mt-1" style={{ color: "#5C5E62" }}>
+              {GLOBAL_ODM.taglineSecondary}
+            </p>
+          </div>
+
+          {/* 全球出口网络 + 合作品牌 Logo 墙大图 */}
+          <div
+            className="relative overflow-hidden border border-[#EEEEEE]"
+            style={{ borderRadius: "12px" }}
+          >
+            <Image
+              src={MEDIA.globalOdmPartners}
+              alt="Global export network map showing shipments from China to 60+ countries, with internationally renowned imaging brand ODM partner logos including Konica Minolta, Kenko, Rollei, YASHICA, aiwa, ILFORD, B+H, Gripo, and AKITO"
+              width={1200}
+              height={500}
+              className="w-full h-auto"
+              priority
+            />
+          </div>
+
+          {/* 出口国家/地区说明文字 */}
+          <p
+            className="mt-6 text-sm leading-relaxed max-w-3xl mx-auto text-center"
+            style={{ color: "#5C5E62" }}
+          >
+            {GLOBAL_ODM.exportDescription}
+          </p>
+
+          {/* 合作品牌标签云（纯文字，增强 SEO 与可访问性） */}
+          <div className="mt-5 flex flex-wrap items-center justify-center gap-x-5 gap-y-2">
+            {GLOBAL_ODM.brands.map((brand) => (
+              <span
+                key={brand}
+                className="text-[13px] font-medium px-3 py-1 bg-white border border-[#EEEEEE]"
+                style={{
+                  borderRadius: "6px",
+                  color: "#393C41",
+                }}
+              >
+                {brand}
+              </span>
+            ))}
+          </div>
+        </div>
+      </section>
+      </AnimatedSection>
+
+      {/* 区块 6 — 最新资讯 Latest News */}
+      <AnimatedSection>
+      <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
           <div className="flex items-end justify-between mb-12">
             <div>

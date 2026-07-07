@@ -42,6 +42,9 @@ export const MEDIA = {
   /** ── 工厂宣传视频（WordPress 媒体库上传） ── */
   factoryVideo: wpFile("2026/07", "SongdianFactoryVideo.mp4"),
 
+  /** ── 全球 ODM 合作伙伴图（本地静态资源） ── */
+  globalOdmPartners: "/global-odm-partners.jpg",
+
   /** ── FileBird: Website/Icons ── */
   icons: {
     // iso:     wpFile("2026/07", "iso-certified.svg"),
