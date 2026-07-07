@@ -8,6 +8,7 @@ import Image from "next/image";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import StatsDashboard from "@/components/StatsDashboard";
 import HorizontalTimeline from "@/components/HorizontalTimeline";
+import SectionHeading from "@/components/SectionHeading";
 import { generateBreadcrumbs } from "@/lib/seo";
 import { COMPANY, ABOUT } from "@/lib/content-data";
 
@@ -49,7 +50,7 @@ export default function AboutPage() {
       {/* Section 4 — Timeline */}
       <section className="py-16 md:py-24 bg-gray-50">
         <div className="max-w-6xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-14 text-center">Our Journey</h2>
+          <SectionHeading className="mb-14">Our Journey</SectionHeading>
           <HorizontalTimeline items={ABOUT.timeline} />
         </div>
       </section>
@@ -57,7 +58,7 @@ export default function AboutPage() {
       {/* Section 5 — Values */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-12 text-center">Our Values</h2>
+          <SectionHeading className="mb-12">Our Values</SectionHeading>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             {ABOUT.values.map((v) => (
               <div key={v.title} className="p-8 border border-[#EEEEEE] hover:border-[#D0D1D2] transition-colors" style={{ borderRadius: "12px", transitionDuration: "0.33s" }}>
@@ -88,7 +89,7 @@ export default function AboutPage() {
       {/* Section 7 — Certifications */}
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-12 text-center">Certifications &amp; Compliance</h2>
+          <SectionHeading className="mb-12">Certifications &amp; Compliance</SectionHeading>
           <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
             {ABOUT.certifications.map((cert) => (
               <div key={cert.name} className="p-6 border border-[#EEEEEE] text-center hover:border-[#D0D1D2] transition-colors" style={{ borderRadius: "12px", transitionDuration: "0.33s" }}>
