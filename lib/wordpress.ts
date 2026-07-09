@@ -307,6 +307,38 @@ export async function getAllPostSlugs(): Promise<string[]> {
   return data.map((p) => p.slug);
 }
 
+/**
+ * 获取指定文章的「上一篇 / 下一篇」导航数据。
+ *
+ * 以新闻列表一致的顺序（发布时间降序，最新在前）定位相邻文章：
+ *   - prev（上一篇）：时间更晚（列表中更靠前）的文章
+ *   - next（下一篇）：时间更早（列表中更靠后）的文章
+ *
+ * 仅请求 `id / slug / title / date` 字段，避免拉取特色图与 _embed，体积更小。
+ * 文章总数极少（站点当前约 8 篇），`per_page=100` 一次取全。
+ *
+ * @param slug - 当前文章 slug
+ * @returns 含 `prev` 与 `next` 的对象；到边界时对应项为 `null`
+ */
+export async function getAdjacentPosts(slug: string): Promise<{
+  prev: { slug: string; title: string; date: string } | null;
+  next: { slug: string; title: string; date: string } | null;
+}> {
+  const { data } = await wpFetch<WPPost[]>(
+    "/posts?_fields=id,slug,title,date&per_page=100&orderby=date&order=desc"
+  );
+  const idx = data.findIndex((p) => p.slug === slug);
+  if (idx === -1) return { prev: null, next: null };
+
+  const map = (p?: WPPost) =>
+    p ? { slug: p.slug, title: p.title.rendered, date: formatDate(p.date) } : null;
+
+  return {
+    prev: map(data[idx - 1]),
+    next: map(data[idx + 1]),
+  };
+}
+
 // ============================================================
 // 页面 API
 // ============================================================

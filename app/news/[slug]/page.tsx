@@ -11,7 +11,7 @@
 
 import Link from "next/link";
 import type { Metadata } from "next";
-import { getPostBySlug, getAllPostSlugs, getPosts } from "@/lib/wordpress";
+import { getPostBySlug, getAllPostSlugs, getPosts, getAdjacentPosts } from "@/lib/wordpress";
 import Breadcrumbs from "@/components/Breadcrumbs";
 import PostCard from "@/components/PostCard";
 import { generateBreadcrumbs, articleSchema } from "@/lib/seo";
@@ -79,6 +79,9 @@ export default async function NewsDetailPage({
 
   const related = relatedPosts.posts.filter((p) => p.id !== post.id).slice(0, 3);
 
+  // 上一篇 / 下一篇（按发布时间降序定位相邻文章）
+  const { prev: prevPost, next: nextPost } = await getAdjacentPosts(slug);
+
   return (
     <>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
@@ -142,6 +145,51 @@ export default async function NewsDetailPage({
                 </span>
               ))}
             </div>
+          )}
+
+          {/* 上一篇 / 下一篇 —— 相邻文章导航 */}
+          {(prevPost || nextPost) && (
+            <nav aria-label="Post navigation" className="mt-14 grid grid-cols-1 sm:grid-cols-2 gap-3">
+              {prevPost ? (
+                <Link
+                  href={`/news/${prevPost.slug}`}
+                  className="group flex flex-col gap-1 rounded-xl border border-[#EEEEEE] px-5 py-4 transition-colors hover:border-[#d4343e]"
+                >
+                  <span className="flex items-center gap-1.5 text-xs" style={{ color: "#5C5E62" }}>
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" />
+                    </svg>
+                    上一篇
+                  </span>
+                  <span className="text-[15px] font-medium leading-snug text-[#171A20] transition-colors group-hover:text-[#d4343e]">
+                    {prevPost.title}
+                  </span>
+                  <span className="text-xs mt-0.5" style={{ color: "#8E8E8E" }}>{prevPost.date}</span>
+                </Link>
+              ) : (
+                <span aria-hidden="true" />
+              )}
+
+              {nextPost ? (
+                <Link
+                  href={`/news/${nextPost.slug}`}
+                  className="group flex flex-col gap-1 rounded-xl border border-[#EEEEEE] px-5 py-4 sm:items-end sm:text-right transition-colors hover:border-[#d4343e]"
+                >
+                  <span className="flex items-center gap-1.5 text-xs" style={{ color: "#5C5E62" }}>
+                    下一篇
+                    <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                    </svg>
+                  </span>
+                  <span className="text-[15px] font-medium leading-snug text-[#171A20] transition-colors group-hover:text-[#d4343e]">
+                    {nextPost.title}
+                  </span>
+                  <span className="text-xs mt-0.5" style={{ color: "#8E8E8E" }}>{nextPost.date}</span>
+                </Link>
+              ) : (
+                <span aria-hidden="true" />
+              )}
+            </nav>
           )}
 
           {/* 返回资讯列表 —— 蓝色链接 */}
