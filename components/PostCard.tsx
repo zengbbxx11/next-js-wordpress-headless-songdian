@@ -7,6 +7,8 @@ import type { PostSummary } from "@/lib/types";
 interface PostCardProps {
   /** 博客文章摘要数据 */
   post: PostSummary;
+  /** 是否显示作者（默认显示）；首页 Latest News 区传 false 隐藏 */
+  showAuthor?: boolean;
 }
 
 /**
@@ -16,7 +18,7 @@ interface PostCardProps {
  * - Hover：Electric Blue 边框 + shadow-sm + 图片 brightness(1.05)
  * - 标题 hover 变蓝
  */
-export default function PostCard({ post }: PostCardProps) {
+export default function PostCard({ post, showAuthor = true }: PostCardProps) {
   return (
     <Link
       href={`/news/${post.slug}`}
@@ -61,8 +63,12 @@ export default function PostCard({ post }: PostCardProps) {
 
         <div className="flex items-center gap-3 text-xs text-gray-400">
           <span>{post.date}</span>
-          <span className="w-1 h-1 rounded-full bg-gray-300" />
-          <span>{post.author}</span>
+          {showAuthor && (
+            <>
+              <span className="w-1 h-1 rounded-full bg-gray-300" />
+              <span>{post.author}</span>
+            </>
+          )}
         </div>
       </div>
     </Link>

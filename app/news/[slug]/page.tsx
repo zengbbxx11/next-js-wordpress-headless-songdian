@@ -89,7 +89,7 @@ export default async function NewsDetailPage({
 
           {post.categories.length > 0 && (
             <Link
-              href={`/news?category=${post.categories[0].id}`}
+              href={`/news?category=${post.categories[0].slug}`}
               className="inline-block mt-4 px-3 py-1 text-xs font-semibold rounded-full transition-colors bg-[rgba(62,106,225,0.15)] hover:bg-[rgba(62,106,225,0.25)]"
               style={{
                 color: "#3E6AE1",

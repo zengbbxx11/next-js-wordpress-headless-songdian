@@ -37,8 +37,12 @@ export const COMPANY = {
 
   /** 联系页面和结构化数据中显示的联系方式 */
   contact: {
-    /** 物理地址 */
-    address: "B-10, Qiaozhu North Road, Ronggui Subdistrict, Shunde District, Foshan, Guangdong, China",
+    /** 物理地址（英文，便于海外访客阅读） */
+    address: "Room 801, Building 17, Tongde Intelligent Manufacturing Park, No. 9 Guizhou Avenue East, Shangjiashi Community, Ronggui Subdistrict, Shunde District, Foshan, Guangdong, China",
+    /** 地址纬度（用于地图精准定位，避免文本地址落点偏移） */
+    lat: 22.75499,
+    /** 地址经度（同德智造园东缘，已按页面拖拽校准至 17 栋一带） */
+    lng: 113.28204,
     /** 城市 */
     city: "Foshan",
     /** 国家 */
@@ -110,6 +114,28 @@ export const TRUST_ITEMS = [
 ] as const;
 
 // ============================================================
+// 信任条 — 认证标识墙（Certification Wall）
+// ============================================================
+
+/**
+ * 首页信任条（认证标识墙）展示的资质认证。
+ * 选用全球 B2B 买家最熟悉的几项，均对应 ABOUT.certificationImages 中的真实证书图片。
+ * code 为证书代号（徽章主显示），full 为全称（用于 tooltip / 无障碍标签）。
+ */
+export const TRUST_CERTS = [
+  { code: "ISO 9001", full: "Quality Management System" },
+  { code: "CE", full: "European Conformity" },
+  { code: "FCC", full: "U.S. Federal Communications Commission" },
+  { code: "RoHS", full: "Restriction of Hazardous Substances" },
+  { code: "UL", full: "Underwriters Laboratories" },
+  { code: "UKCA", full: "UK Conformity Assessed" },
+  { code: "BSCI", full: "Business Social Compliance Initiative" },
+  { code: "FDA", full: "U.S. Food & Drug Administration" },
+  { code: "TELEC", full: "Japan Radio Equipment Certification" },
+  { code: "WEEE", full: "Waste Electrical & Electronic Equipment" },
+] as const;
+
+// ============================================================
 // 产品分类（显示在首页）
 // ============================================================
 
@@ -149,6 +175,40 @@ export const PRODUCT_CATEGORIES = [
     icon: "shield",
   },
 ] as const;
+
+// ============================================================
+// 首页 — 产品类目展示（我们有哪些相机类目）
+// ============================================================
+
+/**
+ * 首页"产品类目"卡片展示配置。
+ * 键为产品分类 slug（与 WordPress /products?category=<slug> 筛选、以及下方 categoryOrder 保持一致），
+ * 值为该类目在首页卡片上展示的名称与一句话描述。
+ * 卡片图片动态取该类目下最新一个产品的特色图，不在此写死。
+ */
+export const CATEGORY_SHOWCASE: Record<string, { name: string; description: string }> = {
+  mirrorless: {
+    name: "Mirrorless Cameras",
+    description: "Interchangeable-lens systems with advanced imaging for enthusiasts and professionals.",
+  },
+  compact: {
+    name: "Compact Cameras",
+    description: "Pocketable 4K point-and-shoot cameras with autofocus and flip screens.",
+  },
+  action: {
+    name: "Action Cameras",
+    description: "Waterproof 4K action cameras with EIS for outdoor adventures.",
+  },
+  video: {
+    name: "Video Cameras",
+    description: "1080p/4K camcorders and vlogging cameras with built-in stabilization.",
+  },
+  kids: {
+    name: "Kids Cameras",
+    description: "Durable, child-friendly instant-print and digital cameras.",
+  },
+};
+
 
 // ============================================================
 // 全球 ODM 合作伙伴（首页）
@@ -537,40 +597,8 @@ export const ABOUT = {
 } as const;
 
 // ============================================================
-// 询盘表单指南（显示在联系页面）
+// 联系页面文案（Contact）
 // ============================================================
-
-/**
- * 联系/询盘页面展示的询盘表单填写指引，
- * 帮助潜在客户了解提交制造询盘时应提供哪些信息。
- */
-export const INQUIRY_GUIDE = [
-  {
-    title: "Product Type",
-    description:
-      "What type of camera do you need? Action cam, trail cam, dashcam, instant print, or custom module?",
-  },
-  {
-    title: "Target Specifications",
-    description:
-      "Resolution, sensor, lens, battery life, waterproof rating, connectivity — the more details, the better.",
-  },
-  {
-    title: "Order Quantity",
-    description:
-      "Estimated annual volume or first order quantity. This helps us prepare the right production plan.",
-  },
-  {
-    title: "Service Type",
-    description: "Do you need OEM (build to your spec) or ODM (we design for you)?",
-  },
-  {
-    title: "Target Markets",
-    description:
-      "Which countries will you sell in? This determines certification requirements (CE, FCC, etc.).",
-  },
-  {
-    title: "Timeline",
-    description: "Expected launch date or delivery deadline. We'll assess feasibility and plan accordingly.",
-  },
-] as const;
+// 注：「Send an Inquiry」表单的信任背书条（24h 回复 / 免费报价 / 60+ 国家）
+// 与 Lucide 图标组件强耦合，直接定义在 components/form/InquiryForm.tsx 内，
+// 不在此集中管理，避免 icon 名称到组件的映射冗余。

@@ -4,44 +4,44 @@
  * 询盘表单（完整版，components/form 目录）
  * ------------------------------------------------------------------
  * 客户端组件。基于 react-hook-form + zod 校验 + next-safe-form 提交。
- * 字段包含姓名/邮箱/电话/公司/产品类型/数量/留言/偏好联系方式，提交成功后弹窗提示并重置。
+ *
+ * 设计目标：降低客户填表成本、提升填表欲望。
+ *  - 仅 4 项必填（姓名 / 邮箱 / 产品类型 / 需求），其余设为可选并折叠收起；
+ *  - 产品类型改为可一键点选的「胶囊按钮」，比下拉框更快、更有交互感；
+ *  - 表单头部加信任背书条（24h 回复 · 免费报价 · 服务 60+ 国家），降低提交心理门槛；
+ *  - CTA 文案由 "Submit" 改为利益导向的 "Get My Free Quote"；
+ *  - 提交成功改为页面内成功态，替代原生 alert。
  */
 
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { createSafeAction } from "next-safe-form";
 import FormField from "./FormField";
-import FormSelect from "./FormSelect";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Loader2 } from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Loader2, Clock, BadgeCheck, Globe, Check } from "lucide-react";
 
 const cameraCategories = [
-  { label: "Compact Digital Cameras", value: "compact-digital-cameras" },
+  { label: "Compact Cameras", value: "compact-digital-cameras" },
   { label: "Mirrorless Cameras", value: "mirrorless-cameras" },
   { label: "Action Cameras", value: "action-cameras" },
   { label: "Kids Cameras", value: "kids-cameras" },
-  { label: "Video Cameras / Camcorders", value: "video-cameras-camcorders" },
-  { label: "Custom OEM/ODM Project", value: "custom-oem-odm-project" },
+  { label: "Video / Camcorders", value: "video-cameras-camcorders" },
+  { label: "Custom OEM/ODM", value: "custom-oem-odm-project" },
 ];
 
-const preferredContactOptions = [
-  { label: "Email", value: "email" },
-  { label: "WhatsApp", value: "whatsapp" },
-  { label: "Phone", value: "phone" },
-];
-
-// zod 校验规则：姓名至少 2 字符、邮箱格式正确、留言至少 10 字符、产品类型为必填
+// zod 校验规则：仅核心 4 项必填，其余可选，最大程度降低填写负担
 const inquirySchema = z.object({
-  fullName: z.string().min(2, "姓名至少需要 2 个字符"),
+  fullName: z.string().min(2, "请输入至少 2 个字符的姓名"),
   email: z.string().email("请输入有效的邮箱地址"),
+  productInterest: z.string().min(1, "请选择您感兴趣的产品类型"),
+  message: z.string().min(10, "请简单描述您的需求（至少 10 个字符）"),
   phone: z.string().optional(),
   company: z.string().optional(),
-  productInterest: z.string().min(1, "请选择产品类型"),
   quantity: z.string().optional(),
-  message: z.string().min(10, "留言至少需要 10 个字符"),
-  preferredContact: z.string().optional(),
 });
 
 type InquiryFormValues = z.infer<typeof inquirySchema>;
@@ -55,7 +55,15 @@ const submitInquiry = createSafeAction({
   },
 });
 
+const TRUST_ITEMS = [
+  { icon: Clock, text: "Reply within 24h" },
+  { icon: BadgeCheck, text: "Free, no-obligation quote" },
+  { icon: Globe, text: "Trusted in 60+ countries" },
+];
+
 export default function InquiryForm() {
+  const [submitted, setSubmitted] = useState(false);
+
   const {
     register,
     handleSubmit,
@@ -67,16 +75,15 @@ export default function InquiryForm() {
     defaultValues: {
       fullName: "",
       email: "",
+      productInterest: "",
+      message: "",
       phone: "",
       company: "",
-      productInterest: "",
       quantity: "",
-      message: "",
-      preferredContact: "",
     },
   });
 
-  // 提交处理：组装 FormData 并调用安全 action，成功后提示并重置表单
+  // 提交处理：组装 FormData 并调用安全 action，成功后展示成功态并重置表单
   const onSubmit = async (values: InquiryFormValues) => {
     const formData = new FormData();
     Object.entries(values).forEach(([key, value]) => {
@@ -85,10 +92,39 @@ export default function InquiryForm() {
 
     const result = await submitInquiry(null, formData);
     if (result.success) {
-      alert("感谢您的询盘！我们将在 24 小时内与您联系。");
+      setSubmitted(true);
       reset();
     }
   };
+
+  // 提交成功后的内联成功态（替代原生 alert，体验更顺滑）
+  if (submitted) {
+    return (
+      <Card className="w-full border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
+        <CardContent className="py-12 md:py-16 text-center px-6">
+          <div
+            className="w-16 h-16 mx-auto mb-5 rounded-full flex items-center justify-center"
+            style={{ backgroundColor: "#EFF3FF" }}
+          >
+            <Check className="w-8 h-8" style={{ color: "#3E6AE1" }} strokeWidth={2.5} />
+          </div>
+          <h3 className="text-xl font-bold text-gray-900 mb-2">Thank you — we&apos;ve got it!</h3>
+          <p className="text-gray-500 text-sm max-w-sm mx-auto">
+            Your inquiry is on its way to our team. Expect a tailored quote in your inbox within 24 hours.
+          </p>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => setSubmitted(false)}
+            className="mt-6"
+            style={{ borderRadius: "4px" }}
+          >
+            Send another inquiry
+          </Button>
+        </CardContent>
+      </Card>
+    );
+  }
 
   return (
     <form onSubmit={handleSubmit(onSubmit)}>
@@ -96,12 +132,60 @@ export default function InquiryForm() {
         <CardHeader>
           <CardTitle className="text-xl font-bold text-gray-900">Send an Inquiry</CardTitle>
           <CardDescription className="text-sm text-gray-500">
-            Fill out the form below and our team will contact you shortly.
+            Tell us about your project — get a tailored quote within 24 hours. No commitment, just answers.
           </CardDescription>
+
+          {/* 信任背书条：降低提交心理门槛，提升填表欲望 */}
+          <div className="flex flex-wrap gap-x-5 gap-y-2 pt-1">
+            {TRUST_ITEMS.map((item) => (
+              <div key={item.text} className="flex items-center gap-1.5 text-xs text-gray-500">
+                <item.icon className="w-4 h-4 shrink-0" style={{ color: "#3E6AE1" }} aria-hidden="true" />
+                <span>{item.text}</span>
+              </div>
+            ))}
+          </div>
         </CardHeader>
 
         <CardContent>
           <div className="space-y-5">
+            {/* 产品类型：一键点选胶囊，比下拉框更快更有交互感（必填） */}
+            <Controller
+              control={control}
+              name="productInterest"
+              render={({ field, fieldState }) => (
+                <div className="space-y-2">
+                  <span className="text-sm font-medium text-gray-700">
+                    What are you looking for? <span style={{ color: "#3E6AE1" }}>*</span>
+                  </span>
+                  <div role="radiogroup" className="flex flex-wrap gap-2">
+                    {cameraCategories.map((cat) => {
+                      const active = field.value === cat.value;
+                      return (
+                        <button
+                          key={cat.value}
+                          type="button"
+                          role="radio"
+                          aria-checked={active}
+                          onClick={() => field.onChange(cat.value)}
+                          className={cn(
+                            "px-3.5 py-2 text-sm rounded-full border transition-colors focus:outline-none focus-visible:ring-2 focus-visible:ring-[#3E6AE1]/30",
+                            active
+                              ? "border-[#d4343e] bg-[#fdeced] text-[#d4343e] font-medium"
+                              : "border-gray-200 bg-gray-50 text-gray-600 hover:border-gray-300"
+                          )}
+                        >
+                          {cat.label}
+                        </button>
+                      );
+                    })}
+                  </div>
+                  {fieldState.error && (
+                    <p className="text-sm" style={{ color: "#3E6AE1" }}>{fieldState.error.message}</p>
+                  )}
+                </div>
+              )}
+            />
+
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
               <FormField
                 label="Full Name"
@@ -121,60 +205,49 @@ export default function InquiryForm() {
               />
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <FormField
-                label="Phone / WhatsApp"
-                type="tel"
-                placeholder="+1 234 567 8900"
-                registration={register("phone")}
-                error={errors.phone}
-              />
-              <FormField
-                label="Company Name"
-                type="text"
-                placeholder="Your Company Inc."
-                registration={register("company")}
-                error={errors.company}
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-              <FormSelect
-                name="productInterest"
-                label="Product Interest"
-                control={control}
-                error={errors.productInterest}
-                options={cameraCategories}
-                placeholder="Select camera type..."
-                required
-              />
-              <FormField
-                label="Estimated Order Quantity"
-                type="text"
-                placeholder="e.g. 500 units"
-                registration={register("quantity")}
-                error={errors.quantity}
-              />
-            </div>
-
             <FormField
               label="Your Requirements"
               type="textarea"
-              placeholder="Please describe your product requirements, target specifications, expected delivery timeline, and any other relevant details..."
+              placeholder="e.g. We're launching a 4K action camera line for the EU market — need ODM support on design, certification (CE/FCC) and packaging. Target MOQ 1,000 units."
               rows={5}
               required
               registration={register("message")}
               error={errors.message}
             />
 
-            <FormSelect
-              name="preferredContact"
-              label="Preferred Contact Method"
-              control={control}
-              error={errors.preferredContact}
-              options={preferredContactOptions}
-              placeholder="Select method..."
-            />
+            {/* 可选信息折叠：核心表单保持简短，降低「看起来很长」的心理负担 */}
+            <details className="group rounded-md border border-dashed border-gray-200 px-4 py-3">
+              <summary className="text-sm font-medium text-gray-600 cursor-pointer select-none list-none flex items-center justify-between">
+                <span>Add more details (optional)</span>
+                <span className="text-gray-400 text-xs group-open:hidden">Show</span>
+                <span className="text-gray-400 text-xs hidden group-open:inline">Hide</span>
+              </summary>
+              <div className="pt-4 space-y-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
+                  <FormField
+                    label="Phone / WhatsApp"
+                    type="tel"
+                    placeholder="+1 234 567 8900"
+                    registration={register("phone")}
+                    error={errors.phone}
+                  />
+                  <FormField
+                    label="Company Name"
+                    type="text"
+                    placeholder="Your Company Inc."
+                    registration={register("company")}
+                    error={errors.company}
+                  />
+                </div>
+                <FormField
+                  label="Estimated Order Quantity"
+                  type="text"
+                  placeholder="e.g. 500 units"
+                  registration={register("quantity")}
+                  error={errors.quantity}
+                />
+              </div>
+            </details>
 
             <div className="pt-2">
               <Button
@@ -200,9 +273,12 @@ export default function InquiryForm() {
                     Sending...
                   </>
                 ) : (
-                  "Send Inquiry"
+                  "Get My Free Quote"
                 )}
               </Button>
+              <p className="text-xs text-gray-400 mt-3">
+                We respect your privacy. Your details are only used to prepare your quote.
+              </p>
             </div>
           </div>
         </CardContent>

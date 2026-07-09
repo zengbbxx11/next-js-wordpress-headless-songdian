@@ -1,19 +1,24 @@
 /*
  * 文件：app/contact/page.tsx（联系我们 / Contact）
- * 职责：联系方式展示 + 询盘表单，含公司地址/邮箱/电话、询盘须知与 Google 地图。
+ * 职责：联系方式展示 + 询盘表单，含公司地址/邮箱/电话、询盘须知与地图（Leaflet + Esri 卫星影像）。
  * 数据来源：本地常量 COMPANY、INQUIRY_GUIDE（@/lib/content-data）；
  *           localBusinessSchema()（@/lib/seo）；表单提交由 InquiryForm 处理。
  * 渲染方式：静态生成 + ISR（revalidate = 3600 秒）。
- * 是否含 client 组件：是 —— InquiryForm 为客户端表单组件。
+ * 是否含 client 组件：是 —— InquiryForm、ContactMap 为客户端组件。
  */
 
 import { superMeta } from "next-super-meta";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import ContactMap from "@/components/ContactMap";
 import InquiryForm from "@/components/form/InquiryForm";
 import { generateBreadcrumbs, localBusinessSchema } from "@/lib/seo";
-import { COMPANY, INQUIRY_GUIDE } from "@/lib/content-data";
-import { Card, CardContent } from "@/components/ui/card";
+import { COMPANY } from "@/lib/content-data";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { buttonVariants } from "@/components/ui/button";
+import { cn } from "@/lib/utils";
+import { wgs84ToGcj02 } from "@/lib/coord-transform";
+import { MapPin, Navigation } from "lucide-react";
 
 export const metadata = await superMeta({
   title: "Contact Us",
@@ -27,6 +32,10 @@ export const revalidate = 3600;
 export default function ContactPage() {
   const breadcrumbs = generateBreadcrumbs([{ label: "Contact" }]);
   const businessSchema = localBusinessSchema();
+
+  // 高德传 WGS-84 并自动转 GCJ-02；Google 中国底图为 GCJ-02，
+  // 故 Google 链接需先用 WGS-84 坐标换算成 GCJ-02，才能与高德落在同一点。
+  const gmap = wgs84ToGcj02(COMPANY.contact.lat, COMPANY.contact.lng);
 
   return (
     <>
@@ -49,10 +58,11 @@ export default function ContactPage() {
 
             {/* 左栏 */}
             <div className="lg:col-span-2">
-              <h2 className="text-xl font-bold text-gray-900 tracking-tight mb-6">Contact Information</h2>
-
-              <Card className="mb-8 border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
-                <CardContent className="space-y-5 pt-(--card-spacing)">
+              <Card className="border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
+                <CardHeader>
+                  <CardTitle className="text-xl font-bold text-gray-900 tracking-tight">Contact Information</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-5">
                   {[
                     {
                       label: "Address",
@@ -94,26 +104,6 @@ export default function ContactPage() {
                   ))}
                 </CardContent>
               </Card>
-
-              {/* 询盘指引 */}
-              <Card className="bg-gray-50 border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
-                <CardContent>
-                  <h3 className="text-sm font-semibold text-gray-900 mb-3">What to Include</h3>
-                  <ul className="space-y-2.5">
-                    {INQUIRY_GUIDE.map((item) => (
-                      <li key={item.title} className="flex gap-2.5 text-sm">
-                        <svg className="w-4 h-4 text-gray-400 shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                          <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                        </svg>
-                        <div>
-                          <span className="text-gray-700 font-medium">{item.title}</span>
-                          <span className="text-gray-400 ml-1">— {item.description}</span>
-                        </div>
-                      </li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
             </div>
 
             {/* 右栏 —— 询盘表单 */}
@@ -124,20 +114,58 @@ export default function ContactPage() {
         </div>
       </section>
 
-      {/* Google 地图 */}
+      {/* 地图（Leaflet + Esri 卫星影像，零 key、国内外可访问） */}
       <section className="py-4 bg-gray-50 border-t border-[#EEEEEE]">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="aspect-[21/9] overflow-hidden bg-gray-200 border border-[#D0D1D2]" style={{ borderRadius: "12px" }}>
-            <iframe
-              src={`https://maps.google.com/maps?q=${encodeURIComponent("B-10 Qiaozhu North Road, Ronggui, Shunde, Foshan")}&z=17&output=embed`}
-              width="100%"
-              height="100%"
-              style={{ border: 0 }}
-              allowFullScreen
-              loading="lazy"
-              referrerPolicy="no-referrer-when-downgrade"
-              title="Company Location"
-              className=""
+          {/* 地图上方：在地图中查看 / 导航（AMap / Google） */}
+          <div className="mb-4 flex flex-wrap items-center gap-2">
+            <span className="text-sm text-gray-500">View / Navigate:</span>
+            <a
+              href={`https://uri.amap.com/marker?position=${COMPANY.contact.lng},${COMPANY.contact.lat}&name=${encodeURIComponent(COMPANY.contact.address)}&src=sonida&coordinate=wgs84&callnative=1`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-1.5")}
+            >
+              <MapPin aria-hidden="true" />
+              AMap View
+            </a>
+            <a
+              href={`https://uri.amap.com/navigation?to=${COMPANY.contact.lng},${COMPANY.contact.lat},${encodeURIComponent(COMPANY.contact.address)}&mode=car&policy=1&src=sonida&coordinate=wgs84&callnative=1`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1.5")}
+            >
+              <Navigation aria-hidden="true" />
+              AMap Navigate
+            </a>
+            <a
+              href={`https://www.google.com/maps/search/?api=1&query=${gmap.lat},${gmap.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "default", size: "sm" }), "gap-1.5")}
+            >
+              <MapPin aria-hidden="true" />
+              Google View
+            </a>
+            <a
+              href={`https://www.google.com/maps/dir/?api=1&destination=${gmap.lat},${gmap.lng}`}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={cn(buttonVariants({ variant: "outline", size: "sm" }), "gap-1.5")}
+            >
+              <Navigation aria-hidden="true" />
+              Google Navigate
+            </a>
+          </div>
+
+          <div
+            className="aspect-[21/9] min-h-[280px] overflow-hidden bg-gray-200 border border-[#D0D1D2]"
+            style={{ borderRadius: "12px" }}
+          >
+            <ContactMap
+              lat={COMPANY.contact.lat}
+              lng={COMPANY.contact.lng}
+              address={COMPANY.contact.address}
             />
           </div>
         </div>

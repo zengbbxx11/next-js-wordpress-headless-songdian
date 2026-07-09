@@ -59,5 +59,14 @@ export function cleanPostContent(html: string): string {
   // 8. 移除残留的空 div（配对的 </div></div> 合并为单个）
   cleaned = cleaned.replace(/<div>\s*<\/div>/g, "");
 
+  // 9. 移除 HTML 注释（WP/Astra 注入的不可见标注，如 <!-- BODY CONTENT STARTS -->、<!--more-->）
+  //    这些注释对用户不可见，但常残留在空 <p> 内形成无意义占位段，带来额外间距
+  cleaned = cleaned.replace(/<!--[\s\S]*?-->/g, "");
+
+  // 10. 移除清洗后仅剩空白的空段落/块（消除正文开头的无意义占位段，
+  //     避免其 margin 在图片与正文间制造额外空白）
+  cleaned = cleaned.replace(/<(p|div|span)[^>]*>\s*<\/\1>/gi, "");
+  cleaned = cleaned.replace(/<(p|div|span)[^>]*>\s*<\/\1>/gi, "");
+
   return cleaned;
 }

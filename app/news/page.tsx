@@ -10,6 +10,7 @@ import Link from "next/link";
 import { superMeta } from "next-super-meta";
 import { getPosts } from "@/lib/wordpress";
 import Breadcrumbs from "@/components/Breadcrumbs";
+import SpotlightCard from "@/components/SpotlightCard";
 import { generateBreadcrumbs } from "@/lib/seo";
 import { COMPANY } from "@/lib/content-data";
 
@@ -54,9 +55,10 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
             <>
               {/* 精选 */}
               {featured && (
+                <SpotlightCard>
                 <Link
                   href={`/news/${featured.slug}`}
-                  className="group block relative overflow-hidden mb-10 border border-transparent hover:border-[#3E6AE1] hover:shadow-sm transition-all"
+                  className="group block relative overflow-hidden mb-10 border border-transparent hover:border-[#3E6AE1] hover:shadow-sm transition-all h-full w-full"
                   style={{ backgroundColor: "#F4F4F4", borderRadius: "12px", transitionDuration: "0.3s" }}
                 >
                   <div className="grid grid-cols-1 md:grid-cols-2 min-h-[320px]">
@@ -66,7 +68,8 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                         <img
                           src={featured.featuredImage}
                           alt={featured.featuredImageAlt}
-                          className="absolute inset-0 w-full h-full object-cover"
+                          className="absolute inset-0 w-full h-full object-cover group-hover:brightness-[1.06] transition-all"
+                          style={{ transitionDuration: "0.3s" }}
                           loading="eager"
                         />
                       ) : (
@@ -95,21 +98,22 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                     </div>
                   </div>
                 </Link>
+                </SpotlightCard>
               )}
 
               {/* 网格 */}
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {remaining.map((post) => (
+                  <SpotlightCard key={post.id} className="h-full">
                   <Link
-                    key={post.id}
                     href={`/news/${post.slug}`}
-                    className="group flex flex-col sm:flex-row gap-5 bg-white border border-[#EEEEEE] hover:border-[#3E6AE1] hover:shadow-sm overflow-hidden transition-all"
+                    className="group flex flex-col sm:flex-row gap-5 bg-white border border-[#EEEEEE] hover:border-[#3E6AE1] hover:shadow-sm overflow-hidden transition-all h-full w-full"
                     style={{ borderRadius: "12px", transitionDuration: "0.3s" }}
                   >
                     <div className="relative sm:w-48 shrink-0 aspect-[4/3] sm:aspect-auto bg-gray-100 overflow-hidden">
                       {post.featuredImage ? (
                         // eslint-disable-next-line @next/next/no-img-element
-                        <img src={post.featuredImage} alt={post.featuredImageAlt} className="absolute inset-0 w-full h-full object-cover" loading="lazy" />
+                        <img src={post.featuredImage} alt={post.featuredImageAlt} className="absolute inset-0 w-full h-full object-cover group-hover:brightness-[1.06] transition-all" style={{ transitionDuration: "0.3s" }} loading="lazy" />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-300"><svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg></div>
                       )}
@@ -123,6 +127,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                       <p className="text-[13px] text-gray-500 line-clamp-2 leading-relaxed">{post.excerpt}</p>
                     </div>
                   </Link>
+                  </SpotlightCard>
                 ))}
               </div>
 

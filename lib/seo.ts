@@ -253,7 +253,7 @@ export function localBusinessSchema(): StructuredData {
       addressCountry: "CN",
       addressRegion: "Guangdong",
       addressLocality: "Foshan",
-      streetAddress: "Building 17, Tongde Intelligent Manufacturing Park, No. 9 Guizhou Avenue East, Ronggui Subdistrict, Shunde District",
+      streetAddress: "Room 801, Building 17, Tongde Intelligent Manufacturing Park, No. 9 Guizhou Avenue East, Shangjiashi Community, Ronggui Subdistrict, Shunde District, Foshan, Guangdong",
     },
   };
 }

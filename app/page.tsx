@@ -19,13 +19,14 @@
 import Link from "next/link";
 import Image from "next/image";
 import { getPosts, getProducts, getSiteBanner, getProductCategories } from "@/lib/wordpress";
-import PostCard from "@/components/PostCard";
-import ProductCard from "@/components/ProductCard";
+import NewsGrid from "@/components/NewsGrid";
 import HeroSection from "@/components/motion/HeroSection";
 import AnimatedSection from "@/components/motion/AnimatedSection";
+import { ShieldCheck, ArrowRight, Camera } from "lucide-react";
 import { superMeta } from "next-super-meta";
-import { STRENGTHS, COMPANY, GLOBAL_ODM } from "@/lib/content-data";
+import { STRENGTHS, COMPANY, GLOBAL_ODM, TRUST_CERTS, CATEGORY_SHOWCASE } from "@/lib/content-data";
 import { MEDIA } from "@/lib/media";
+import type { WCProductCategory } from "@/lib/types";
 
 export const metadata = await superMeta({
   title: `${COMPANY.tagline} — OEM / ODM Digital Camera Factory`,
@@ -43,65 +44,113 @@ export default async function HomePage() {
     getSiteBanner(),
   ]);
 
-  // 从每个分类中各取最新 1 个产品（mirrorless, compact, action, video, kids）
-  const categoryOrder = ["mirrorless", "compact", "action", "video", "kids"];
+  // 从每个类目各取最新 1 个产品图（mirrorless, compact, action, video, kids）
+  const categoryOrder = ["mirrorless", "compact", "action", "video", "kids"] as const;
   const sortedCategories = categoryOrder
     .map((slug) => categories.find((c) => c.slug.toLowerCase().includes(slug)))
-    .filter(Boolean);
+    .filter((c): c is WCProductCategory => Boolean(c));
 
   const categoryProducts = await Promise.all(
     sortedCategories.map((cat) =>
-      getProducts({ category: cat!.id, perPage: 1 }).catch(() => ({ products: [], pagination: null }))
+      getProducts({ category: cat.id, perPage: 1 }).catch(() => ({ products: [], pagination: null }))
     )
   );
-  const products = categoryProducts.flatMap((r) => r.products).slice(0, 5);
 
-  const hasWooCommerce = products.length > 0;
+  // 组装首页类目展示卡片：类目标签 + 该类目下最新产品图片
+  const categoryCards = sortedCategories.map((cat, i) => ({
+    category: cat,
+    meta: CATEGORY_SHOWCASE[categoryOrder[i]] ?? { name: cat.name, description: "" },
+    product: categoryProducts[i]?.products?.[0] ?? null,
+  }));
 
   return (
     <>
       {/* 区块 1 — 首屏 Hero */}
       <HeroSection bannerUrl={bannerUrl || undefined} />
 
-      {/* 区块 2 — 信任条 Trust Strip */}
-      <section className="py-10" style={{ borderBottom: "1px solid #EEEEEE", backgroundColor: "#FFFFFF" }}>
+      {/* 区块 2 — 信任条 Trust Strip：认证标识墙 */}
+      <section className="py-6 border-b" style={{ borderColor: "#EEEEEE", backgroundColor: "#FFFFFF" }}>
         <div className="max-w-7xl mx-auto px-6">
-          <div className="flex flex-wrap items-center justify-center gap-x-12 gap-y-4" style={{ fontSize: "14px", color: "#5C5E62" }}>
-            <span className="flex items-center gap-2">ISO 9001 Certified</span>
-            <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
-            <span className="flex items-center gap-2">10M Units/Year Capacity</span>
-            <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
-            <span className="flex items-center gap-2">60+ Countries Served</span>
-            <span className="hidden sm:block" style={{ color: "#EEEEEE" }}>|</span>
-            <span className="flex items-center gap-2">500+ Patents</span>
-          </div>
+          <ul className="grid grid-cols-2 sm:grid-cols-5 lg:grid-cols-10 gap-3">
+            {TRUST_CERTS.map((cert) => (
+              <li
+                key={cert.code}
+                className="flex items-center justify-center gap-1.5 rounded-lg border bg-white px-3 py-2 transition-colors"
+                style={{ borderColor: "#E5E7EB" }}
+                title={cert.full}
+              >
+                <ShieldCheck className="h-4 w-4 shrink-0" style={{ color: "#d4343e" }} aria-hidden="true" />
+                <span className="text-sm font-medium" style={{ color: "#393C41" }}>{cert.code}</span>
+              </li>
+            ))}
+          </ul>
         </div>
       </section>
 
-      {/* 区块 3 — 精选产品 Featured Products */}
-      {hasWooCommerce && (
+      {/* 区块 3 — 产品类目展示 Product Categories */}
+      {categoryCards.length > 0 && (
         <AnimatedSection>
         <section className="py-16 md:py-24 bg-gray-50">
           <div className="max-w-7xl mx-auto px-6">
             <div className="flex items-end justify-between mb-12">
               <div>
-                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#5C5E62" }}>5 Categories</span>
-                <h2 className="mt-2 tracking-tight" style={{ fontSize: "30px", fontWeight: 500, color: "#171A20" }}>Our Camera Lineup</h2>
+                <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#5C5E62" }}>Product Categories</span>
+                <h2 className="mt-2 tracking-tight" style={{ fontSize: "30px", fontWeight: 500, color: "#171A20" }}>Cameras We Manufacture</h2>
               </div>
-              <Link href="/products" className="hidden md:inline-flex items-center text-sm font-medium transition-colors" style={{ color: "#393C41", transitionDuration: "0.33s" }}>
-                View All <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              <Link href="/products" className="hidden md:inline-flex items-center text-sm font-medium transition-colors hover:text-[#d4343e]" style={{ color: "#393C41", transitionDuration: "0.33s" }}>
+                View All <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
-              {products.map((p, i) => (
-                <div key={p.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 80}ms` }}>
-                  <ProductCard product={p} />
-                </div>
+
+            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 lg:flex lg:h-[460px] lg:gap-4">
+              {categoryCards.map(({ category, meta, product }, i) => (
+                <Link
+                  key={category.id}
+                  href={`/products?category=${category.slug}`}
+                  className="group relative block overflow-hidden bg-[#171A20] aspect-[3/4] animate-fade-in-up transition-[flex-grow] duration-500 ease-out lg:aspect-auto lg:h-full lg:min-w-0 lg:flex-1 lg:contain-layout lg:hover:flex-[2.7]"
+                  style={{ animationDelay: `${i * 80}ms`, borderRadius: "12px" }}
+                  aria-label={`${meta.name} — view products`}
+                >
+                  {product?.image ? (
+                    // eslint-disable-next-line @next/next/no-img-element
+                    <img
+                      src={product.image}
+                      alt={product.imageAlt || meta.name}
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08] will-change-transform transform-gpu"
+                      loading="lazy"
+                    />
+                  ) : (
+                    <div className="absolute inset-0 flex items-center justify-center text-white/30">
+                      <Camera className="w-12 h-12" />
+                    </div>
+                  )}
+
+                  {/* 渐变遮罩 — 保证文字可读 */}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/85 via-black/25 to-transparent" />
+
+                  {/* 类目标题（默认显示，带序号）+ 说明/CTA（展开后显示） */}
+                  <div className="absolute inset-x-0 bottom-0 p-4 text-white">
+                    <div className="flex items-baseline gap-2">
+                      <span className="text-base font-bold tabular-nums" style={{ color: "#d4343e" }} aria-hidden="true">
+                        {String(i + 1).padStart(2, "0")}
+                      </span>
+                      <h3 className="text-lg font-semibold leading-snug">{meta.name}</h3>
+                    </div>
+                    <div className="overflow-hidden max-h-0 opacity-0 transition-all duration-500 ease-out group-hover:delay-500 group-hover:max-h-28 group-hover:opacity-100">
+                      <p className="mt-2 text-[12px] leading-snug text-white/80 line-clamp-2">{meta.description}</p>
+                      <span className="mt-2 inline-flex items-center text-[12px] font-medium text-white/90">
+                        Explore
+                        <ArrowRight className="w-3.5 h-3.5 ml-1 transition-transform duration-300 group-hover:translate-x-1" />
+                      </span>
+                    </div>
+                  </div>
+                </Link>
               ))}
             </div>
+
             <div className="mt-8 text-center md:hidden">
-              <Link href="/products" className="inline-flex items-center text-sm font-medium transition-colors" style={{ color: "#393C41", transitionDuration: "0.33s" }}>
-                View All Products <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+              <Link href="/products" className="inline-flex items-center text-sm font-medium transition-colors hover:text-[#d4343e]" style={{ color: "#393C41", transitionDuration: "0.33s" }}>
+                View All Products <ArrowRight className="w-4 h-4 ml-1" />
               </Link>
             </div>
           </div>
@@ -200,9 +249,9 @@ export default async function HomePage() {
       </AnimatedSection>
 
       {/* 区块 6 — 最新资讯 Latest News */}
-      <AnimatedSection>
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
+          <AnimatedSection>
           <div className="flex items-end justify-between mb-12">
             <div>
               <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#5C5E62" }}>News &amp; Insights</span>
@@ -212,15 +261,10 @@ export default async function HomePage() {
               View All <svg className="w-4 h-4 ml-1" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
             </Link>
           </div>
+          </AnimatedSection>
 
           {posts.length > 0 ? (
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              {posts.map((post, i) => (
-                <div key={post.id} className="animate-fade-in-up" style={{ animationDelay: `${i * 100}ms` }}>
-                  <PostCard post={post} />
-                </div>
-              ))}
-            </div>
+            <NewsGrid posts={posts} />
           ) : (
             <div className="text-center py-12 text-gray-400 bg-white border border-[#EEEEEE]" style={{ borderRadius: "12px" }}>
               <p className="text-sm">No articles published yet. Add posts in your WordPress admin panel.</p>
@@ -234,7 +278,6 @@ export default async function HomePage() {
           </div>
         </div>
       </section>
-      </AnimatedSection>
 
       {/* 区块 7 — 行动号召 CTA */}
       <AnimatedSection>

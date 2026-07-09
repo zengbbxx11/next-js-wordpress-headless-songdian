@@ -102,7 +102,7 @@ export default async function ProductDetailPage({
   const breadcrumbs = generateBreadcrumbs([
     { label: "Products", href: "/products" },
     ...(primaryCategory
-      ? [{ label: primaryCategory.name, href: `/products?category=${primaryCategory.id}` }]
+      ? [{ label: primaryCategory.name, href: `/products?category=${primaryCategory.slug}` }]
       : []),
     { label: product.name },
   ]);
@@ -138,9 +138,9 @@ export default async function ProductDetailPage({
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(schema) }} />
 
       {/* 面包屑导航 */}
-      <section className="bg-gray-50 py-4" style={{ borderBottom: "1px solid #EEEEEE" }}>
+      <section className="py-5" style={{ backgroundColor: "#171A20" }}>
         <div className="max-w-7xl mx-auto px-6">
-          <Breadcrumbs items={breadcrumbs} />
+          <Breadcrumbs items={breadcrumbs} variant="dark" />
         </div>
       </section>
 
@@ -227,7 +227,7 @@ export default async function ProductDetailPage({
                   </svg>
                 </Link>
                 <Link
-                  href={primaryCategory ? `/products?category=${primaryCategory.id}` : "/products"}
+                  href={primaryCategory ? `/products?category=${primaryCategory.slug}` : "/products"}
                   className="inline-flex items-center px-6 py-3 border border-gray-200 text-gray-600 text-sm font-medium rounded-xl hover:bg-gray-50 transition-colors"
                 >
                   &larr; {primaryCategory ? `Back to ${primaryCategory.name}` : "All Products"}
@@ -277,7 +277,6 @@ export default async function ProductDetailPage({
         </section>
       )}
 
-      
       {/* 产品亮点 */}
       {hasContent && (
         <section className="py-14 md:py-20 bg-white">
