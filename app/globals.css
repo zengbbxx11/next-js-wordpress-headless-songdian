@@ -117,32 +117,8 @@ body {
 }
 
 /* ============================================================
-   Tesla 统一过渡系统 — 0.33s
+   Tesla 统一过渡 — 通过 Tailwind utility 按需使用 duration-[330ms]
    ============================================================ */
-
-*,
-*::before,
-*::after {
-  transition-timing-function: cubic-bezier(0.5, 0, 0, 0.75);
-  transition-duration: 0.33s;
-}
-
-/* 对频繁变化的属性强制统一 timing */
-a, button, input, select, textarea,
-[class*="hover:"],
-[class*="transition-"] {
-  transition-duration: 0.33s;
-}
-
-/* ============================================================
-   Frosted Glass — 毛玻璃导航效果
-   ============================================================ */
-
-.glass-nav {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-}
 
 /* ============================================================
    WordPress Gutenberg 内容样式
@@ -341,6 +317,40 @@ a, button, input, select, textarea,
 }
 
 /* ============================================================
+   展会滚动墙 — 横向无缝循环
+   - 列表复制一份，整体位移 -50% 恰好移动一个副本宽度
+   - 由组件内联 animationPlayState 控制悬停/按钮暂停
+   - 尊重 prefers-reduced-motion：关闭动画，静态展示
+   ============================================================ */
+
+@keyframes marquee-scroll {
+  from { transform: translateX(0); }
+  to   { transform: translateX(-50%); }
+}
+
+.animate-marquee {
+  animation: marquee-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .animate-marquee {
+    animation: none;
+    transform: none;
+  }
+}
+
+@keyframes loading-bar {
+  0%   { margin-left: -40%; }
+  50%  { margin-left: 40%; }
+  100% { margin-left: 100%; }
+}
+
+.animate-loading-bar {
+  animation: loading-bar 1.5s ease-in-out infinite;
+}
+
+/* ============================================================
    滚动条 — 极简 6px
    ============================================================ */
 
@@ -359,32 +369,6 @@ a, button, input, select, textarea,
 ::selection {
   background: #171A20;
   color: #FFFFFF;
-}
-
-/* ============================================================
-   shadcn/ui 暗色模式（暂未启用）
-   ============================================================ */
-
-.dark {
-  --background: #171A20;
-  --foreground: #FFFFFF;
-  --card: #171A20;
-  --card-foreground: #FFFFFF;
-  --popover: #171A20;
-  --popover-foreground: #FFFFFF;
-  --primary: #3E6AE1;
-  --primary-foreground: #FFFFFF;
-  --secondary: oklch(0.269 0 0);
-  --secondary-foreground: #FFFFFF;
-  --muted: oklch(0.269 0 0);
-  --muted-foreground: #8E8E8E;
-  --accent: #3E6AE1;
-  --accent-hover: #5E8AF5;
-  --accent-foreground: #FFFFFF;
-  --destructive: oklch(0.704 0.191 22.216);
-  --border: rgba(255, 255, 255, 0.1);
-  --input: rgba(255, 255, 255, 0.15);
-  --ring: #3E6AE1;
 }
 
 @layer base {

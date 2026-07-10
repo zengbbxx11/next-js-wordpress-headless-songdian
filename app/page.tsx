@@ -22,11 +22,23 @@ import { getPosts, getProducts, getSiteBanner, getProductCategories } from "@/li
 import NewsGrid from "@/components/NewsGrid";
 import HeroSection from "@/components/motion/HeroSection";
 import AnimatedSection from "@/components/motion/AnimatedSection";
-import { ShieldCheck, ArrowRight, Camera } from "lucide-react";
+import ExhibitionMarquee from "@/components/ExhibitionMarquee";
+import { getExhibitions } from "@/lib/exhibitions";
+import { ShieldCheck, ArrowRight, Camera, Award, Zap, Factory, Lightbulb, Globe, Package, type LucideIcon } from "lucide-react";
 import { superMeta } from "next-super-meta";
 import { STRENGTHS, COMPANY, GLOBAL_ODM, TRUST_CERTS, CATEGORY_SHOWCASE } from "@/lib/content-data";
 import { MEDIA } from "@/lib/media";
 import type { WCProductCategory } from "@/lib/types";
+
+// 核心优势图标映射 —— 与 content-data.ts 中 STRENGTHS[].icon 字段对应
+const STRENGTH_ICONS: Record<string, LucideIcon> = {
+  award: Award,
+  zap: Zap,
+  factory: Factory,
+  lightbulb: Lightbulb,
+  globe: Globe,
+  package: Package,
+};
 
 export const metadata = await superMeta({
   title: `${COMPANY.tagline} — OEM / ODM Digital Camera Factory`,
@@ -62,6 +74,9 @@ export default async function HomePage() {
     meta: CATEGORY_SHOWCASE[categoryOrder[i]] ?? { name: cat.name, description: "" },
     product: categoryProducts[i]?.products?.[0] ?? null,
   }));
+
+  // 动态读取 public/Exhibitions 下的展会图片（增删改自动同步，ISR 60s 再生）
+  const exhibitions = getExhibitions();
 
   return (
     <>
@@ -112,12 +127,12 @@ export default async function HomePage() {
                   aria-label={`${meta.name} — view products`}
                 >
                   {product?.image ? (
-                    // eslint-disable-next-line @next/next/no-img-element
-                    <img
+                    <Image
                       src={product.image}
                       alt={product.imageAlt || meta.name}
-                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08] will-change-transform transform-gpu"
-                      loading="lazy"
+                      fill
+                      sizes="(max-width: 1024px) 50vw, 20vw"
+                      className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.08] will-change-transform transform-gpu"
                     />
                   ) : (
                     <div className="absolute inset-0 flex items-center justify-center text-white/30">
@@ -158,29 +173,34 @@ export default async function HomePage() {
         </AnimatedSection>
       )}
 
-      {/* 区块 4 — 核心优势 Why Choose Us */}
+      {/* 区块 4 — 核心优势 Why Choose Us（重设计：图标卡片 + 品牌红悬停态） */}
       <AnimatedSection>
       <section className="py-16 md:py-24 bg-white">
         <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-12">
+          <div className="text-center mb-14">
             <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#5C5E62" }}>Why Choose Us</span>
             <h2 className="mt-2 tracking-tight" style={{ fontSize: "30px", fontWeight: 500, color: "#171A20" }}>Manufacturing Excellence</h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {STRENGTHS.map((item, i) => (
-              <div
-                key={item.title}
-                className="p-6 border transition-colors animate-fade-in-up border-[#EEEEEE] hover:border-[#D0D1D2]"
-                style={{
-                  borderRadius: "12px",
-                  transitionDuration: "0.33s",
-                  animationDelay: `${i * 100}ms`,
-                }}
-              >
-                <h3 className="text-base font-semibold text-gray-900 mb-2">{item.title}</h3>
-                <p className="text-sm leading-relaxed" style={{ color: "#5C5E62" }}>{item.description}</p>
-              </div>
-            ))}
+
+          <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+            {STRENGTHS.map((item, i) => {
+              const Icon = STRENGTH_ICONS[item.icon] ?? ShieldCheck;
+              return (
+                <div
+                  key={item.title}
+                  className="group relative flex flex-col p-7 border border-[#EEEEEE] bg-white rounded-xl transition-colors duration-300 hover:border-[#d4343e] animate-fade-in-up"
+                  style={{ animationDelay: `${i * 90}ms` }}
+                >
+                  {/* 品牌红图标方块：悬停反白，强化视觉焦点 */}
+                  <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-[#d4343e]/10 text-[#d4343e] transition-colors duration-300 group-hover:bg-[#d4343e] group-hover:text-white">
+                    <Icon className="h-6 w-6" aria-hidden="true" />
+                  </div>
+
+                  <h3 className="mt-5 text-[17px] font-semibold tracking-tight text-[#171A20]">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-[#5C5E62]">{item.description}</p>
+                </div>
+              );
+            })}
           </div>
         </div>
       </section>
@@ -244,6 +264,29 @@ export default async function HomePage() {
               </span>
             ))}
           </div>
+        </div>
+      </section>
+      </AnimatedSection>
+
+      {/* 区块 5.5 — 参展展会 Exhibition Marquee（位于 Global Reach 与 News & Insights 之间） */}
+      <AnimatedSection>
+      <section className="py-16 md:py-24 bg-white border-y border-[#EEEEEE]">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="text-center mb-12">
+            <span className="text-xs font-semibold uppercase tracking-wider" style={{ color: "#d4343e" }}>Global Presence</span>
+            <h2 className="mt-2 tracking-tight" style={{ fontSize: "30px", fontWeight: 500, color: "#171A20" }}>Exhibitions &amp; Trade Shows</h2>
+            <p className="mt-3 text-base font-medium mx-auto max-w-2xl" style={{ color: "#5C5E62" }}>
+              We showcase our latest OEM / ODM camera innovations at leading industry events worldwide.
+            </p>
+          </div>
+
+          {exhibitions.length > 0 ? (
+            <ExhibitionMarquee items={exhibitions} />
+          ) : (
+            <div className="text-center py-12 text-[#8E8E8E] border border-[#EEEEEE] rounded-xl">
+              <p className="text-sm">No exhibition photos uploaded yet. Add images to <code className="px-1.5 py-0.5 bg-[#F4F4F4] rounded text-[#393C41]">/public/Exhibitions</code>.</p>
+            </div>
+          )}
         </div>
       </section>
       </AnimatedSection>

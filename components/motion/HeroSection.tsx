@@ -9,6 +9,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import { motion, useReducedMotion } from "framer-motion";
 import { HERO } from "@/lib/content-data";
 import { MEDIA } from "@/lib/media";
@@ -47,12 +48,13 @@ export default function HeroSection({ bannerUrl }: HeroSectionProps) {
 
   return (
     <section className="relative overflow-hidden min-h-screen flex items-center">
-      {/* eslint-disable-next-line @next/next/no-img-element */}
-      <img
+      <Image
         src={bannerUrl || MEDIA.heroBanner}
         alt="Songdian SMT production line — precision camera manufacturing"
-        className="absolute inset-0 w-full h-full object-cover"
-        loading="eager"
+        fill
+        priority
+        sizes="100vw"
+        className="object-cover"
       />
 
       {/* 深色叠加层 — 40% 不透明度保证白字清晰 */}
@@ -112,22 +114,8 @@ export default function HeroSection({ bannerUrl }: HeroSectionProps) {
           {/* 主按钮 — 蓝色，48px 高 */}
           <Link
             href={HERO.cta.primary.href}
-            className="inline-flex items-center justify-center px-8 text-white font-semibold rounded transition-colors"
-            style={{
-              fontSize: "16px",
-              fontWeight: 600,
-              backgroundColor: COLORS.electricBlue,
-              color: COLORS.white,
-              height: "48px",
-              borderRadius: "4px",
-              transitionDuration: "0.33s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlueHover;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlue;
-            }}
+            className="inline-flex items-center justify-center px-8 h-[48px] text-[16px] font-semibold text-white rounded bg-[#3E6AE1] hover:bg-[#3457B8] transition-colors duration-[330ms]"
+            style={{ borderRadius: "4px" }}
           >
             {HERO.cta.primary.label}
             <svg className="w-5 h-5 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -138,22 +126,8 @@ export default function HeroSection({ bannerUrl }: HeroSectionProps) {
           {/* 副按钮 — 白底黑字，48px 高 */}
           <Link
             href={HERO.cta.secondary.href}
-            className="inline-flex items-center justify-center px-8 font-semibold rounded transition-colors"
-            style={{
-              fontSize: "16px",
-              fontWeight: 600,
-              backgroundColor: COLORS.white,
-              color: COLORS.graphite,
-              height: "48px",
-              borderRadius: "4px",
-              transitionDuration: "0.33s",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = "#F4F4F4";
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.white;
-            }}
+            className="inline-flex items-center justify-center px-8 h-[48px] text-[16px] font-semibold text-[#393C41] rounded bg-white hover:bg-[#F4F4F4] transition-colors duration-[330ms]"
+            style={{ borderRadius: "4px" }}
           >
             {HERO.cta.secondary.label}
           </Link>

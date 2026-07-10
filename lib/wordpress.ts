@@ -638,11 +638,12 @@ export async function getSiteBanner(): Promise<string | null> {
 }
 
 /**
- * 收集所有站点 URL 用于生成 sitemap.xml
- * 包含静态页面（首页、产品、博客、服务、询盘、联系）
- * 以及所有已发布博客文章与产品的动态路由。
+ * 收集所有站点 URL 用于生成 sitemap.xml（已废弃）。
  *
- * @returns sitemap 条目对象数组，含 url、lastModified、changeFrequency 与 priority
+ * @deprecated 自 2026-07 起不再使用。sitemap 改由 app/sitemap.ts 独立生成，
+ *             后者直接使用 getAllPostSlugs / getAllProductSlugs 并正确生成
+ *             /news/[slug] 和 /products/[slug] 路由。
+ *             此函数保留仅作参考，将在下一大版本中移除。
  */
 export async function getAllSiteUrls() {
   const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "http://localhost:3000";
@@ -652,7 +653,7 @@ export async function getAllSiteUrls() {
     { url: siteUrl, lastModified: new Date(), changeFrequency: "daily" as const, priority: 1.0 },
     { url: `${siteUrl}/products`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.9 },
     { url: `${siteUrl}/blog`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 },
-    { url: `${siteUrl}/services`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 },
+    { url: `${siteUrl}/solutions`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 },
     { url: `${siteUrl}/inquiry`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.9 },
     { url: `${siteUrl}/contact`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 },
   ];

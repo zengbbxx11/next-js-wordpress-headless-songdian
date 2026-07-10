@@ -24,11 +24,11 @@ const NAV_LINKS: NavLink[] = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
   {
-    label: "Services",
-    href: "/services",
+    label: "Solutions",
+    href: "/solutions",
     children: [
-      { label: "OEM / ODM", href: "/services" },
-      { label: "FAQ", href: "/services/faq" },
+      { label: "OEM / ODM", href: "/solutions" },
+      { label: "FAQ", href: "/solutions/faq" },
     ],
   },
   { label: "News", href: "/news" },

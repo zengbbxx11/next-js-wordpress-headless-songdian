@@ -22,7 +22,7 @@ export { COMPANY };
 export const NAV_LINKS = [
   { label: "Home", href: "/" },
   { label: "Products", href: "/products" },
-  { label: "Services", href: "/services" },
+  { label: "Solutions", href: "/solutions" },
   { label: "News", href: "/news" },
   { label: "About", href: "/about" },
 ] as const;
@@ -45,8 +45,8 @@ export const FOOTER_LINKS = {
   ],
   /** 服务相关链接 */
   services: [
-    { label: "OEM / ODM", href: "/services" },
-    { label: "FAQ", href: "/services/faq" },
+    { label: "OEM / ODM", href: "/solutions" },
+    { label: "FAQ", href: "/solutions/faq" },
   ],
   /** 公司信息链接 */
   company: [
@@ -56,7 +56,7 @@ export const FOOTER_LINKS = {
   ],
   /** 客户支持链接 */
   support: [
-    { label: "FAQ", href: "/services/faq" },
+    { label: "FAQ", href: "/solutions/faq" },
     { label: "Request Quote", href: "/contact" },
     { label: "Privacy Policy", href: "/privacy-policy" },
   ],

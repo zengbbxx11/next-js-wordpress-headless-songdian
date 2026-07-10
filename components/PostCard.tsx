@@ -1,4 +1,5 @@
 import Link from "next/link";
+import Image from "next/image";
 import type { PostSummary } from "@/lib/types";
 
 /**
@@ -28,13 +29,13 @@ export default function PostCard({ post, showAuthor = true }: PostCardProps) {
       {/* ====================== 图片区域 ====================== */}
       <div className="relative aspect-[16/10] bg-gray-100 overflow-hidden">
         {post.featuredImage ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={post.featuredImage}
             alt={post.featuredImageAlt}
-            className="absolute inset-0 w-full h-full object-cover transition-all group-hover:brightness-[1.06]"
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+            className="object-cover transition-all brightness-[1.06] group-hover:brightness-[1.12]"
             style={{ transitionDuration: "0.3s" }}
-            loading="lazy"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center">

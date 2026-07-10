@@ -17,12 +17,12 @@ import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
-import { createSafeAction } from "next-safe-form";
 import FormField from "./FormField";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import { Loader2, Clock, BadgeCheck, Globe, Check } from "lucide-react";
+import { submitInquiry } from "@/lib/inquiry-service";
 
 const cameraCategories = [
   { label: "Compact Cameras", value: "compact-digital-cameras" },
@@ -45,15 +45,6 @@ const inquirySchema = z.object({
 });
 
 type InquiryFormValues = z.infer<typeof inquirySchema>;
-
-// next-safe-form action：模拟后端提交（延迟 500ms 后返回数据）
-const submitInquiry = createSafeAction({
-  schema: inquirySchema,
-  handler: async (data) => {
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    return data;
-  },
-});
 
 const TRUST_ITEMS = [
   { icon: Clock, text: "Reply within 24h" },
@@ -83,14 +74,17 @@ export default function InquiryForm() {
     },
   });
 
-  // 提交处理：组装 FormData 并调用安全 action，成功后展示成功态并重置表单
+  // 提交处理：调用服务端 action 保存询盘并发送邮件通知
   const onSubmit = async (values: InquiryFormValues) => {
-    const formData = new FormData();
-    Object.entries(values).forEach(([key, value]) => {
-      if (value) formData.append(key, value);
+    const result = await submitInquiry({
+      fullName: values.fullName,
+      email: values.email,
+      productInterest: values.productInterest,
+      message: values.message,
+      phone: values.phone || null,
+      company: values.company || null,
+      quantity: values.quantity || null,
     });
-
-    const result = await submitInquiry(null, formData);
     if (result.success) {
       setSubmitted(true);
       reset();

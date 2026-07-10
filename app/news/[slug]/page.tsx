@@ -10,6 +10,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import type { Metadata } from "next";
 import { getPostBySlug, getAllPostSlugs, getPosts, getAdjacentPosts } from "@/lib/wordpress";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -119,13 +120,14 @@ export default async function NewsDetailPage({
 
           {/* 特色图片 — 限制高度，确保首屏可见正文 */}
           {post.featuredImage && (
-            <div className="mb-5 overflow-hidden bg-gray-100 max-h-[360px]" style={{ borderRadius: "12px" }}>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img
+            <div className="relative mb-5 overflow-hidden bg-gray-100 max-h-[360px]" style={{ borderRadius: "12px" }}>
+              <Image
                 src={post.featuredImage}
                 alt={post.featuredImageAlt}
+                width={800}
+                height={400}
                 className="w-full h-auto max-h-[360px] object-contain"
-                loading="eager"
+                priority
               />
             </div>
           )}

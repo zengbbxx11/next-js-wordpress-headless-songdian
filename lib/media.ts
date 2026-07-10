@@ -18,7 +18,7 @@
  */
 
 // WordPress 媒体库基础 URL（来自环境变量，开发环境回退到 localhost:10004）
-const WP_BASE = process.env.NEXT_PUBLIC_WP_URL || "http://localhost:10004";
+const WP_BASE = process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:10004";
 
 // 根据上传年月目录与文件名拼接 WordPress 媒体文件的完整 URL
 function wpFile(yearMonth: string, filename: string): string {

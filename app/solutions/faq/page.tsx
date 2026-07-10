@@ -1,5 +1,5 @@
 /*
- * 文件：app/services/faq/page.tsx（常见问题 / FAQ）
+ * 文件：app/solutions/faq/page.tsx（常见问题 / FAQ）
  * 职责：常见问题解答页。左侧粘性分类目录（锚点直达 + 滚动高亮），
  *       右侧按分类分区的手风琴问答，并注入 FAQ JSON-LD 结构化数据。
  * 数据来源：本地常量 FAQS（@/lib/content-data）；faqSchema()（@/lib/seo）。
@@ -18,8 +18,8 @@ import { FAQS } from "@/lib/content-data";
 export const metadata = await superMeta({
   title: "FAQ",
   description:
-    "Answers to common questions about our OEM/ODM camera manufacturing — factory capabilities, certifications, quality control, lead times, customization, and after-sales support.",
-  url: "/services/faq",
+    "Answers to common questions about our camera manufacturing solutions — factory capabilities, certifications, quality control, lead times, customization, and after-sales support.",
+  url: "/solutions/faq",
 });
 
 // ISR 重新验证间隔（秒）：静态内容每小时刷新一次
@@ -35,7 +35,7 @@ function slugify(s: string): string {
 
 export default function FAQPage() {
   const breadcrumbs = generateBreadcrumbs([
-    { label: "Services", href: "/services" },
+    { label: "Solutions", href: "/solutions" },
     { label: "FAQ" },
   ]);
 

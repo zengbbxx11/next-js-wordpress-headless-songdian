@@ -72,11 +72,13 @@ export function organizationSchema(): StructuredData {
     contactPoint: {
       "@type": "ContactPoint",
       contactType: "sales",
-      email: "leon@sonida.com",
-      telephone: "+86 18800375068",
+      email: COMPANY.contact.email,
+      telephone: COMPANY.contact.phone,
     },
     sameAs: [
-      // 在此处添加社交媒体 URL
+      COMPANY.social.linkedin,
+      COMPANY.social.youtube,
+      COMPANY.social.alibaba,
     ],
   };
 }
@@ -95,7 +97,7 @@ export function webSiteSchema(): StructuredData {
     url: SITE_URL,
     potentialAction: {
       "@type": "SearchAction",
-      target: `${SITE_URL}/blog?search={search_term_string}`,
+      target: `${SITE_URL}/news?search={search_term_string}`,
       "query-input": "required name=search_term_string",
     },
   };
@@ -246,8 +248,8 @@ export function localBusinessSchema(): StructuredData {
     name: COMPANY.name,
     url: SITE_URL,
     description: process.env.NEXT_PUBLIC_SITE_DESCRIPTION || "",
-    telephone: "+86 18800375068",
-    email: "leon@sonida.com",
+    telephone: COMPANY.contact.phone,
+    email: COMPANY.contact.email,
     address: {
       "@type": "PostalAddress",
       addressCountry: "CN",

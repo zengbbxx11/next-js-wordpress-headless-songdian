@@ -2,6 +2,7 @@
 
 // 客户端组件：缩略图点击切换右侧大图
 import { useState } from "react";
+import Image from "next/image";
 
 /**
  * ProductGallery — 产品图片 + 竖排缩略图相册
@@ -51,12 +52,12 @@ export default function ProductGallery({
             }`}
             style={{ borderRadius: "8px" }}
           >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img
+            <Image
               src={img.src}
               alt={img.alt || mainAlt}
-              className="absolute inset-0 w-full h-full object-cover"
-              loading="lazy"
+              fill
+              sizes="80px"
+              className="object-cover"
             />
           </button>
         ))}
@@ -68,12 +69,13 @@ export default function ProductGallery({
           className="relative aspect-square overflow-hidden bg-gray-50 border border-[#EEEEEE]"
           style={{ borderRadius: "12px" }}
         >
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
+          <Image
             src={selected}
             alt={mainAlt}
-            className="absolute inset-0 w-full h-full object-cover"
-            loading="eager"
+            fill
+            sizes="(max-width: 768px) 100vw, 50vw"
+            className="object-cover"
+            priority
           />
         </div>
       </div>

@@ -7,6 +7,7 @@
  */
 
 import Link from "next/link";
+import Image from "next/image";
 import { superMeta } from "next-super-meta";
 import { getPosts } from "@/lib/wordpress";
 import Breadcrumbs from "@/components/Breadcrumbs";
@@ -64,13 +65,14 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                   <div className="grid grid-cols-1 md:grid-cols-2 min-h-[320px]">
                     <div className="relative aspect-[4/3] md:aspect-auto bg-gray-800 overflow-hidden" style={{ borderRadius: "12px 0 0 12px" }}>
                       {featured.featuredImage ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img
+                        <Image
                           src={featured.featuredImage}
                           alt={featured.featuredImageAlt}
-                          className="absolute inset-0 w-full h-full object-cover group-hover:brightness-[1.06] transition-all"
+                          fill
+                          sizes="(max-width: 768px) 100vw, 50vw"
+                          className="object-cover group-hover:brightness-[1.06] transition-all"
                           style={{ transitionDuration: "0.3s" }}
-                          loading="eager"
+                          priority
                         />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-600">
@@ -112,8 +114,7 @@ export default async function NewsPage({ searchParams }: NewsPageProps) {
                   >
                     <div className="relative sm:w-48 shrink-0 aspect-[4/3] sm:aspect-auto bg-gray-100 overflow-hidden">
                       {post.featuredImage ? (
-                        // eslint-disable-next-line @next/next/no-img-element
-                        <img src={post.featuredImage} alt={post.featuredImageAlt} className="absolute inset-0 w-full h-full object-cover group-hover:brightness-[1.06] transition-all" style={{ transitionDuration: "0.3s" }} loading="lazy" />
+                        <Image src={post.featuredImage} alt={post.featuredImageAlt} fill sizes="200px" className="object-cover group-hover:brightness-[1.06] transition-all" style={{ transitionDuration: "0.3s" }} />
                       ) : (
                         <div className="absolute inset-0 flex items-center justify-center text-gray-300"><svg className="w-8 h-8" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m2.25 0H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z" /></svg></div>
                       )}

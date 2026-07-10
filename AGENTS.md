@@ -58,8 +58,8 @@ C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-a
 | `/news` | WP 文章列表 + 置顶卡片 | ISR 60s |
 | `/news/[slug]` | WP 文章详情（Astra 主题清洗） | ISR 60s |
 | `/about` | content-data.ts 静态内容 | Static |
-| `/services` | content-data.ts 服务列表 | Static |
-| `/services/faq` | content-data.ts FAQ 列表 | Static |
+| `/solutions` | content-data.ts 解决方案列表（OEM/ODM/经销） | Static |
+| `/solutions/faq` | content-data.ts FAQ 列表 | Static |
 | `/contact` | 联系表单 + Google Maps 嵌入 | Static |
 
 ---

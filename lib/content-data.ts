@@ -246,66 +246,225 @@ export const STRENGTHS = [
   {
     title: "20 Years of Expertise",
     description: "Since 2006, we've been dedicated to digital camera R&D and manufacturing. Our veteran engineering team delivers products that win markets.",
+    icon: "award",
   },
   {
     title: "30+ New Products Annually",
     description: "Fast-paced innovation cycle — we launch over 30 new models each year, keeping your product lineup fresh and competitive.",
+    icon: "zap",
   },
   {
     title: "10M Units Annual Output",
     description: "10 production lines across 40,000 m² facility. Annual capacity of 10 million units ensures timely delivery at any scale.",
+    icon: "factory",
   },
   {
     title: "500+ Patents",
     description: "Deep investment in R&D with a portfolio of 500+ registered patents covering optical design, electronics, and manufacturing processes.",
+    icon: "lightbulb",
   },
   {
     title: "Global B2B Partner",
     description: "Serving brands across North America, Europe, Asia, Middle East, and Oceania. Verified by TÜV Rheinland onsite inspection.",
+    icon: "globe",
   },
   {
     title: "End-to-End Service",
     description: "From industrial design and prototyping to mass production, packaging, and logistics — we're your single-source camera manufacturing partner.",
+    icon: "package",
   },
 ] as const;
 
 // ============================================================
-// 服务（服务页面）
+// 隐私政策（隐私页 / Privacy Policy）
 // ============================================================
 
 /**
- * 服务页面展示的服务项目详情。
- * 每个服务包含用于锚点链接的 id、标题、副标题、概述段落
- * 以及功能要点列表。
+ * 首页页脚「Privacy」链接指向 /privacy-policy，本常量为其全部文案。
+ * 设计要点：
+ *   - 正文各小节存于 `sections`（prose + 可选 bullets）。
+ *   - “Contact Us” 小节不写死，由页面用 {@link COMPANY} 动态渲染，
+ *     保证公司名称 / 地址 / 邮箱 / 电话与全站始终同步。
+ *   - 不写 `as const`：各小节字段（paragraphs / bullets）可选且不齐，
+ *     走 TS 推断出的公共结构，避免联合类型访问报错。
+ *   - 语言沿用全站英文（B2B 全球客户），如需中文版可在此追加。
  */
-export const SERVICES = [
+export const PRIVACY = {
+  /** 最近更新日期 */
+  lastUpdated: "July 10, 2026",
+  /** 开篇说明（数据控制者 + 适用范围） */
+  intro:
+    "Songdian Technology (Guangdong) Co., Ltd. (\"Songdian\", \"we\", \"us\") operates this website to present our OEM/ODM digital camera manufacturing services to business customers worldwide. This Privacy Policy explains what personal information we collect, how we use and protect it, and the choices and rights you have. By using this site, you agree to the practices described below.",
+  /** 政策正文各小节（联系方式的“Contact Us”小节由 COMPANY 动态渲染，保持与全站同步） */
+  sections: [
+    {
+      id: "controller",
+      title: "1. Who We Are (Data Controller)",
+      paragraphs: [
+        "The data controller responsible for your personal information is Songdian Technology (Guangdong) Co., Ltd., a digital camera manufacturer founded in 2006 and headquartered in Foshan, Guangdong, China. Our registered address and full contact details appear in the “Contact Us” section below.",
+      ],
+    },
+    {
+      id: "collect",
+      title: "2. Information We Collect",
+      paragraphs: [
+        "We collect only the information needed to respond to your inquiries and operate the site responsibly:",
+      ],
+      bullets: [
+        "Inquiry & contact forms — your name, company name, business email, optional phone number, and the message you submit.",
+        "Subscriptions — your email address if you sign up for product updates or newsletters.",
+        "Partner accounts — login credentials and profile details if you are granted access to a customer portal.",
+        "Automatically collected data — IP address, browser and device type, referring pages, and aggregated usage analytics gathered through cookies and similar technologies (see Section 5).",
+      ],
+    },
+    {
+      id: "use",
+      title: "3. How We Use Your Information",
+      bullets: [
+        "Respond to your inquiries, quotes, and manufacturing requests.",
+        "Provide and improve our OEM/ODM services, products, and website.",
+        "Send service communications and, where you have opted in, product news and updates.",
+        "Comply with legal obligations and protect our rights, users, and business.",
+        "Analyze site usage to improve content and user experience.",
+      ],
+    },
+    {
+      id: "legal-basis",
+      title: "4. Legal Basis for Processing",
+      paragraphs: [
+        "Where the General Data Protection Regulation (GDPR) or similar law applies, we process your personal data on the following bases: performance of a contract (e.g., responding to a request for a quote); our legitimate interests in operating and improving our business; and your consent, where you have subscribed to marketing communications. You may withdraw consent at any time without affecting prior processing.",
+      ],
+    },
+    {
+      id: "cookies",
+      title: "5. Cookies and Similar Technologies",
+      paragraphs: [
+        "We use cookies and comparable technologies to keep the site functioning, remember preferences, and understand how visitors use it. You can control or disable cookies through your browser settings; some features may not work if you do so.",
+      ],
+      bullets: [
+        "Strictly necessary — required for core site functionality and security.",
+        "Analytics — help us measure traffic and improve the site (aggregated, non-identifying).",
+        "Preference — remember choices such as language or region.",
+      ],
+    },
+    {
+      id: "sharing",
+      title: "6. How We Share Information",
+      paragraphs: [
+        "We do not sell your personal information. We share it only with:",
+      ],
+      bullets: [
+        "Service providers — vetted partners who help us run the site, deliver email, and provide IT and customer-support services, bound by confidentiality.",
+        "Professional advisors and authorities — where required by law, regulation, legal process, or to protect rights and safety.",
+        "A successor entity — in connection with a merger, acquisition, or asset transfer, subject to this policy.",
+      ],
+    },
+    {
+      id: "transfers",
+      title: "7. International Data Transfers",
+      paragraphs: [
+        "As a global OEM/ODM supplier serving brands in 60+ countries, your information may be transferred to and processed in China and other jurisdictions where we or our service providers operate. Where required, we rely on appropriate safeguards (such as standard contractual clauses) to protect your data.",
+      ],
+    },
+    {
+      id: "retention",
+      title: "8. Data Retention",
+      paragraphs: [
+        "We keep personal information only as long as necessary for the purposes described in this policy, to comply with legal obligations, resolve disputes, and enforce agreements. Inquiry records are typically retained for the duration of the business relationship and a limited period thereafter.",
+      ],
+    },
+    {
+      id: "security",
+      title: "9. Data Security",
+      paragraphs: [
+        "We maintain technical and organizational measures appropriate to the sensitivity of the data — including access controls, encryption in transit, and network safeguards — to protect your personal information against unauthorized access, loss, or misuse. No method of transmission or storage is completely secure, but we continually review and strengthen our controls.",
+      ],
+    },
+    {
+      id: "rights",
+      title: "10. Your Privacy Rights",
+      paragraphs: [
+        "Depending on your location, you may have the right to access, correct, delete, or port your personal data, to restrict or object to certain processing, and to withdraw consent. To exercise any of these rights, contact us using the details below; we will respond within the timeframe required by applicable law.",
+      ],
+      bullets: [
+        "Access — request a copy of the personal data we hold about you.",
+        "Rectification — ask us to correct inaccurate or incomplete data.",
+        "Erasure — request deletion of your data where there is no overriding reason to keep it.",
+        "Objection & restriction — object to, or ask us to pause, certain processing.",
+        "Portability — receive your data in a structured, machine-readable format.",
+      ],
+    },
+    {
+      id: "children",
+      title: "11. Children's Privacy",
+      paragraphs: [
+        "This website is intended for business customers and professional buyers, not children. We do not knowingly collect personal information from anyone under 16. If you believe a minor has provided us data, contact us and we will delete it.",
+      ],
+    },
+    {
+      id: "changes",
+      title: "12. Changes to This Policy",
+      paragraphs: [
+        "We may update this Privacy Policy from time to time. Material changes will be reflected by the “Last updated” date at the top, and where appropriate we will notify you through the site or by email.",
+      ],
+    },
+  ],
+};
+
+// ============================================================
+// 解决方案（解决方案页 / Solutions）
+// ============================================================
+
+/**
+ * 解决方案页 Hero 区域文案。
+ * 传达「我们是一家位于中国的工厂，专业从事高品质相机研发」，
+ * 以及「解决方案根据您的需求量身定制」的核心定位。
+ */
+export const SOLUTIONS_HERO = {
+  /** 品牌红 eyebrow 标签 */
+  eyebrow: "Our Solutions",
+  /** 主标题（H1） */
+  title: "Camera Solutions, Tailored to Your Needs",
+  /** 支持性段落 */
+  subtitle:
+    "We are a China-based factory specializing in the R&D of high-quality cameras. From your spec sheet to your product idea, we offer three core solutions to match how you go to market: OEM, ODM, and SONGDIAN brand distribution.",
+} as const;
+
+/**
+ * 三大核心解决方案：OEM、ODM、SONGDIAN 品牌经销。
+ * 每个解决方案包含锚点 id、标题、简短口号、概述段落、
+ * 功能要点列表与 Lucide 图标标识符。
+ */
+export const SOLUTIONS = [
   {
     /** 用于锚点/哈希链接的唯一标识符 */
     id: "oem",
-    /** 服务标题 */
+    /** 解决方案标题 */
     title: "OEM Manufacturing",
     /** 简短口号 */
-    subtitle: "Build to Your Specification",
+    tagline: "Build to Your Specification",
+    /** Lucide 图标标识符 */
+    icon: "factory",
     /** 概述段落 */
     summary:
-      "Hand us your product specifications, BOM, and branding requirements — we handle everything from component sourcing and PCB assembly to firmware flashing, QC testing, and custom packaging. 10 production lines, 10 million units annual output.",
+      "Hand us your product specifications, BOM, and branding — we handle component sourcing, PCB assembly, firmware, QC, and packaging. Ten production lines and 10 million units of annual capacity keep your orders on time, at any scale.",
     /** 主要功能/交付物 */
     features: [
-      "Full BOM procurement and supply chain management",
+      "Full BOM procurement and supply-chain management",
       "High-precision SMT assembly across 10 production lines",
       "Custom firmware with your splash screen and UI",
       "Custom enclosure with your logo and color scheme",
       "Retail-ready packaging with your brand design",
       "100% functional QC with detailed inspection reports",
-      "Annual capacity of 10 million units for rapid fulfillment",
     ],
   },
   {
     id: "odm",
     title: "ODM Design & Development",
-    subtitle: "We Design, You Brand",
+    tagline: "We Design, You Brand",
+    icon: "pencil-ruler",
     summary:
-      "Choose from our library of 500+ patented designs or let our R&D team create a custom product for your market. 30+ new products developed annually — from concept to mass production in as little as 3 months.",
+      "Choose from our library of 500+ patented camera designs, or let our R&D team develop a custom product for your market. We launch 30+ new models every year — from concept to mass production in as little as 3 months.",
     features: [
       "Access to 500+ patented camera designs",
       "Industrial design and mechanical engineering (CAD/CAM)",
@@ -313,39 +472,21 @@ export const SERVICES = [
       "Embedded firmware development and ISP tuning",
       "Rapid prototyping with 3D printing and CNC",
       "CE, FCC, RoHS compliance support",
-      "White-label and private-label options available",
     ],
   },
   {
-    id: "branding",
-    title: "Brand Customization",
-    subtitle: "Your Brand, Our Quality",
+    id: "distribution",
+    title: "SONGDIAN Brand Distribution",
+    tagline: "Distribute Our Brand",
+    icon: "store",
     summary:
-      "Full-spectrum branding services for distributors and retailers. Custom logos, packaging, firmware UI, user manuals, and product photography — everything you need to launch your own camera brand.",
+      "Become an authorized distributor of the SONGDIAN brand. Get factory-direct pricing across our full camera catalog, plus marketing and after-sales support — everything you need to sell proven cameras under a trusted name.",
     features: [
-      "Custom logo printing on camera body and lens",
-      "Bespoke packaging design and printing",
-      "Branded firmware with custom splash screen and UI colors",
-      "Multi-language user manual creation and printing",
-      "Professional product photography for your catalog",
-      "Drop-shipping and FBA prep services available",
-      "Low MOQ for brand trials — start with 100 units",
-    ],
-  },
-  {
-    id: "qc",
-    title: "Quality Assurance",
-    subtitle: "TÜV Rheinland Verified",
-    summary:
-      "Every camera undergoes a rigorous 5-stage QC process. Onsite verified by TÜV Rheinland — one of the world's leading inspection companies — ensuring consistent quality at any production scale.",
-    features: [
-      "IQC — Incoming material inspection for all components",
-      "IPQC — In-process quality control at each production stage",
-      "AOI — Automated optical inspection after SMT assembly",
-      "Full functional testing of all ports, buttons, and sensors",
-      "24-hour burn-in / aging test for reliability",
-      "OQC — AQL sampling inspection before shipment",
-      "Detailed QC reports provided with every order",
+      "Factory-direct pricing with competitive distributor margins",
+      "Full catalog of proven, market-ready camera models",
+      "Marketing assets, product photography, and sales collateral",
+      "Brand-backed warranty and dedicated after-sales support",
+      "Regional exclusivity options for qualified partners",
     ],
   },
 ] as const;

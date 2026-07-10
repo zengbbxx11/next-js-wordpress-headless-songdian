@@ -1,7 +1,5 @@
-"use client";
-
-// 客户端组件：CTA 按钮 hover 颜色切换依赖内联事件处理器
 import Link from "next/link";
+import Image from "next/image";
 import type { ProductSummary } from "@/lib/types";
 
 /**
@@ -34,13 +32,13 @@ export default function ProductCard({ product }: ProductCardProps) {
         className="block relative aspect-square shrink-0 bg-gray-50 overflow-hidden"
       >
         {product.image ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img
+          <Image
             src={product.image}
             alt={product.imageAlt || product.name}
-            className="absolute inset-0 w-full h-full object-cover transition-transform group-hover:scale-[1.03]"
+            fill
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+            className="object-cover transition-transform group-hover:scale-[1.03]"
             style={{ transitionDuration: "0.3s" }}
-            loading="lazy"
           />
         ) : (
           <div className="absolute inset-0 flex items-center justify-center text-gray-300">
@@ -86,21 +84,12 @@ export default function ProductCard({ product }: ProductCardProps) {
         {/* ====================== CTA ====================== */}
         <Link
           href={`/products/${product.slug}`}
-          className="flex items-center justify-center w-full mt-3 text-xs font-medium text-white rounded transition-colors"
+          className="flex items-center justify-center w-full mt-3 h-[34px] text-xs font-medium text-white rounded bg-[#3E6AE1] hover:bg-[#3561CC] transition-colors"
           style={{
             fontSize: "12px",
             fontWeight: 500,
-            backgroundColor: "#3E6AE1",
-            color: "#FFFFFF",
-            height: "34px",
             borderRadius: "4px",
             transitionDuration: "0.33s",
-          }}
-          onMouseEnter={(e) => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
-          }}
-          onMouseLeave={(e) => {
-            (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
           }}
         >
           View Details
