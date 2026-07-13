@@ -7,7 +7,7 @@
 ## 项目定位
 
 松典科技（广东）有限公司 B2B 官网，面向全球 OEM/ODM 数码相机采购商。
-后端 WordPress + WooCommerce（`localhost:10004`），前端 Next.js Headless。
+后端 WordPress + WooCommerce（部署在腾讯云服务器 `127.0.0.1:10004`），前端 Next.js Headless。
 
 ---
 
@@ -17,7 +17,7 @@
 |---|------|
 | 框架 | Next.js 16 + React 19 + TypeScript（strict） |
 | 样式 | Tailwind CSS v4 + shadcn/ui |
-| 后端 | WordPress `localhost:10004` + WooCommerce（无需 API Key） |
+| 后端 | WordPress `127.0.0.1:10004`（部署在腾讯云服务器）+ WooCommerce（无需 API Key） |
 | 表单 | react-hook-form + Zod + Server Actions |
 | SEO | next-super-meta + JSON-LD 结构化数据 |
 | 动画 | framer-motion |
@@ -27,13 +27,23 @@
 ## 项目路径
 
 ```
-C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app
+本地: C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app
+服务器: /home/ubuntu/songdianweb
+GitHub: https://github.com/zengbbxx11/next-js-wordpress-headless-songdian.git
 ```
 
-启动：`npm run dev` → `http://localhost:3000`
+### 本地启动
+
+```bash
+npm run dev → http://localhost:3000
+```
 
 > ⚠️ 本机沙箱 `npm run dev` 可能 fork 失败（EAGAIN），改用：
 > `node_modules/next/dist/bin/next dev -p 3000`
+
+### 服务器启动（PM2）
+
+PM2 保活，端口 3000，通过 1Panel OpenResty 反向代理到 80 端口。
 
 ---
 
@@ -155,18 +165,18 @@ C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-a
 
 配置文件：`.env.local`（开发）/ `.env.example`（模板）
 
-| 变量 | 用途 | 示例 |
-|------|------|------|
-| `NEXT_PUBLIC_WORDPRESS_URL` | WordPress 后端地址 | `http://localhost:10004` |
-| `NEXT_PUBLIC_ISR_REVALIDATE` | ISR 重新验证间隔（秒） | `60` |
-| `NEXT_PUBLIC_SITE_URL` | 前端站点地址 | `http://localhost:3000` |
-| `NEXT_PUBLIC_SITE_NAME` | 站点名称（SEO） | `Songdian Technology...` |
-| `SMTP_HOST` | SMTP 服务器（询盘邮件） | `smtp.qq.com` |
-| `SMTP_PORT` | SMTP 端口 | `587` |
-| `SMTP_USER` | SMTP 用户名（发件邮箱） | `xxx@qq.com` |
-| `SMTP_PASS` | SMTP 授权码（非邮箱密码） | `授权码` |
-| `INQUIRY_EMAIL_TO` | 接收询盘通知的邮箱 | `zengxb21@proton.me` |
-| `INQUIRY_EMAIL_FROM` | 发件人地址（默认取 SMTP_USER） | `noreply@songdian.com` |
+| 变量 | 用途 | 开发环境 | 生产环境（服务器） |
+|------|------|---------|------------------|
+| `NEXT_PUBLIC_WORDPRESS_URL` | WordPress 后端地址 | `http://localhost:10004` | `http://127.0.0.1:10004`（容器的 `siteurl` 为 `http://106.53.220.184:10004`，需在 `remotePatterns` 中对应添加） |
+| `NEXT_PUBLIC_ISR_REVALIDATE` | ISR 重新验证间隔（秒） | `60` | `60` |
+| `NEXT_PUBLIC_SITE_URL` | 前端站点地址 | `http://localhost:3000` | `http://106.53.220.184` |
+| `NEXT_PUBLIC_SITE_NAME` | 站点名称（SEO） | `Songdian Technology...` | 同左 |
+| `SMTP_HOST` | SMTP 服务器（询盘邮件） | `smtp.qq.com` | 同左 |
+| `SMTP_PORT` | SMTP 端口 | `587` | 同左 |
+| `SMTP_USER` | SMTP 用户名（发件邮箱） | `xxx@qq.com` | 同左 |
+| `SMTP_PASS` | SMTP 授权码（非邮箱密码） | 授权码 | 同左 |
+| `INQUIRY_EMAIL_TO` | 接收询盘通知的邮箱 | `zengxb21@proton.me` | 同左 |
+| `INQUIRY_EMAIL_FROM` | 发件人地址（默认取 SMTP_USER） | `noreply@songdian.com` | 同左 |
 
 > ⚠️ SMTP 四项不填则仅保存到 `data/inquiries.json`，不发邮件。
 
@@ -210,6 +220,34 @@ C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-a
 | 添加重定向 | `next.config.ts` → `redirects()` |
 | 产品相册不显示 | 确认 `wc-product-specs-rest.php` 插件已启用 |
 | 新闻详情样式乱 | Astra 主题 HTML 干扰，由 `html-cleaner.ts` 自动清洗 |
+
+---
+
+## 生产部署
+
+| 项目 | 值 |
+|------|-----|
+| 服务器 | 腾讯云 2C2G（已加 2GB Swap），1Panel Linux 面板 |
+| IP | `106.53.220.184` |
+| SSH | `ubuntu@106.53.220.184`（nvm 管理 Node 22） |
+| 前端 | PM2 保活，端口 3000，路径 `/home/ubuntu/songdianweb` |
+| 后端 | WordPress 容器（php:8.3.32），端口 `0.0.0.0:10004→80` |
+| 数据库 | MySQL 8.4.10，库名 `word_dNMNbP` |
+| 反向代理 | 1Panel OpenResty（80 → 127.0.0.1:3000） |
+| 代码源 | GitHub：`https://github.com/zengbbxx11/next-js-wordpress-headless-songdian.git` |
+
+### 部署更新流程
+
+```bash
+ssh ubuntu@106.53.220.184
+cd ~/songdianweb
+git pull
+npm install
+npm run build
+pm2 restart songdian
+```
+
+详细部署文档见 `deploy-guide.md`。
 
 ---
 

@@ -309,17 +309,43 @@ my-app/
 
 ## 部署
 
-推荐 **Vercel**（零配置，自动识别 Next.js）。关键事项：
+当前生产环境：**腾讯云服务器 + 1Panel Linux 面板**，自托管运行。详见 `deploy-guide.md`。
 
-1. **图片域名**：`next.config.ts` 的 `images.remotePatterns` 当前放行 `localhost:10004`。上线前追加生产域名规则：
-   ```ts
-   { protocol: "https", hostname: "your-domain.com" }
-   ```
-2. **环境变量**：在部署平台配置所有 `NEXT_PUBLIC_*` 变量 + SMTP 变量（`SMTP_HOST` 等）。
-3. **WordPress 插件**：目标 WP 环境需启用 `wc-product-specs-rest.php`。
-4. **生产安全**：部署到公网后，可移除 `dangerouslyAllowLocalIP: true`。
+### 服务器概览
 
-也可 `npm run build && npm run start` 自托管（Node 服务）。
+```text
+地址:      http://106.53.220.184
+SSH:       ubuntu@106.53.220.184
+面板:      1Panel（端口 8090）
+WordPress: http://106.53.220.184:10004（容器化）
+数据库:    MySQL 8.4，库名 word_dNMNbP
+```
+
+### 生产环境关键配置
+
+1. **图片白名单**：`next.config.ts` 的 `images.remotePatterns` 已配置 `127.0.0.1:10004` 和 `106.53.220.184:10004`。
+2. **环境变量**：`.env.local` 中 `NEXT_PUBLIC_WORDPRESS_URL=http://127.0.0.1:10004`。
+3. **WordPress 插件**：服务器 WordPress 已启用 `wc-product-specs-rest.php`。
+4. **PM2 保活**：`pm2 start npm --name songdian -- run start -- -p 3000`。
+5. **反向代理**：1Panel OpenResty 转发 80 端口到 `127.0.0.1:3000`。
+
+### 部署更新
+
+```bash
+ssh ubuntu@106.53.220.184
+cd ~/songdianweb
+git pull
+npm install
+npm run build
+pm2 restart songdian
+```
+
+### 备选方案：Vercel
+
+如果将来切换回 Vercel 部署，注意：
+1. `next.config.ts` 的 `remotePatterns` 需追加生产域名规则
+2. 在 Vercel 项目设置中配置所有 `NEXT_PUBLIC_*` 环境变量
+3. WordPress 需可从公网访问，或使用专用 API 网关
 
 ---
 
