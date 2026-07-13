@@ -25,6 +25,7 @@ import type {
   ProductSummary,
   ProductDetail,
 } from "@/lib/types";
+import { cache } from "react";
 
 /** WordPress REST API 基础 URL，开发环境默认为 localhost */
 const WP_URL = process.env.NEXT_PUBLIC_WORDPRESS_URL || "http://localhost:10004";
@@ -52,18 +53,22 @@ const WC_API = `${WP_URL}/wp-json/wc/v3`;
  */
 async function wpFetch<T>(
   endpoint: string,
-  options?: RequestInit & { timeout?: number }
+  options?: RequestInit & { timeout?: number; revalidate?: number | false }
 ): Promise<{ data: T; pagination?: WPPagination }> {
   const controller = new AbortController();
   const timeout = options?.timeout || 15000;
   const timer = setTimeout(() => controller.abort(), timeout);
 
+  const { revalidate, ...fetchOptions } = options || {};
+
   try {
     const res = await fetch(`${WP_API}${endpoint}`, {
-      ...options,
+      ...fetchOptions,
       signal: controller.signal,
-      headers: { "Content-Type": "application/json", ...options?.headers },
-      next: { revalidate: Number(process.env.NEXT_PUBLIC_ISR_REVALIDATE) || 60 },
+      headers: { "Content-Type": "application/json", ...fetchOptions?.headers },
+      next: revalidate !== undefined
+        ? { revalidate }
+        : { revalidate: Number(process.env.NEXT_PUBLIC_ISR_REVALIDATE) || 60 },
     });
 
     if (!res.ok) throw new Error(`WP API Error: ${res.status}`);
@@ -395,9 +400,6 @@ export async function getTags(): Promise<WPTag[]> {
 // 产品 API（通过 WP REST 访问 WooCommerce 产品自定义文章类型）
 // ============================================================
 
-/** WooCommerce 产品自定义文章类型通过 WP REST API 访问的基础 URL */
-const PRODUCT_API_BASE = `${WP_URL}/wp-json/wp/v2/product`;
-
 /**
  * 通过 WP REST API 获取分页的 WooCommerce 产品列表。
  *
@@ -428,20 +430,7 @@ export async function getProducts(params?: {
     if (params?.category) query.set("product_cat", String(params.category));
     if (params?.search) query.set("search", params.search);
 
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
-
-    const res = await fetch(`${PRODUCT_API_BASE}?${query}`, {
-      signal: controller.signal,
-      next: { revalidate: Number(process.env.NEXT_PUBLIC_ISR_REVALIDATE) || 60 },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) return { products: [], pagination: null };
-
-    const data: WPPost[] = await res.json();
-    const totalPages = res.headers.get("X-WP-TotalPages");
-    const total = res.headers.get("X-WP-Total");
+    const { data, pagination } = await wpFetch<WPPost[]>(`/product?${query}`);
 
     const products: ProductSummary[] = data.map((p) => {
       const media = p._embedded?.["wp:featuredmedia"]?.[0];
@@ -475,12 +464,7 @@ export async function getProducts(params?: {
       };
     });
 
-    return {
-      products,
-      pagination: totalPages && total
-        ? { totalPages: parseInt(totalPages), total: parseInt(total) }
-        : null,
-    };
+    return { products, pagination: pagination || null };
   } catch {
     return { products: [], pagination: null };
   }
@@ -493,19 +477,11 @@ export async function getProducts(params?: {
  * @param slug - WooCommerce 产品 slug
  * @returns {@link ProductDetail} 对象，未找到则返回 `null`
  */
-export async function getProductBySlug(slug: string): Promise<ProductDetail | null> {
+export const getProductBySlug = cache(async (slug: string): Promise<ProductDetail | null> => {
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
-
-    const res = await fetch(`${PRODUCT_API_BASE}?slug=${encodeURIComponent(slug)}&_embed=true`, {
-      signal: controller.signal,
-      next: { revalidate: Number(process.env.NEXT_PUBLIC_ISR_REVALIDATE) || 60 },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) return null;
-    const data: WPPost[] = await res.json();
+    const { data } = await wpFetch<WPPost[]>(
+      `/product?slug=${encodeURIComponent(slug)}&_embed=true`
+    );
     if (!data.length) return null;
 
     const p = data[0];
@@ -561,7 +537,7 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
   } catch {
     return null;
   }
-}
+});
 
 /**
  * 获取所有已发布产品的 slug（最多 100 个）。
@@ -571,17 +547,10 @@ export async function getProductBySlug(slug: string): Promise<ProductDetail | nu
  */
 export async function getAllProductSlugs(): Promise<string[]> {
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 15000);
-
-    const res = await fetch(`${PRODUCT_API_BASE}?_fields=slug&per_page=100`, {
-      signal: controller.signal,
-      next: { revalidate: 3600 },
-    });
-    clearTimeout(timer);
-
-    if (!res.ok) return [];
-    const data: WPPost[] = await res.json();
+    const { data } = await wpFetch<WPPost[]>(
+      "/product?_fields=slug&per_page=100",
+      { revalidate: 3600 }
+    );
     return data.map((p) => p.slug);
   } catch {
     return [];
@@ -590,26 +559,15 @@ export async function getAllProductSlugs(): Promise<string[]> {
 
 /**
  * 获取所有 WooCommerce 产品分类，按字母排序（最多 50 个）。
- * 使用 `product_cat` 分类端点，并设置较长的 ISR 重新验证窗口。
  *
  * @returns {@link WCProductCategory} 对象数组
  */
 export async function getProductCategories(): Promise<WCProductCategory[]> {
   try {
-    const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 10000);
-
-    const res = await fetch(
-      `${WP_URL}/wp-json/wp/v2/product_cat?per_page=50&orderby=name&order=asc`,
-      {
-        signal: controller.signal,
-        next: { revalidate: 3600 },
-      }
+    const { data } = await wpFetch<WCProductCategory[]>(
+      "/product_cat?per_page=50&orderby=name&order=asc",
+      { revalidate: 3600 }
     );
-    clearTimeout(timer);
-
-    if (!res.ok) return [];
-    const data: WCProductCategory[] = await res.json();
     return data;
   } catch {
     return [];

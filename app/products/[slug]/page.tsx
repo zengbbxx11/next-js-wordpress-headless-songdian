@@ -9,6 +9,7 @@
  * 是否含 client 组件：是 —— ProductGallery 为客户端交互组件。
  */
 
+import { Suspense } from "react";
 import Link from "next/link";
 import type { Metadata } from "next";
 import { getProductBySlug, getAllProductSlugs, getProducts } from "@/lib/wordpress";
@@ -77,6 +78,48 @@ function extractSpecs(html: string): { label: string; value: string }[] {
   return specs.slice(0, 16);
 }
 
+// ============================================================
+// 相关产品 — 独立 async 组件，Suspense 流式到达，不阻塞主内容
+// ============================================================
+
+async function RelatedProducts({ categoryId, currentProductId }: { categoryId: number; currentProductId: number }) {
+  const { products } = await getProducts({ category: categoryId, perPage: 4 }).catch(() => ({ products: [], pagination: null }));
+  const related = products.filter((p) => p.id !== currentProductId).slice(0, 4);
+
+  if (related.length === 0) return null;
+
+  return (
+    <section className="py-14 md:py-20" style={{ backgroundColor: "#F4F4F4" }}>
+      <div className="max-w-7xl mx-auto px-6">
+        <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-8">Related Products</h2>
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {related.map((p) => (
+            <ProductCard key={p.id} product={p} />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function RelatedProductsSkeleton() {
+  return (
+    <section className="py-14 md:py-20" style={{ backgroundColor: "#F4F4F4" }}>
+      <div className="max-w-7xl mx-auto px-6">
+        <div className="h-8 w-48 rounded animate-pulse bg-[#E5E5E5] mb-8" />
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
+          {Array.from({ length: 4 }).map((_, i) => (
+            <div key={i} className="space-y-3">
+              <div className="aspect-square rounded-xl animate-pulse bg-[#E5E5E5]" style={{ animationDelay: `${i * 0.1}s` }} />
+              <div className="h-4 w-3/4 rounded animate-pulse bg-[#E5E5E5]" />
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
 export default async function ProductDetailPage({
   params,
 }: {
@@ -126,12 +169,6 @@ export default async function ProductDetailPage({
   const primaryImage = product.images?.[0]?.src || null;
   const galleryImages = product.gallery || [];
   const hasContent = product.description && product.description.trim().length > 0;
-
-  // 获取同类相关产品（取首个分类，最多 4 个）
-  let relatedProducts: Awaited<ReturnType<typeof getProducts>> = { products: [], pagination: null };
-  if (product.categories.length > 0) {
-    try { relatedProducts = await getProducts({ category: product.categories[0].id, perPage: 4 }); } catch { /* ignore */ }
-  }
 
   return (
     <>
@@ -287,21 +324,11 @@ export default async function ProductDetailPage({
         </section>
       )}
 
-      {/* 相关产品 */}
-      {relatedProducts.products.length > 1 && (
-        <section className="py-14 md:py-20" style={{ backgroundColor: "#F4F4F4" }}>
-          <div className="max-w-7xl mx-auto px-6">
-            <h2 className="text-2xl font-bold text-gray-900 tracking-tight mb-8">Related Products</h2>
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
-              {relatedProducts.products
-                .filter((p) => p.id !== product.id)
-                .slice(0, 4)
-                .map((p) => (
-                  <ProductCard key={p.id} product={p} />
-                ))}
-            </div>
-          </div>
-        </section>
+      {/* 相关产品 — 流式到达，不阻塞主内容 */}
+      {primaryCategory && (
+        <Suspense fallback={<RelatedProductsSkeleton />}>
+          <RelatedProducts categoryId={primaryCategory.id} currentProductId={product.id} />
+        </Suspense>
       )}
     </>
   );

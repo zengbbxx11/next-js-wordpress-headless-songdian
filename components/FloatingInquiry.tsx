@@ -40,21 +40,13 @@ export default function FloatingInquiry() {
 
       <Link
         href="/contact"
-        className="inline-flex items-center px-6 text-white text-sm font-medium rounded"
+        className="inline-flex items-center px-6 text-white text-sm font-medium rounded bg-[#3E6AE1] hover:bg-[#3561CC] transition-colors duration-[330ms]"
         style={{
           fontSize: "14px",
           fontWeight: 500,
-          backgroundColor: "#3E6AE1",
           color: "#FFFFFF",
           height: "36px",
           borderRadius: "4px",
-          transition: "background-color 0.33s ease",
-        }}
-        onMouseEnter={(e) => {
-          (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
-        }}
-        onMouseLeave={(e) => {
-          (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
         }}
       >
         Send Inquiry
@@ -72,13 +64,6 @@ export default function FloatingInquiry() {
           />
         </svg>
       </Link>
-
-      {/* 底部安全区域占位 — 为页面内容留出空间 */}
-      <style jsx global>{`
-        body {
-          padding-bottom: 56px;
-        }
-      `}</style>
     </div>
   );
 }

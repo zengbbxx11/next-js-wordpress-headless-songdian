@@ -39,6 +39,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingInquiry from "@/components/FloatingInquiry";
+import NavigationProgress from "@/components/NavigationProgress";
 import { COMPANY } from "@/lib/content-data";
 import { MEDIA } from "@/lib/media";
 import { organizationSchema, webSiteSchema } from "@/lib/seo";
@@ -58,12 +59,14 @@ initSuperMeta({
 const geistSans = Geist({
   variable: "--font-geist-sans",
   subsets: ["latin"],
+  display: "swap",
 });
 
 /** Geist Mono — monospace font for code / technical content */
 const geistMono = Geist_Mono({
   variable: "--font-geist-mono",
   subsets: ["latin"],
+  display: "swap",
 });
 
 // ------------------------------------------------------------------
@@ -197,6 +200,9 @@ export default function RootLayout({
       </head>
       {/* Body：纵向 flex 列布局，将页脚推到底部；白底深字 */}
       <body className="min-h-screen flex flex-col bg-white text-gray-900">
+        {/* 顶部路由切换进度条 — 点击链接瞬间触发 */}
+        <NavigationProgress />
+
         {/* 站点级导航页头 */}
         <Header />
 

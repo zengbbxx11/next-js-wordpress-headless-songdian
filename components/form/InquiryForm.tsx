@@ -35,10 +35,10 @@ const cameraCategories = [
 
 // zod 校验规则：仅核心 4 项必填，其余可选，最大程度降低填写负担
 const inquirySchema = z.object({
-  fullName: z.string().min(2, "请输入至少 2 个字符的姓名"),
-  email: z.string().email("请输入有效的邮箱地址"),
-  productInterest: z.string().min(1, "请选择您感兴趣的产品类型"),
-  message: z.string().min(10, "请简单描述您的需求（至少 10 个字符）"),
+  fullName: z.string().min(2, "Please enter your name (at least 2 characters)"),
+  email: z.string().email("Please enter a valid email address"),
+  productInterest: z.string().min(1, "Please select a product type"),
+  message: z.string().min(10, "Please describe your needs (at least 10 characters)"),
   phone: z.string().optional(),
   company: z.string().optional(),
   quantity: z.string().optional(),
@@ -247,19 +247,8 @@ export default function InquiryForm() {
               <Button
                 type="submit"
                 disabled={isSubmitting}
-                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold transition-all"
-                style={{
-                  backgroundColor: "#3E6AE1",
-                  color: "#FFFFFF",
-                  borderRadius: "4px",
-                  transitionDuration: "0.33s",
-                }}
-                onMouseEnter={(e) => {
-                  if (!isSubmitting) (e.currentTarget as HTMLElement).style.backgroundColor = "#3561CC";
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.backgroundColor = "#3E6AE1";
-                }}
+                className="w-full sm:w-auto px-8 py-3 text-sm font-semibold transition-colors duration-[330ms] bg-[#3E6AE1] hover:bg-[#3561CC] text-white"
+                style={{ borderRadius: "4px" }}
               >
                 {isSubmitting ? (
                   <>

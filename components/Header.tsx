@@ -125,20 +125,11 @@ export default function Header() {
               >
                 <Link
                   href={item.href}
-                  className="inline-flex items-center px-3 py-2 text-[16px] font-medium rounded"
-                  style={{
-                    fontSize: "16px",
-                    fontWeight: 500,
-                    color: isActive ? COLORS.brandRed : COLORS.carbonDark,
-                    borderRadius: "4px",
-                    transition: "color 0.33s ease",
-                  }}
-                  onMouseEnter={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = COLORS.brandRed;
-                  }}
-                  onMouseLeave={(e) => {
-                    (e.currentTarget as HTMLElement).style.color = isActive ? COLORS.brandRed : COLORS.carbonDark;
-                  }}
+                  className="inline-flex items-center px-3 py-2 text-[16px] font-medium rounded text-[#171A20] hover:text-[#d4343e] transition-colors duration-[330ms]"
+                  style={isActive
+                    ? { fontSize: "16px", fontWeight: 500, color: COLORS.brandRed, borderRadius: "4px" }
+                    : { fontSize: "16px", fontWeight: 500, borderRadius: "4px" }
+                  }
                 >
                   {item.label}
                   {hasDropdown && (
@@ -177,18 +168,10 @@ export default function Header() {
                       <Link
                         key={child.label}
                         href={child.href}
-                        className="flex items-center px-4 py-2.5 mx-1 text-[15px] rounded-md hover:bg-gray-50 transition-colors"
+                        className="flex items-center px-4 py-2.5 mx-1 text-[15px] rounded-md hover:bg-gray-50 text-[#171A20] hover:text-[#d4343e] transition-colors duration-[150ms]"
                         style={{
                           fontSize: "15px",
                           fontWeight: 400,
-                          color: COLORS.carbonDark,
-                          transitionDuration: "0.15s",
-                        }}
-                        onMouseEnter={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = COLORS.brandRed;
-                        }}
-                        onMouseLeave={(e) => {
-                          (e.currentTarget as HTMLElement).style.color = COLORS.carbonDark;
                         }}
                       >
                         {child.label}
@@ -206,21 +189,13 @@ export default function Header() {
           {/* 桌面端 CTA 按钮 */}
           <Link
             href="/contact"
-            className="hidden md:inline-flex items-center px-5 text-white text-[15px] font-medium rounded"
+            className="hidden md:inline-flex items-center px-5 text-white text-[15px] font-medium rounded bg-[#3E6AE1] hover:bg-[#3457B8] transition-colors duration-[330ms]"
             style={{
               fontSize: "15px",
               fontWeight: 500,
-              backgroundColor: COLORS.electricBlue,
               color: COLORS.white,
               height: "40px",
               borderRadius: "4px",
-              transition: "background-color 0.33s ease",
-            }}
-            onMouseEnter={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlueHover;
-            }}
-            onMouseLeave={(e) => {
-              (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlue;
             }}
           >
             Request Quote
@@ -285,19 +260,11 @@ export default function Header() {
               <Link
                 href={item.href}
                 onClick={() => setMobileOpen(false)}
-                className="block px-4 py-3 text-[16px] font-medium rounded"
+                className="block px-4 py-3 text-[16px] font-medium rounded text-[#171A20] hover:text-[#d4343e] transition-colors duration-[330ms]"
                 style={{
                   fontSize: "16px",
                   fontWeight: 500,
-                  color: COLORS.carbonDark,
                   borderRadius: "4px",
-                  transition: "color 0.33s ease",
-                }}
-                onMouseEnter={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = COLORS.brandRed;
-                }}
-                onMouseLeave={(e) => {
-                  (e.currentTarget as HTMLElement).style.color = COLORS.carbonDark;
                 }}
               >
                 {item.label}
@@ -310,19 +277,11 @@ export default function Header() {
                       key={child.label}
                       href={child.href}
                       onClick={() => setMobileOpen(false)}
-                      className="block px-3 py-2 text-[15px] font-normal rounded"
+                      className="block px-3 py-2 text-[15px] font-normal rounded text-[#171A20] hover:text-[#d4343e] transition-colors duration-[330ms]"
                       style={{
                         fontSize: "15px",
                         fontWeight: 400,
-                        color: COLORS.carbonDark,
                         borderRadius: "4px",
-                        transition: "color 0.33s ease",
-                      }}
-                      onMouseEnter={(e) => {
-                        (e.currentTarget as HTMLElement).style.color = COLORS.brandRed;
-                      }}
-                      onMouseLeave={(e) => {
-                        (e.currentTarget as HTMLElement).style.color = COLORS.carbonDark;
                       }}
                     >
                       {child.label}
@@ -338,20 +297,12 @@ export default function Header() {
             <Link
               href="/contact"
               onClick={() => setMobileOpen(false)}
-              className="block text-center px-6 py-3 text-white text-[15px] font-medium rounded"
+              className="block text-center px-6 py-3 text-white text-[15px] font-medium rounded bg-[#3E6AE1] hover:bg-[#3457B8] transition-colors duration-[330ms]"
               style={{
                 fontSize: "15px",
                 fontWeight: 500,
-                backgroundColor: COLORS.electricBlue,
                 color: COLORS.white,
                 borderRadius: "4px",
-                transition: "background-color 0.33s ease",
-              }}
-              onMouseEnter={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlueHover;
-              }}
-              onMouseLeave={(e) => {
-                (e.currentTarget as HTMLElement).style.backgroundColor = COLORS.electricBlue;
               }}
             >
               Request Quote
