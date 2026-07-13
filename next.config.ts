@@ -11,6 +11,12 @@ const nextConfig: NextConfig = {
         port: "10004",
         pathname: "/**",
       },
+      {
+        protocol: "http",
+        hostname: "127.0.0.1",
+        port: "10004",
+        pathname: "/**",
+      },
       // Production: add your domain
       // { protocol: "https", hostname: "your-domain.com" },
     ],
