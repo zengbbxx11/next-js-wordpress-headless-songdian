@@ -152,6 +152,12 @@ export const metadata: Metadata = {
     canonical: SITE_URL,
   },
 
+  // Favicon / 站点图标 — 使用品牌 Logo SVG
+  icons: {
+    icon: "/Favicon/songdiantechSite.svg",
+    shortcut: "/Favicon/songdiantechSite.svg",
+  },
+
   // Site verification — add Google Search Console code after domain setup
   verification: {
     // google: "your-verification-code",

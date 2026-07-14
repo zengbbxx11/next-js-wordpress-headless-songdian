@@ -39,8 +39,8 @@ export const MEDIA = {
   /** ── FileBird: Website/OG ── */
   ogImage: wpFile("2026/07", "og-image.jpg"),
 
-  /** ── 工厂宣传视频（WordPress 媒体库上传） ── */
-  factoryVideo: wpFile("2026/07", "SongdianFactoryVideo.mp4"),
+  /** ── 工厂宣传视频（本地静态资源，避免 WordPress URL 跨环境问题） ── */
+  factoryVideo: "/Video/SongdianFactoryVideo.mp4",
 
   /** ── 全球 ODM 合作伙伴图（本地静态资源） ── */
   globalOdmPartners: "/global-odm-partners.jpg",
