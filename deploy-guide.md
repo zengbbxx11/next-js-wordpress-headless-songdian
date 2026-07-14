@@ -258,7 +258,21 @@ npm run build
 pm2 restart songdian
 ```
 
-### 6.2 查看运行状态
+> ⚠️ `public/Video/` 目录下的视频文件（约 31MB）不在 Git 追踪中。首次部署或更新视频需手动上传（见下文）。
+
+### 6.2 手动上传视频文件
+
+About 页的工厂视频（`/Video/SongdianFactoryVideo.mp4`）因体积较大不进 Git。
+首次部署或更换视频时：
+
+```bash
+# 在本地 PowerShell 执行
+scp "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app\public\Video\SongdianFactoryVideo.mp4" ubuntu@106.53.220.184:~/songdianweb/public/Video/
+```
+
+或在 1Panel → **文件** → `/home/ubuntu/songdianweb/public/Video/` → 上传。
+
+### 6.3 查看运行状态
 
 ```bash
 pm2 status               # 进程状态
@@ -266,7 +280,7 @@ pm2 logs songdian        # 实时日志
 pm2 logs songdian --lines 50  # 最近 50 行
 ```
 
-### 6.3 WordPress 相关命令
+### 6.4 WordPress 相关命令
 
 ```bash
 # 检查 WordPress 是否可访问
@@ -281,7 +295,7 @@ UPDATE wp_posts SET guid = REPLACE(guid, '旧URL', '新URL');
 "
 ```
 
-### 6.4 数据库备份
+### 6.5 数据库备份
 
 > 在 1Panel 图形界面操作最方便：
 
@@ -295,7 +309,7 @@ UPDATE wp_posts SET guid = REPLACE(guid, '旧URL', '新URL');
 mysqldump -u root -p你的密码 word_dNMNbP > ~/songdianweb_backup_$(date +%Y%m%d).sql
 ```
 
-### 6.5 服务器重启后的恢复
+### 6.6 服务器重启后的恢复
 
 服务器意外重启后，按以下顺序恢复服务：
 
@@ -316,7 +330,7 @@ pm2 save
 
 > 如果重启后 `pm2 resurrect` 无效，重新执行 `pm2 start` 并 `pm2 save`。
 
-### 6.6 git pull 冲突处理
+### 6.7 git pull 冲突处理
 
 更新代码时若遇到 git pull 冲突：
 
@@ -333,7 +347,7 @@ git pull
 git stash pop   # 恢复被暂存的改动，手动解决冲突
 ```
 
-### 6.7 服务器资源监控
+### 6.8 服务器资源监控
 
 ```bash
 free -h       # 内存 + swap
@@ -342,7 +356,7 @@ pm2 status    # 进程
 docker stats  # 各容器实时资源占用（需 sudo）
 ```
 
-### 6.8 资源优化建议（2G 服务器）
+### 6.9 资源优化建议（2G 服务器）
 
 当前各容器内存占用参考（来自 `docker stats`）：
 
