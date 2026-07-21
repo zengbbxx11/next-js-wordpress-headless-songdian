@@ -13,12 +13,13 @@
 | SSH 用户 | `ubuntu` |
 | 面板 | 1Panel Linux 面板（端口 8090）|
 | 服务器规格 | 2C2G，已加 2GB Swap |
-| 前端工程 | Next.js 16 + TypeScript + Tailwind |
+| 前端工程 | Next.js 16 + React 19 + TypeScript + Tailwind CSS v4 |
 | 后端 CMS | WordPress（1Panel 应用商店部署）|
 | 数据库 | MySQL 8.4.10，库名 `word_dNMNbP` |
 | 前端运行 | PM2 保活，端口 3000 |
 | Nginx 反向代理 | 1Panel OpenResty，80 端口 → 127.0.0.1:3000 |
 | 项目路径 | `/home/ubuntu/songdianweb` |
+| Google Analytics | `@next/third-parties` 官方组件，通过 `NEXT_PUBLIC_GA_ID` 环境变量启用 |
 
 ---
 
@@ -143,13 +144,15 @@ cat > .env.local << 'EOF'
 NEXT_PUBLIC_WORDPRESS_URL=http://127.0.0.1:10004
 NEXT_PUBLIC_SITE_URL=http://106.53.220.184
 NEXT_PUBLIC_ISR_REVALIDATE=60
+NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 NODE_ENV=production
 WOOCOMMERCE_CONSUMER_KEY=ck_xxx
 WOOCOMMERCE_CONSUMER_SECRET=cs_xxx
 SMTP_HOST=smtp.qq.com
 SMTP_PORT=587
 SMTP_USER=3932182720@qq.com
-SMTP_PASS=pbwnuufompuyceej
+SMTP_PASS=你的QQ邮箱授权码
+INQUIRY_EMAIL_TO=zengxb21@proton.me
 EOF
 ```
 
@@ -260,17 +263,22 @@ pm2 restart songdian
 
 > ⚠️ `public/Video/` 目录下的视频文件（约 31MB）不在 Git 追踪中。首次部署或更新视频需手动上传（见下文）。
 
-### 6.2 手动上传视频文件
+### 6.2 手动上传静态资源文件
 
-About 页的工厂视频（`/Video/SongdianFactoryVideo.mp4`）因体积较大不进 Git。
-首次部署或更换视频时：
+以下大文件不在 Git 追踪中，首次部署或更换时需手动上传：
 
+**工厂视频**（About 页，~31MB）：
 ```bash
 # 在本地 PowerShell 执行
-scp "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app\public\Video\SongdianFactoryVideo.mp4" ubuntu@106.53.220.184:~/songdianweb/public/Video/
+scp "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\public\Video\SongdianFactoryVideo.mp4" ubuntu@106.53.220.184:~/songdianweb/public/Video/
 ```
 
-或在 1Panel → **文件** → `/home/ubuntu/songdianweb/public/Video/` → 上传。
+**VR 全景图**（About 页 360° 展厅，`public/VR/*.webp`，5 张共 ~4MB）：
+```bash
+scp "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\public\VR\*.webp" ubuntu@106.53.220.184:~/songdianweb/public/VR/
+```
+
+或在 1Panel → **文件** → `/home/ubuntu/songdianweb/public/` → 上传对应文件。
 
 ### 6.3 查看运行状态
 
@@ -374,7 +382,7 @@ docker stats  # 各容器实时资源占用（需 sudo）
 ### 7.1 项目位置
 
 ```text
-C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app
+C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless
 ```
 
 ### 7.2 本地构建说明
@@ -386,7 +394,7 @@ C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-a
 3. 在项目目录执行：
 
 ```bash
-cd "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless\my-app"
+cd "C:\Users\Administrator\Desktop\Front-end project\next-js-wordpress-headless"
 npm run build
 ```
 
@@ -478,4 +486,4 @@ PM2 进程：
 
 ---
 
-*最后更新：2026-07-13*
+*最后更新：2026-07-21*

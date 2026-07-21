@@ -40,6 +40,7 @@ import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import FloatingInquiry from "@/components/FloatingInquiry";
 import NavigationProgress from "@/components/NavigationProgress";
+import { GoogleAnalytics } from "@next/third-parties/google";
 import { COMPANY } from "@/lib/content-data";
 import { MEDIA } from "@/lib/media";
 import { organizationSchema, webSiteSchema } from "@/lib/seo";
@@ -196,12 +197,6 @@ export default function RootLayout({
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(siteSchema) }}
         />
-        {/*
-          Google Analytics / GTM
-          Currently handled by WordPress Site Kit plugin.
-          To enable direct GA4 tracking, uncomment the Script blocks below
-          and replace the measurement ID with your own.
-        */}
         {/* next-super-meta 自动注入 SEO 元标签 */}
       </head>
       {/* Body：纵向 flex 列布局，将页脚推到底部；白底深字 */}
@@ -224,6 +219,11 @@ export default function RootLayout({
 
         {/* 浮动询盘按钮 —— 全站可见的常驻组件 */}
         <FloatingInquiry />
+
+        {/* Google Analytics — 通过 @next/third-parties 官方组件注入 GA4 */}
+        {process.env.NEXT_PUBLIC_GA_ID && (
+          <GoogleAnalytics gaId={process.env.NEXT_PUBLIC_GA_ID} />
+        )}
       </body>
     </html>
   );
