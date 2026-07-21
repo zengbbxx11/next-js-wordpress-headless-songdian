@@ -34,7 +34,7 @@ export const MEDIA = {
   logo: "/logo.png",
 
   /** ── FileBird: Website/Hero ── */
-  heroBanner: wpFile("2026/06", "banner.webp"),
+  heroBanner: "/banner.webp",
 
   /** ── FileBird: Website/OG ── */
   ogImage: wpFile("2026/07", "og-image.jpg"),
@@ -43,7 +43,16 @@ export const MEDIA = {
   factoryVideo: "/Video/SongdianFactoryVideo.mp4",
 
   /** ── 全球 ODM 合作伙伴图（本地静态资源） ── */
-  globalOdmPartners: "/global-odm-partners.jpg",
+  globalOdmPartners: "/global-odm-partners.webp",
+
+  /** ── VR 360° 虚拟展厅（public/VR/，5 个场景的等距柱状投影全景图） ── */
+  vrShowroom: {
+    reception: "/VR/reception.webp",
+    "exhibition-hall": "/VR/Exhibition-Hall.webp",
+    "production-workshop-corridor": "/VR/Production-workshop-corridor.webp",
+    "assembly-workshop": "/VR/Assembly-workshop.webp",
+    "office-area": "/VR/Office-area.webp",
+  },
 
   /** ── FileBird: Website/Icons ── */
   icons: {

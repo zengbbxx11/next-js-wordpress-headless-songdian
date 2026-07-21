@@ -679,22 +679,72 @@ export const ABOUT = {
    * 图片统一存放于 public/CertificationsAndComplianceImages/，文件名前缀即证书类型。
    * title 为证书代号，description 为证书全称/适用范围，src 指向 public 下的图片。 */
   certificationImages: [
-    { title: "BSCI", description: "Business Social Compliance Initiative", src: "/CertificationsAndComplianceImages/BSCI-sonida.png" },
-    { title: "CE", description: "European Conformity", src: "/CertificationsAndComplianceImages/CE-DC312-songdian.png" },
-    { title: "CPC", description: "Children's Product Certificate", src: "/CertificationsAndComplianceImages/CPC-DC50X-sonida.png" },
-    { title: "EMC", description: "Electromagnetic Compatibility", src: "/CertificationsAndComplianceImages/EMC-sonida.png" },
-    { title: "EPA", description: "U.S. Environmental Protection Agency", src: "/CertificationsAndComplianceImages/EPA-sonida.png" },
-    { title: "FCC", description: "U.S. Federal Communications Commission", src: "/CertificationsAndComplianceImages/FCC-DC312-songdian.png" },
-    { title: "FDA", description: "U.S. Food & Drug Administration", src: "/CertificationsAndComplianceImages/FDA-sonida.png" },
-    { title: "ISO 9001", description: "Quality Management System", src: "/CertificationsAndComplianceImages/ISO9001-songdian.png" },
-    { title: "MSDS", description: "Material Safety Data Sheet", src: "/CertificationsAndComplianceImages/MSDS-sonida.png" },
-    { title: "RoHS", description: "Restriction of Hazardous Substances", src: "/CertificationsAndComplianceImages/RoHS-DC312-songdain.png" },
-    { title: "TELEC", description: "Japan Radio Equipment Certification", src: "/CertificationsAndComplianceImages/TELEC-sonida.png" },
-    { title: "UKCA", description: "UK Conformity Assessed", src: "/CertificationsAndComplianceImages/UKCA-DC312-songdian.png" },
-    { title: "UL", description: "Underwriters Laboratories", src: "/CertificationsAndComplianceImages/UL-HDV301-sonida.png" },
-    { title: "UN38.3", description: "Battery Transport Safety", src: "/CertificationsAndComplianceImages/UN38.3-NP60-sonida.png" },
-    { title: "WEEE", description: "Waste Electrical & Electronic Equipment", src: "/CertificationsAndComplianceImages/WEEE-sonida.png" },
+    { title: "BSCI", description: "Business Social Compliance Initiative", src: "/CertificationsAndComplianceImages/BSCI-sonida.webp" },
+    { title: "CE", description: "European Conformity", src: "/CertificationsAndComplianceImages/CE-DC312-songdian.webp" },
+    { title: "CPC", description: "Children's Product Certificate", src: "/CertificationsAndComplianceImages/CPC-DC50X-sonida.webp" },
+    { title: "EMC", description: "Electromagnetic Compatibility", src: "/CertificationsAndComplianceImages/EMC-sonida.webp" },
+    { title: "EPA", description: "U.S. Environmental Protection Agency", src: "/CertificationsAndComplianceImages/EPA-sonida.webp" },
+    { title: "FCC", description: "U.S. Federal Communications Commission", src: "/CertificationsAndComplianceImages/FCC-DC312-songdian.webp" },
+    { title: "FDA", description: "U.S. Food & Drug Administration", src: "/CertificationsAndComplianceImages/FDA-sonida.webp" },
+    { title: "ISO 9001", description: "Quality Management System", src: "/CertificationsAndComplianceImages/ISO9001-songdian.webp" },
+    { title: "MSDS", description: "Material Safety Data Sheet", src: "/CertificationsAndComplianceImages/MSDS-sonida.webp" },
+    { title: "RoHS", description: "Restriction of Hazardous Substances", src: "/CertificationsAndComplianceImages/RoHS-DC312-songdain.webp" },
+    { title: "TELEC", description: "Japan Radio Equipment Certification", src: "/CertificationsAndComplianceImages/TELEC-sonida.webp" },
+    { title: "UKCA", description: "UK Conformity Assessed", src: "/CertificationsAndComplianceImages/UKCA-DC312-songdian.webp" },
+    { title: "UL", description: "Underwriters Laboratories", src: "/CertificationsAndComplianceImages/UL-HDV301-sonida.webp" },
+    { title: "UN38.3", description: "Battery Transport Safety", src: "/CertificationsAndComplianceImages/UN38.3-NP60-sonida.webp" },
+    { title: "WEEE", description: "Waste Electrical & Electronic Equipment", src: "/CertificationsAndComplianceImages/WEEE-sonida.webp" },
   ],
+
+  /**
+   * VR 360° 虚拟展厅（About 页，工厂视频之后、认证资质之前）。
+   * 每个场景对应 public/VR/ 下一张等距柱状投影全景图。
+   * id 与 lib/media.ts 中 MEDIA.vrShowroom 的 key 一一对应；
+   * src 由 VRShowroom 组件根据 id 拼出。
+   */
+  vrShowroom: {
+    eyebrow: "360° Virtual Tour",
+    title: "Step Inside Our Facility in 360°",
+    description:
+      "Can't visit in person? Explore our factory from anywhere. Drag any scene to look around — from the front desk to the production line.",
+    scenes: [
+      {
+        id: "reception",
+        title: "Reception",
+        subtitle: "Front Desk",
+        description:
+          "The first stop on every visit — our modern reception welcomes clients and partners from around the world.",
+      },
+      {
+        id: "exhibition-hall",
+        title: "Exhibition Hall",
+        subtitle: "Showroom",
+        description:
+          "Browse our full camera lineup — flagship mirrorless bodies, compact cameras, action cams, and kids' models on display.",
+      },
+      {
+        id: "production-workshop-corridor",
+        title: "Production Workshop Corridor",
+        subtitle: "Assembly Line",
+        description:
+          "A walk down our SMT and assembly corridor — high-precision lines where every camera begins its journey.",
+      },
+      {
+        id: "assembly-workshop",
+        title: "Assembly Workshop",
+        subtitle: "Final Assembly",
+        description:
+          "Skilled technicians perform final assembly, calibration, and quality checks before each unit ships.",
+      },
+      {
+        id: "office-area",
+        title: "Office Area",
+        subtitle: "R&D Center",
+        description:
+          "Our engineering and design teams — the minds behind 30+ new products and 500+ patents every year.",
+      },
+    ],
+  },
 
   /** 研发区域内容 */
   rd: {

@@ -9,7 +9,6 @@
  *     各自独立的 Suspense 边界，流式到达，互不阻塞
  *
  * 数据来源（WP REST API，仅在 Suspense 内的 async 组件中触发）：
- *   - getSiteBanner()       → Hero Banner 图
  *   - getProductCategories()→ 产品分类
  *   - getProducts()         → 分类下的产品预览图
  *   - getPosts()            → WP 文章（新闻）列表
@@ -21,7 +20,7 @@
 import { Suspense } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { getPosts, getProducts, getSiteBanner, getProductCategories } from "@/lib/wordpress";
+import { getPosts, getProducts, getProductCategories } from "@/lib/wordpress";
 import NewsGrid from "@/components/NewsGrid";
 import HeroSection from "@/components/motion/HeroSection";
 import AnimatedSection from "@/components/motion/AnimatedSection";
@@ -49,10 +48,9 @@ export const revalidate = 60;
 // Streaming async sections — 各自独立获取数据，流式到达
 // ============================================================
 
-/** Hero 区块 — 异步获取 Banner 图 */
-async function HeroSectionAsync() {
-  const bannerUrl = await getSiteBanner();
-  return <HeroSection bannerUrl={bannerUrl || undefined} />;
+/** Hero 区块 — 直接使用本地 banner.webp */
+function HeroSectionAsync() {
+  return <HeroSection />;
 }
 
 /** 产品类目展示 — 异步获取分类及每个分类下的最新产品图 */

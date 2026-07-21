@@ -15,6 +15,7 @@ import HorizontalTimeline from "@/components/HorizontalTimeline";
 import SectionHeading from "@/components/SectionHeading";
 import FactoryVideo from "@/components/FactoryVideo";
 import CertificateGallery from "@/components/CertificateGallery";
+import VRShowroom, { type VRScene } from "@/components/VRShowroom";
 import { MEDIA } from "@/lib/media";
 import { generateBreadcrumbs } from "@/lib/seo";
 import { COMPANY, ABOUT } from "@/lib/content-data";
@@ -30,6 +31,15 @@ export const revalidate = 3600;
 
 export default function AboutPage() {
   const breadcrumbs = generateBreadcrumbs([{ label: "About" }]);
+
+  // 将 content-data 中的场景元数据 + media.ts 中的图片路径拼成 VRShowroom 所需数据
+  const vrScenes: VRScene[] = ABOUT.vrShowroom.scenes.map((s) => ({
+    id: s.id,
+    title: s.title,
+    subtitle: s.subtitle,
+    description: s.description,
+    src: MEDIA.vrShowroom[s.id as keyof typeof MEDIA.vrShowroom],
+  }));
 
   return (
     <>
@@ -152,6 +162,20 @@ export default function AboutPage() {
           >
             {ABOUT.factory.caption}
           </p>
+
+          {/* VR 360° 虚拟展厅 —— 工厂视频之后、认证资质之前 */}
+          <div className="mt-16 md:mt-20 border-t border-[#EEEEEE] pt-16 md:pt-20">
+            <p className="text-xs font-semibold uppercase tracking-[0.15em] mb-3" style={{ color: "#d4343e" }}>
+              {ABOUT.vrShowroom.eyebrow}
+            </p>
+            <h2 className="text-2xl md:text-3xl font-bold text-gray-900 tracking-tight mb-3">
+              {ABOUT.vrShowroom.title}
+            </h2>
+            <p className="max-w-2xl text-[15px] leading-relaxed mb-8" style={{ color: "#5C5E62" }}>
+              {ABOUT.vrShowroom.description}
+            </p>
+            <VRShowroom scenes={vrScenes} />
+          </div>
         </div>
       </section>
 
